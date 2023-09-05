@@ -46,6 +46,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request){
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request){
-	tmpl := template.Must(template.ParseFiles("./assets/index.html"))
+	tmpl := template.Must(template.ParseFiles("./index.html"))
 	tmpl.Execute(w, nil)
 }
