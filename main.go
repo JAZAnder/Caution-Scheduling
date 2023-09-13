@@ -1,17 +1,34 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"github.com/gorilla/mux"
 	"log"
-	"github.com/joho/godotenv"
+	"net/http"
 	"os"
-	"html/template"
+
+	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 )
 
-//Entry Point
-func main()  {
+// Entry Point
+func main() {
+
+	//Creating Google Login
+	key := "SESSION_SECRET" // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30    // 30 days
+	isProd := false         // Set to true when serving over https
+	store := sessions.NewCookieStore([]byte(key))
+	store.MaxAge(maxAge)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.Secure = isProd
+
+	goth.UseProviders(
+		google.New(".......apps.googleusercontent.com", "PASSWORD", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
+	)
+
+	//Ending Google Login
 
 	err := godotenv.Load()
 	if err != nil {
@@ -22,30 +39,7 @@ func main()  {
 	if port == "" {
 		port = "8080"
 	}
-	
-	
+
 	r := newRouter()
 	http.ListenAndServe(":"+port, r)
-}
-
-//Routes
-func newRouter() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc("/hello", helloHandler).Methods("GET")
-	r.HandleFunc("/", indexHandler)
-
-	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
-	r.PathPrefix("/assets/").Handler(fs)
-
-	return r
-}
-
-//handlers
-func helloHandler(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w, "Hello World!")
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request){
-	tmpl := template.Must(template.ParseFiles("./index.html"))
-	tmpl.Execute(w, nil)
 }
