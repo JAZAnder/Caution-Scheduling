@@ -19,7 +19,7 @@ import (
 func main()  {
 
 	//Creating Google Login
-	key := "........"  // Replace with your SESSION_SECRET or similar
+	key := "SESSION_SECRET"  // Replace with your SESSION_SECRET or similar
 	maxAge := 86400 * 30  // 30 days
 	isProd := false       // Set to true when serving over https
 	store := sessions.NewCookieStore([]byte(key))
@@ -29,7 +29,7 @@ func main()  {
   	store.Options.Secure = isProd
 
 	goth.UseProviders(
-		google.New("......apps.googleusercontent.com", ".......", "https://8080-cs-71058812811-default.cs-us-east1-rtep.cloudshell.dev/auth/google/callback", "email", "profile"),
+		google.New("239635319851-g0dhkjdo7t00run1j0fb3rld3115434h.apps.googleusercontent.com", "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", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
 	)
 
 	//Ending Google Login
@@ -56,8 +56,13 @@ func newRouter() *mux.Router {
 	r.HandleFunc("/hello", helloHandler).Methods("GET")
 	r.HandleFunc("/", indexHandler)
 
+	
 	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
 	r.PathPrefix("/assets/").Handler(fs)
+
+	//Pages
+	wp := http.StripPrefix("/pages/", http.FileServer(http.Dir("./pages/")))
+	r.PathPrefix("/pages/").Handler(wp)
 
 	//Google Signin
 	r.HandleFunc("/auth/{provider}", auth)
@@ -78,6 +83,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request){
 }
 func auth(w http.ResponseWriter, r *http.Request)  {
 	gothic.BeginAuthHandler(w, r)
+	//fmt.Fprintf(w, "Hi")
 }
 func authCallback(w http.ResponseWriter, r *http.Request)  {
 	user, err := gothic.CompleteUserAuth(w, r)
