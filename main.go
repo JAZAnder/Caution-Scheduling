@@ -29,7 +29,7 @@ func main()  {
   	store.Options.Secure = isProd
 
 	goth.UseProviders(
-		google.New("239635319851-g0dhkjdo7t00run1j0fb3rld3115434h.apps.googleusercontent.com", "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", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
+		google.New(".....", "PASSWORD", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
 	)
 
 	//Ending Google Login
