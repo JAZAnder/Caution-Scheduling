@@ -4,31 +4,31 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"github.com/markbates/goth"
-	"github.com/gorilla/sessions"
 	"github.com/markbates/goth/providers/google"
 )
 
-//Entry Point
-func main()  {
+// Entry Point
+func main() {
 
 	//Creating Google Login
-	key := "SESSION_SECRET"  // Replace with your SESSION_SECRET or similar
-	maxAge := 86400 * 30  // 30 days
-	isProd := false       // Set to true when serving over https
+	key := "SESSION_SECRET" // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30    // 30 days
+	isProd := false         // Set to true when serving over https
 	store := sessions.NewCookieStore([]byte(key))
-  	store.MaxAge(maxAge)
-  	store.Options.Path = "/"
-  	store.Options.HttpOnly = true   // HttpOnly should always be enabled
-  	store.Options.Secure = isProd
+	store.MaxAge(maxAge)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.Secure = isProd
 
 	goth.UseProviders(
-		google.New("239635319851-g0dhkjdo7t00run1j0fb3rld3115434h.apps.googleusercontent.com", "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", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
+		google.New(".......apps.googleusercontent.com", "PASSWORD", "http://local.techwall.xyz/auth/google/callback", "email", "profile"),
 	)
 
 	//Ending Google Login
-
 
 	err := godotenv.Load()
 	if err != nil {
@@ -39,12 +39,7 @@ func main()  {
 	if port == "" {
 		port = "8080"
 	}
-	
-	
+
 	r := newRouter()
 	http.ListenAndServe(":"+port, r)
 }
-
-
-
-
