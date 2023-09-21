@@ -7,29 +7,31 @@ import (
 	//"errors"
 )
 
-type lab struct{
-	Id int `json:"id"`
-	Name string `json:"name"`
+type lab struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
 	Location string `json:"location"`
 }
 
-func (l *lab) getLab(db *sql.DB) error{
-	query := "SELECT name, location FROM labs WHERE id="+ strconv.Itoa(l.Id) 
+func (l *lab) getLab(db *sql.DB) error {
+	query := "SELECT name, location FROM labs WHERE id=" + strconv.Itoa(l.Id)
 	return db.QueryRow(query).Scan(&l.Name, &l.Location)
 }
 
-func (l *lab) updateLab(db *sql.DB) error{
-	_, err := db.Exec("UPDATE labs SET name=$1, location=$2 WHERE id=$3", l.Name, l.Location, l.Id)
+func (l *lab) updateLab(db *sql.DB) error {
+	query := "UPDATE `labs` SET `name` = '"+l.Name+"', `location`='"+l.Location+"' WHERE `labs`.`id`="+strconv.Itoa(l.Id)+""
+	_, err := db.Exec(query)
 	return err
 }
 
-func ( l *lab) deleteLab(db *sql.DB) error{
-	_, err := db.Exec("DELETE FROM labs WHERE id=$1", l.Id)
+func (l *lab) deleteLab(db *sql.DB) error {
+	query := "DELETE FROM `labs` WHERE `labs`.`Id`="+strconv.Itoa(l.Id)+""
+	_, err := db.Exec(query)
 	return err
 }
 
-func (l *lab) createLab(db *sql.DB) error{
-	query := "INSERT INTO `labs` (`name`, `location`) VALUES ('" + l.Name + "','"+ l.Location+"')"
+func (l *lab) createLab(db *sql.DB) error {
+	query := "INSERT INTO `labs` (`name`, `location`) VALUES ('" + l.Name + "','" + l.Location + "')"
 	err := db.QueryRow(query)
 
 	if err != nil {
@@ -38,7 +40,7 @@ func (l *lab) createLab(db *sql.DB) error{
 	return nil
 }
 
-func getLabs(db *sql.DB) ([]lab, error){
+func getLabs(db *sql.DB) ([]lab, error) {
 	rows, err := db.Query("Select id, name, location FROM labs")
 
 	if err != nil {
@@ -49,7 +51,7 @@ func getLabs(db *sql.DB) ([]lab, error){
 
 	labs := []lab{}
 
-	for rows.Next(){
+	for rows.Next() {
 		var l lab
 		if err := rows.Scan(&l.Id, &l.Name, &l.Location); err != nil {
 			return nil, err
@@ -59,7 +61,7 @@ func getLabs(db *sql.DB) ([]lab, error){
 	return labs, nil
 }
 
-func (l *lab) print(){
-	fmt.Print("Location : "+l.Location)
-	fmt.Print("Name : "+l.Name)
+func (l *lab) print() {
+	fmt.Print("Location : " + l.Location)
+	fmt.Print("Name : " + l.Name)
 }
