@@ -25,6 +25,7 @@ import (
 
 func (a *App) initializeRoutes() {
     a.labRoutes()
+	a.staticRoutes()
 }
 
 func (a *App) labRoutes(){
