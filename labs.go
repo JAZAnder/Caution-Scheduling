@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"strconv"
 	//"errors"
 )
@@ -59,9 +58,4 @@ func getLabs(db *sql.DB) ([]lab, error) {
 		labs = append(labs, l)
 	}
 	return labs, nil
-}
-
-func (l *lab) print() {
-	fmt.Print("Location : " + l.Location)
-	fmt.Print("Name : " + l.Name)
 }

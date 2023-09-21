@@ -50,7 +50,6 @@ func (a *App) createLab(w http.ResponseWriter, r *http.Request) {
 	l.Name = r.PostFormValue("name")
 
 	if len(l.Name) <= 0 || len(l.Location) <= 0 {
-		l.print()
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -78,7 +77,6 @@ func (a *App) updateLab(w http.ResponseWriter, r *http.Request) {
 	l.Name = r.PostFormValue("name")
 
 	if len(l.Name) <= 0 || len(l.Location) <= 0 {
-		l.print()
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
