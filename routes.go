@@ -23,6 +23,12 @@ func (a *App) labRoutes(){
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.deleteLab).Methods("DELETE")
 }
 
+func (a *App) userRoutes(){
+	//a.Router.HandleFunc("/api/user/logIn", a.isLoggedIn).Methods("POST") //Logs in User
+	a.Router.HandleFunc("/api/user/logIn", a.isLoggedIn).Methods("Get") //Checks if User is Logged in
+	a.Router.HandleFunc("/api/user/isAdmin", a.isAdmin).Methods("GET") //Checks if User is admin
+}
+
 func (a *App) staticRoutes(){
 	//Assets
 	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
