@@ -10,19 +10,6 @@ import (
 
 //Routes
 
-//func newRouter() *gin.Engine {
-// r := gin.Default()
-
-// r.GET("/ping", func(c *gin.Context) {
-// 	c.JSON(200, gin.H{
-// 		"message": "pong",
-// 	})
-// })
-
-// r.GET("/api/labs/test", controllers)
-//return r
-//}
-
 func (a *App) initializeRoutes() {
     a.labRoutes()
 	a.staticRoutes()
@@ -42,9 +29,9 @@ func (a *App) staticRoutes(){
 	a.Router.PathPrefix("/assets/").Handler(fs)
 
 	//Pages
-	wp := http.StripPrefix("/pages/", http.FileServer(http.Dir("./pages/")))
-	a.Router.PathPrefix("/pages/").Handler(wp)
+	wp := http.StripPrefix("/", http.FileServer(http.Dir("./pages/")))
+	a.Router.PathPrefix("/").Handler(wp)
 
 	a.Router.HandleFunc("/hello", helloHandler).Methods("GET")
-	a.Router.HandleFunc("/", indexHandler)
+	//a.Router.HandleFunc("/", indexHandler)
 }
