@@ -1,2 +1,2 @@
 INSERT IGNORE INTO localusers (`userName`,`firstName`,`lastName`,`email`,`password`,`isAdmin`) VALUES
-    ("admin", "admin", "admin", "admin@example.com", "???", 1 )
+    ("admin", "admin", "admin", "admin@example.com", "$2a$08$gVtEQ.rZiq565Cnrx/R/0.dIjySM2jFw8Ds/E8hVe8A7FzftDSg4y", 1 )
