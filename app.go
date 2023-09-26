@@ -5,13 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	//"fmt"
 	"github.com/gorilla/mux"
-	//"log"
 	"net/http"
-	//"github.com/gorilla/sessions"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 type App struct {
@@ -29,6 +26,8 @@ func (a *App) Initialize(user, password, db, dbname string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	checkDatabase(a.DB)
 
 	//Creates Router
 	a.Router = mux.NewRouter()
@@ -52,4 +51,27 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(code)
     w.Write(response)
+}
+
+func checkDatabase(db *sql.DB){
+	dir := "./mysql-tables"
+
+	files, err := os.ReadDir(dir)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		if !file.IsDir(){
+			filePath := fmt.Sprintf("%s/%s", dir, file.Name())
+			content, err := os.ReadFile(filePath)
+			if err != nil {
+				log.Printf("Failed to read file %s: %v", file.Name(), err)
+			} else {
+				_ ,err := db.Exec(string(content))
+				if err != nil {fmt.Println(err)}
+			}
+
+		}
+	}
 }
