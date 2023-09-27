@@ -28,3 +28,4 @@ passwords
 /config/data/*
 /go/pkg
 go.work.sum
+./docker-compose.yml
