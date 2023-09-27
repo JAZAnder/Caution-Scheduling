@@ -24,3 +24,5 @@ go.work
 /src/tmp
 
 /src/adc.json
+passwords
+/config/data/*
