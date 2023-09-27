@@ -27,3 +27,4 @@ go.work
 passwords
 /config/data/*
 /go/pkg
+go.work.sum
