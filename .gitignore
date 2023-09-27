@@ -26,3 +26,4 @@ go.work
 /src/adc.json
 passwords
 /config/data/*
+/go/pkg
