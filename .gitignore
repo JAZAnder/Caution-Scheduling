@@ -21,6 +21,6 @@
 go.work
 
 #custom
-/tmp
-.env
-/adc.json
+/src/tmp
+
+/src/adc.json
