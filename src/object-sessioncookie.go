@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
+	"strconv"
 )
 
 type sessionCookie struct {
@@ -12,17 +13,27 @@ type sessionCookie struct {
 	Cookie  string `json:"cookie"`
 }
 
-func (c *sessionCookie) checkSession(db *sql.DB) (bool, localUser) {
+func (c *sessionCookie) checkSession(db *sql.DB) (localUser, error) {
 	var user localUser
-	
-	if len(c.Cookie) < 0 {
-		return false, user
+	query :="SELECT `localusers`.`userName`, `localusers`.`firstName`, `localusers`.`lastName`, `localusers`.`email`, `localusers`.`isAdmin`"+
+			"FROM `localusers`"+ 
+				"LEFT JOIN `sessionCookie` ON `sessionCookie`.`username` = `localusers`.`userName`" +
+			"WHERE `sessionCookie`.`cookie` = '"+c.Cookie+"';"
+	result := db.QueryRow(query)
+
+	var isAdmin string
+	err := result.Scan(&user.UserName, &user.FirstName, &user.LastName, &user.Email, &isAdmin)
+
+	if err != nil{
+		return user, err
 	}
-	
-	user.UserName = "defult"
-	user.IsAdmin = true
-	return true, user
+
+	user.IsAdmin, _ = strconv.ParseBool(isAdmin) 
+	user.Password="REDACTED"
+
+	return user, nil
 }
+
 
 func (c *sessionCookie) createSession(db *sql.DB) (error) {
 	c.Cookie = generateRandomString(10)
@@ -43,4 +54,4 @@ func generateRandomString(length int) string {
 	   panic(err)
 	}
 	return base64.StdEncoding.EncodeToString(b)
- }
+}

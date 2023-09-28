@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,6 +19,7 @@ type localUser struct{
 func (u *localUser) login(db *sql.DB) (error) {
 	query := "SELECT `password` FROM `localusers` WHERE `userName` = '"+u.UserName+"';"
 	result := db.QueryRow(query)
+
 	var storedCreds localUser
 
 	err := result.Scan(&storedCreds.Password)
@@ -29,7 +31,15 @@ func (u *localUser) login(db *sql.DB) (error) {
 		return err
 	}
 
-	//Get rest of information
+	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin` FROM `localusers` WHERE `userName` = '"+u.UserName+"';"
+	result = db.QueryRow(query)
+
+	var isAdmin string
+	err = result.Scan(&u.FirstName, &u.LastName, &u.Email, &isAdmin)
+	if err != nil {
+		return err
+	}
+	u.IsAdmin, _ = strconv.ParseBool(isAdmin) 
 
 	return nil
 }

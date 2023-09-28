@@ -26,6 +26,8 @@ func (a *App) labRoutes(){
 
 func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser", a.createLocalUser).Methods("POST")
+	a.Router.HandleFunc("/api/luser/login", a.loginLocalUser).Methods("POST")
+	a.Router.HandleFunc("/api/luser/whoami", a.whoami).Methods("GET")
 	
 }
 
