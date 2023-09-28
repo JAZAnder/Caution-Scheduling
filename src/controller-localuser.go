@@ -130,17 +130,15 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) isAdmin(w http.ResponseWriter, r *http.Request, name string) bool {
+func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
 	var c sessionCookie
 
 	cookie, err := r.Cookie(name)
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			return false
+			return false, errors.New("Cookie not Found")
 		} else {
-			respondWithError(w, http.StatusInternalServerError, err.Error())
-			return false
+			return false, errors.New(err.Error())
 		}
 	}
 
@@ -149,14 +147,12 @@ func (a *App) isAdmin(w http.ResponseWriter, r *http.Request, name string) bool 
 	currentUser, err := c.checkSession(a.DB)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			respondWithError(w, http.StatusUnauthorized, "Session Expired")
-			return false
+			return false, errors.New("Session Expired")
 		} else {
-			respondWithError(w, http.StatusInternalServerError, err.Error())
-			return false
+			return false, errors.New(err.Error())
 		}
 	}
 
-	return currentUser.IsAdmin
+	return currentUser.IsAdmin, nil
 
 }
