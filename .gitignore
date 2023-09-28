@@ -21,6 +21,13 @@
 go.work
 
 #custom
-/tmp
-.env
-/adc.json
+/src/tmp
+
+/src/adc.json
+passwords
+/config/data/*
+/go/pkg
+go.work.sum
+./src/go.mod
+./src/go.sum
+/config/go/pkg/*
