@@ -130,6 +130,44 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
+	var c sessionCookie
+	cookie, err := r.Cookie("key")
+
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	err = c.deleteSession(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newcookie := http.Cookie{
+		Name:     "key",
+		Value:    "",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	}
+	
+	http.SetCookie(w, &newcookie)
+
+
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+	return
+}
+
 func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
 	var c sessionCookie
 

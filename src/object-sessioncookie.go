@@ -47,6 +47,12 @@ func (c *sessionCookie) createSession(db *sql.DB) (error) {
 	return nil 
 }
 
+func (c* sessionCookie) deleteSession(db *sql.DB) error {
+	query := "DELETE FROM `sessionCookie` WHERE `cookie` = '"+c.Cookie+"';"
+	_, err := db.Exec(query)
+	return err
+}
+
 func generateRandomString(length int) string {
 	b := make([]byte, length)
 	_, err := rand.Read(b)
