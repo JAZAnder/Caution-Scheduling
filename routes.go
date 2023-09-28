@@ -12,6 +12,7 @@ import (
 
 func (a *App) initializeRoutes() {
     a.labRoutes()
+	a.userRoutes()
 	a.staticRoutes()
 }
 
@@ -24,9 +25,8 @@ func (a *App) labRoutes(){
 }
 
 func (a *App) userRoutes(){
-	//a.Router.HandleFunc("/api/user/logIn", a.isLoggedIn).Methods("POST") //Logs in User
-	a.Router.HandleFunc("/api/user/logIn", a.isLoggedIn).Methods("Get") //Checks if User is Logged in
-	a.Router.HandleFunc("/api/user/isAdmin", a.isAdmin).Methods("GET") //Checks if User is admin
+	a.Router.HandleFunc("/api/luser", a.createLocalUser).Methods("POST")
+	
 }
 
 func (a *App) staticRoutes(){
