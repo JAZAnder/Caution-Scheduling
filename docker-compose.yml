@@ -16,7 +16,7 @@ services:
         depends_on:
             - godatabase
         volumes:
-            - ./config/go/pkg:/go
+            - ./src/:/go/Caution-Scheduling/
             - ./config/go/:/startup:ro
         ports:
             - 80:80
