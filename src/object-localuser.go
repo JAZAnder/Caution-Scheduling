@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"strconv"
-
+	// "fmt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -63,4 +63,10 @@ func (u *localUser) signUp(db *sql.DB) error {
 	}
 
 	return nil
+}
+
+func (u *localUser) deleteLocalUser(db *sql.DB) error {
+	query := "DELETE FROM localusers WHERE `localusers`.`userName` = '"+ u.UserName +"'"
+	_, err := db.Exec(query)
+	return err
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"github.com/gorilla/mux"
 )
 
 func (a *App) isLoggedIn(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +97,49 @@ func (a *App) createLocalUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("	User Created by " + currentUser.UserName)
 	respondWithJSON(w, http.StatusCreated, u)
 	return
+}
+
+func (a *App) deleteLocalUser(w http.ResponseWriter, r *http.Request){
+	var c sessionCookie
+
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Not an Admin")
+		return
+	}
+
+	vars := mux.Vars(r)
+	userName := vars["userName"]
+
+	u := localUser{UserName: userName}
+	if err := u.deleteLocalUser(a.DB); err != nil{
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
