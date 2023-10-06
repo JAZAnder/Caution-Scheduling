@@ -1,28 +1,34 @@
-const baseUrl = "http://local.techwall.xyz"
+//const baseUrl = "http://local.techwall.xyz"
 
-const whoamiUrl = baseUrl+"/api/luser/whoami"
-const loginUrl = baseUrl+"/api/luser/login"
+const user_whoami_Url = baseUrl+"/api/luser/whoami"
+const user_login_Url = baseUrl+"/api/luser/login"
+const user_logout_Url = baseUrl+"/api/luser/logout"
+const user_create_Url = baseUrl+"/api/luser"
 
-function userwhoami(){
-  
-  var myHeaders = new Headers();
-  myHeaders.append("Cookie", "key=ydvu/XZ8D+agCQ==");
+
+function luser(user){
+  this.username = user['userName']
+  this.firstName = user['firstName']
+  this.lastName = user['lastName']
+  this.email = user['email']
+  this.isAdmin = user['isAdmin']
+}
+
+async function user_whoami(){
 
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
     redirect: 'follow'
   };
 
-  fetch(whoamiUrl, requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error))
-  
+  const result = await fetch(user_whoami_Url, requestOptions)
+  const data = await result.json();
+  console.log(data)
+  return data
 }
 
-function userlogin(username, password){
-  var contents = ""
+async function user_login(username, password){
+  // var contents = ""
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -38,10 +44,21 @@ function userlogin(username, password){
       redirect: 'follow'
   };
 
-  return fetch(loginUrl, requestOptions)
-  .then(response => response.json())
-  .then(result => {
-    console.log(result)
-  })
-  .catch(error => console.log('error', error));
+  const result = await fetch(user_login_Url, requestOptions)
+  const data = await result.json();
+  console.log(data)
+  return data
+}
+
+async function user_logout(){
+
+  var requestOptions = {
+    method: 'DELETE',
+    redirect: 'follow'
+  };
+
+  const result = await fetch(user_logout_Url, requestOptions)
+  const data = await result.json();
+  console.log(data)
+  return data
 }
