@@ -114,14 +114,14 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 
 	c.UserName = u.UserName
 	c.createSession(a.DB)
-
 	cookie := http.Cookie{
 		Name:     "key",
 		Value:    c.Cookie,
 		MaxAge:   3600,
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
+		Path: "/",
 	}
 
 	http.SetCookie(w, &cookie)
@@ -156,9 +156,10 @@ func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
 		Name:     "key",
 		Value:    "",
 		MaxAge:   -1,
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
+		Path: "/",
 	}
 	
 	http.SetCookie(w, &newcookie)
