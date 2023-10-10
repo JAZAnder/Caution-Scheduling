@@ -8,22 +8,33 @@
         <!--CSS Stylesheets-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
-        <link rel="stylesheet" href="./index.css">
+        <link rel="stylesheet" href="../index.css">
         <!-- BS Imports -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        
-        
-        <!-- Javascript Files -->
-        <script src="./index.js"></script>
-        <script src="../assets/scripts.js"></script>
 
+        <!-- Javascript Files -->
+        <script src="../../assets/scripts.js"></script>
+        <script src="./luser.js"></script>
+
+        <!--Objects-->
+        <script src="../../assets/objects/localusers.js"></script>
+        
     </head>
     <body>
-        <div class="backGround">
-            <div id="navBar"><script>importElements("navBar", "./assets/elements/navBar.html")</script></div>
-            <div id="body" class="container-fluid text-center"></div></div>
-            <div id="footer"><script>importElements("footer", "./assets/elements/footer.html")</script></div>
+        <script>checkLogin()</script>
+        <div class="row">
+            <div class="col-lg-3">
+                <h1>Hello, <span id="username"></span></h1>
+            </div>
+            <div class="col-lg-6">
+
+            </div>
+            <div class="col-lg-3">
+                <button onclick="logout()">Logout</button>
+            </div>
         </div>
+        
+
     </body>
 </html>
