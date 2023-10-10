@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-
 	//"github.com/gorilla/mux"
 	//"github.com/gin-gonic/gin"
 	//"example.com/controllers"
@@ -45,10 +45,12 @@ func (a *App) staticRoutes(){
 	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
 	a.Router.PathPrefix("/assets/").Handler(fs)
 
+	fmt.Print("Adding Static Routes")
+
     // Serve the homepage when the root URL ("/") is accessed
-    a.Router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        http.ServeFile(w, r, "./pages/homepage.html")
-    }).Methods("GET")
+	rf := http.StripPrefix("/", http.FileServer(http.Dir("./pages/")))
+	a.Router.PathPrefix("/").Handler(rf)
+
 
     a.Router.HandleFunc("/hello", helloHandler).Methods("GET")
 }
