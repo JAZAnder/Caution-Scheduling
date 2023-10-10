@@ -29,3 +29,4 @@ function getCookie(cname) {
     }
     return "";
   }
+
