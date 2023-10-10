@@ -20,7 +20,7 @@ func (a *App) getLab(w http.ResponseWriter, r *http.Request) {
 	}
 
 	l := lab{Id: id}
-	err := l.getLab(a.DB)
+	err = l.getLab(a.DB)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
