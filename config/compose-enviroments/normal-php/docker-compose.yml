@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+    go-environment:
+        container_name: go
+        image: golang
+        restart: always
+        command: > 
+            bash -c "while ! [ -f "/go/Caution-Scheduling/main.go" ];
+                do
+                    echo "#"
+                    sleep 1
+                done
+                go install github.com/cosmtrek/air@latest
+                cd /go/Caution-Scheduling/
+                air&
+                sleep infinity"
+        depends_on:
+            - godatabase
+        volumes:
+            - ./src/:/go/Caution-Scheduling/
+        ports:
+            - 80:80
+    godatabase:
+        container_name: godatabase
+        image: mysql
+        restart: always
+        volumes:
+          - ./config/data:/var/lib/mysql
+    go-phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      ports:
+          - '8080:80'
+      restart: always
+      environment:
+          PMA_HOST: godatabase
+      depends_on:
+          - godatabase
+
