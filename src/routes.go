@@ -13,6 +13,7 @@ import (
 func (a *App) initializeRoutes() {
     a.labRoutes()
 	a.userRoutes()
+	a.hourRoutes()
 	a.staticRoutes()
 }
 
@@ -30,6 +31,13 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/whoami", a.whoami).Methods("GET")
 	a.Router.HandleFunc("/api/luser/logout", a.logoutLocalUser).Methods("DELETE")
 	
+}
+
+func (a *App) hourRoutes(){
+	a.Router.HandleFunc("/api/hour", a.createHour).Methods("POST")
+	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.getHour).Methods("GET")
+	a.Router.HandleFunc("/api/hours", a.getHours).Methods("GET")
+	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.deleteHour).Methods("DELETE")
 }
 
 func (a *App) staticRoutes(){
