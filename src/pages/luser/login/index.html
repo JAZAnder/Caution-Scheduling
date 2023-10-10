@@ -23,30 +23,38 @@
     <!-- Objects -->
     <script src="../../../assets/objects/localusers.js"></script>
 
+    <style>
+    .backGround{
+        background-color: rgb(101, 184, 145);
+    }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h1 class="text-center">Sign In</h1>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-danger" id="error" style="display: none;"></div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input id="username" name="username" type="text" class="form-control">
+<body class=" backGround">
+    <div>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card ">
+                        <div class="card-header">
+                            <h1 class="text-center">Sign In</h1>
                         </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input id="password" name="password" type="password" class="form-control">
+                        <div class="card-body">
+                            <div class="alert alert-danger" id="error" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input id="username" name="username" type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input id="password" name="password" type="password" class="form-control">
+                            </div>
+                            <button onclick="login()" class="btn btn-primary btn-block">Login</button>
                         </div>
-                        <button onclick="login()" class="btn btn-primary btn-block">Login</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 </body>
 </html>
