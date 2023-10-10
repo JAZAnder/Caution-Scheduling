@@ -34,13 +34,13 @@ services:
         # After the first run, comment out the lines above
         volumes:
           - ./config/data:/var/lib/mysql
-    # go-phpmyadmin:
-    #   image: phpmyadmin/phpmyadmin
-    #   ports:
-    #       - '8080:80'
-    #   restart: always
-    #   environment:
-    #       PMA_HOST: godatabase
-    #   depends_on:
-    #       - godatabase
+    go-phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      ports:
+          - '8080:80'
+      restart: always
+      environment:
+          PMA_HOST: godatabase
+      depends_on:
+          - godatabase
 

@@ -32,15 +32,15 @@ func (a *App) userRoutes(){
 	
 }
 
-func (a *App) staticRoutes(){
-	//Assets
-	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
-	a.Router.PathPrefix("/assets/").Handler(fs)
+func (a *App) staticRoutes() {
+    // Assets
+    fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
+    a.Router.PathPrefix("/assets/").Handler(fs)
 
-	//Pages
-	wp := http.StripPrefix("/", http.FileServer(http.Dir("./pages/")))
-	a.Router.PathPrefix("/").Handler(wp)
+    // Serve the homepage when the root URL ("/") is accessed
+    a.Router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        http.ServeFile(w, r, "./pages/homepage.html")
+    }).Methods("GET")
 
-	a.Router.HandleFunc("/hello", helloHandler).Methods("GET")
-	//a.Router.HandleFunc("/", indexHandler)
+    a.Router.HandleFunc("/hello", helloHandler).Methods("GET")
 }
