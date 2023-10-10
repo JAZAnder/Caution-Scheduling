@@ -20,7 +20,8 @@ func (a *App) getLab(w http.ResponseWriter, r *http.Request) {
 	}
 
 	l := lab{Id: id}
-	if err := l.getLab(a.DB); err != nil {
+	err = l.getLab(a.DB)
+	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
 			respondWithError(w, http.StatusNotFound, "Lab not Found")

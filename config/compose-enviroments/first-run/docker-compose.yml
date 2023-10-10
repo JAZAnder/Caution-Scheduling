@@ -5,20 +5,19 @@ services:
         image: golang
         restart: always
         command: > 
-            bash -c "while ! [ -f "/startup/startup.sh" ];
+            bash -c "while ! [ -f "/go/Caution-Scheduling/main.go" ];
                 do
                     echo "#"
                     sleep 1
                 done
-                cp /startup/startup.sh /startup.sh
-                chmod +x /startup.sh
-                /startup.sh
+                go install github.com/cosmtrek/air@latest
+                cd /go/Caution-Scheduling/
+                air&
                 sleep infinity"
         depends_on:
             - godatabase
         volumes:
             - ./src/:/go/Caution-Scheduling/
-            - ./config/go/:/startup:ro
         ports:
             - 80:80
     godatabase:
@@ -34,13 +33,4 @@ services:
         # After the first run, comment out the lines above
         volumes:
           - ./config/data:/var/lib/mysql
-    go-phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      ports:
-          - '8080:80'
-      restart: always
-      environment:
-          PMA_HOST: godatabase
-      depends_on:
-          - godatabase
 
