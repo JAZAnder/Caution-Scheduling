@@ -51,3 +51,9 @@ func getHours(db *sql.DB) ([]hour, error){
 	}
 	return hours, nil
 }
+
+func (h *hour) deleteHour(db *sql.DB) error{
+	query := "DELETE FROM `hours` WHERE `hours`.`Id`="+strconv.Itoa(h.Id)+""
+	_, err := db.Exec(query)
+	return err
+}
