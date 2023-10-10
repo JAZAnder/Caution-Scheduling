@@ -3,6 +3,7 @@ services:
     go-environment:
         container_name: go
         image: golang
+        restart: always
         command: > 
             bash -c "while ! [ -f "/startup/startup.sh" ];
                 do
