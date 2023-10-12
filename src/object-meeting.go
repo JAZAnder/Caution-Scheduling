@@ -14,18 +14,23 @@ type meeting struct{
 }
 
 func (m *meeting) getMeeting(db *sql.DB) error{
+	var tempTutorHourId string
+	var tempLabId string
 	query := "SELECT tutorHourId, labId, studentName, studentEmail FROM meetings WHERE id=" + strconv.Itoa(m.Id)
-	return db.QueryRow(query).Scan(&m.tutorHourId, &m.labId, &m.studentName, &m.studentEmail)
+	err := db.QueryRow(query).Scan(&tempTutorHourId, &tempLabId, &m.StudentName, &m.StudentEmail)
+	m.TutorHourId, err = strconv.Atoi(tempTutorHourId)
+	m.LabId, err = strconv.Atoi(tempLabId)
+	return err
 }
 
 func (m *meeting) updateMeeting(db *sql.DB) error{
-	query := "Update `meetings` SET `tutorHourId` = '"+m.tutorHourId+"', `labId` = '"+m.labId+"', `studentName` = '"+m.studentName+"', `studentEmail` = '"+studentEmail+"' WHERE `meetings`.`id` ="+strconv.Itoa(m.Id)+""
+	query := "Update `meetings` SET `tutorHourId` = '"+strconv.Itoa(m.TutorHourId)+"', `labId` = '"+strconv.Itoa(m.LabId)+"', `studentName` = '"+m.StudentName+"', `studentEmail` = '"+m.StudentEmail+"' WHERE `meetings`.`id` ="+strconv.Itoa(m.Id)+""
 	_, err := db.Exec(query)
 	return err
 }
 
 func (m *meeting) createMeeting(db *sql.DB) error{
-	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+m.tutorHourId+"', '"+m.labId+"', '"+m.studentName+"', '"+m.studentEmail"')"
+	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+strconv.Itoa(m.TutorHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"');"
 	err := db.QueryRow(query)
 
 	if err != nil{

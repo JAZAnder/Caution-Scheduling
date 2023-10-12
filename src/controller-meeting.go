@@ -32,15 +32,38 @@ func (a *App) getMeeting(w http.ResponseWriter, r *http.Request){
 }
 
 func (a *App) createMeeting(w http.ResponseWriter, r *http.Request){
+	var m meeting
+	var err error
+
+	m.TutorHourId, err = strconv.Atoi(r.PostFormValue("tutorHourId"))
+	m.LabId, err = strconv.Atoi(r.PostFormValue("labId")) 
+	m.StudentName = r.PostFormValue("studentName")
+	m.StudentEmail = r.PostFormValue("studentEmail")
+	if err != nil || len(m.StudentName) <= 0 || len(m.StudentEmail) <= 0{
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	err = m.createMeeting(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+
+	respondWithJSON(w, http.StatusCreated, m)
+}
+
+func (a *App) getMeetings(w http.ResponseWriter, r *http.Request){
 	var c sessionCookie
 
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
 			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			
 			return
-		}
-		else {
+		} else {
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -49,48 +72,22 @@ func (a *App) createMeeting(w http.ResponseWriter, r *http.Request){
 	c.Cookie = cookie.Value
 
 	currentUser, err := c.checkSession(a.DB)
-	if err != nil{
-		if err == sql.ErrNoRows{
-			respondWithError(w, http.StatusUnauthorized, "Session expired")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
-		}
-		else{
+		} else {
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
-	if !currentUser.IsAdmin{
-		fmt.Println{"	Fail : Meeting not created by " + currentUser.UserName + " : " + "Not an Admin"}
+	if !currentUser.IsAdmin {
+		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Not an Admin")
 		respondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
-
-	var m meeting
-	m.TutorHourId = r.PostFormValue("tutorHourId")
-	m.LabId = r.PostFormValue("labId")
-	m.StudentName = r.PostFormValue("studentNmae")
-	m.StudentEmail = r.PostFormValue("studentEmail")
-
-	if len(m.TutorHourId) <= 0 || len(m.LabId) <= 0 || len(m.StudentName) <= 0 || len(m.StudentEmail) <= 0{
-		fmt.Println("	Fail : Meeting not created by " + currentUser.UserName + " : " + "Invalid request payload")
-		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
-		return
-	}
-
-	err = m.createMeeting(a.DB)
-	if err != nil {
-		fmt.Println("	Fail : Meeting not created by " + currentUser.UserName +" : "+ err.Error())
-		respondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	fmt.Println("	Meeting created by " + currentUser.UserName)
-
-	respondWithJSON(w, http.StatusCreated, m)
-}
-
-func (a *App) getMeetings(w http.ResponseWriter, r *http.Request){
+	
 	meetings, err := getMeetings(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -99,7 +96,7 @@ func (a *App) getMeetings(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, meetings)
 }
 
-func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
+func (a *App) deleteMeeting(w http.ResponseWriter, r *http.Request){
 	var c sessionCookie
 
 	cookie, err := r.Cookie("key")
@@ -107,8 +104,7 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 		if errors.Is(err, http.ErrNoCookie){
 			respondWithError(w, http.StatusUnauthorized, "Cookie not found")
 			return
-		}
-		else{
+		}else{
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -121,14 +117,13 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 		if err == sql.ErrNoRows{
 			respondWithError(w, http.StatusUnauthorized, "Session expired")
 			return
-		}
-		else{
+		}else{
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
 	}
 
 	if !currentUser.IsAdmin{
-		fmt.Println("	Fail : Meeting not deleted by " + curresntUser.UserName + " : " + "Not an Admin")
+		fmt.Println("	Fail : Meeting not deleted by " + currentUser.UserName + " : " + "Not an Admin")
 		respondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
@@ -140,9 +135,9 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	m := meeting{Id: id}
-	if err := h.deleteMeeting(a.DB); err != nil{
+	if err := m.deleteMeeting(a.DB); err != nil{
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusOk, map[string]string{"result": "success"})
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
