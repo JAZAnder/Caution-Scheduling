@@ -1,6 +1,13 @@
 # Caution-Scheduling
 
+## What is Caution-Scheduling
+
+## How to Start Caution-Scheduling
+
+## How to Use Caution-Scheduling
+
 ## Files not Included
+
 ```.env```
 
 This should be placed in the root directory, and be layed out as such. 

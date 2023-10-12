@@ -6,6 +6,7 @@ async function login(){
         document.getElementById("password").value = ""
         document.getElementById("error").innerHTML = data['error']
         console.log("Login Fail")
+        alert("Wrong Username or Password")
     }else{
         document.getElementById("username").value = ""
         document.getElementById("password").value = ""
