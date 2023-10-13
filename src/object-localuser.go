@@ -64,3 +64,30 @@ func (u *localUser) signUp(db *sql.DB) error {
 
 	return nil
 }
+
+func getLusers(db *sql.DB, isAdmin bool) ([]localUser, error) {
+	rows, err := db.Query("SELECT * FROM `localusers`")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	lusers := []localUser{}
+
+	for rows.Next() {
+		var u localUser
+		var uAdmin string
+		if err := rows.Scan(&u.UserName, &u.FirstName, &u.LastName, &u.Email, &u.Password, &uAdmin); err != nil {
+			return nil, err
+		}
+		u.Password = "REDACTED"
+		u.IsAdmin, _ = strconv.ParseBool(uAdmin)
+		if (!isAdmin) {
+			u.IsAdmin = false
+		}
+		lusers = append(lusers, u)
+	}
+	return lusers, nil
+}

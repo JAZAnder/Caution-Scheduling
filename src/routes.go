@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	//"github.com/gorilla/mux"
 	//"github.com/gin-gonic/gin"
@@ -31,6 +30,7 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/login", a.loginLocalUser).Methods("POST")
 	a.Router.HandleFunc("/api/luser/whoami", a.whoami).Methods("GET")
 	a.Router.HandleFunc("/api/luser/logout", a.logoutLocalUser).Methods("DELETE")
+	a.Router.HandleFunc("/api/lusers", a.getAllUsers).Methods("GET")
 	
 }
 
@@ -53,7 +53,6 @@ func (a *App) staticRoutes(){
 	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
 	a.Router.PathPrefix("/assets/").Handler(fs)
 
-	fmt.Print("Adding Static Routes")
 
     // Serve the homepage when the root URL ("/") is accessed
 	rf := http.StripPrefix("/", http.FileServer(http.Dir("./pages/")))

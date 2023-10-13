@@ -14,7 +14,6 @@ func (a *App) isLoggedIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithError(w, http.StatusUnauthorized, "Not Logged In")
-
 }
 
 func (a *App) whoami(w http.ResponseWriter, r *http.Request) {
@@ -167,6 +166,28 @@ func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 	return
+}
+
+func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request){
+	var c sessionCookie
+	isAdmin := false
+	cookie, err := r.Cookie("key")
+	if err == nil {
+		c.Cookie = cookie.Value
+		currentUser, err := c.checkSession(a.DB)
+		if err == nil {
+			isAdmin = currentUser.IsAdmin
+		}
+	}
+
+	Users, err := getLusers(a.DB, isAdmin)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+
+	respondWithJSON(w, http.StatusOK, Users)
 }
 
 func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
