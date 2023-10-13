@@ -61,6 +61,42 @@ function userOptionsForEach(item){
 
     options.add(option)
 }
+
+async function hourOptions(){
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+    data = await hour_getAll()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(hourOptionsForEach)
+}
+
+function hourOptionsForEach(item){
+    const optionInfo = new hour(item)
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.startTime + " - " + optionInfo.endTime
+    option.value = optionInfo.id
+
+    options.add(option)
+}
+
+async function scheduleMeeting(){
+    tutorHourId = 0
+    labId = document.getElementById("hourId-Select").value
+    studentName = document.getElementById("Name").value
+    studentEmail = document.getElementById("email").value
+    data = await meeting_create(tutorHourId, labId, studentName, studentEmail)
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        alert("Error : "+data['error'])
+    }else{
+        alert("Meeting Sceduled!!")
+    }
+}
 // Load the readOnlyTable.html into the 'readOnlyTable' div
 importElements('readOnlyTable', './assets/elements/readOnlyTable.html');
 
