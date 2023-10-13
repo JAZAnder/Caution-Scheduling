@@ -40,6 +40,27 @@ function addLabForEach(item){
     options.add(option)
 }
 
+async function userOptions(){
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+    data = await user_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(userOptionsForEach)
+}
+
+function userOptionsForEach(item){
+    const optionInfo = new luser(item)
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.firstName + " " + optionInfo.lastName
+    option.value = optionInfo.username
+
+    options.add(option)
+}
 // Load the readOnlyTable.html into the 'readOnlyTable' div
 importElements('readOnlyTable', './assets/elements/readOnlyTable.html');
 
