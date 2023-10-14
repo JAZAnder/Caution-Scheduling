@@ -19,7 +19,15 @@
 
         <!--Objects-->
         <script src="../../assets/objects/localusers.js"></script>
+        <script src="../../assets/objects/hour.js"> </script>
+        <script src="../../assets/objects/meeting.js"> </script>
         
+
+        <style>
+            table, th, td {
+                border: 1px solid;
+            }
+        </style>
     </head>
     <body>
         <script>checkLogin()</script>
@@ -35,14 +43,15 @@
             </div>
         </div>
         <div class="row">
+            <div id="error"></div>
             <div class="col-lg-3">
                 <div>
                     <h2>Create New User</h2>
-                    <div><label for="userName">userName</label><input type="text" id="userName"></div>
-                    <div><label for="firstName">firstName</label><input type="text" id="firstName"></div>
-                    <div><label for="lastName">lastName</label><input type="text" id="lastName"></div>
-                    <div><label for="email">email</label><input type="text" id="email"></div>
-                    <div><label for="password">password</label><input type="password" id="password"></div>
+                    <div><label for="userName">Username</label><input type="text" id="userName"></div>
+                    <div><label for="firstName">First Name</label><input type="text" id="firstName"></div>
+                    <div><label for="lastName">Last Name</label><input type="text" id="lastName"></div>
+                    <div><label for="email">Email</label><input type="text" id="email"></div>
+                    <div><label for="password">Password</label><input type="password" id="password"></div>
                     <div>
                         <p>Is Admin</p>
                         <label for="isAdminTrue">True</label>
@@ -50,18 +59,19 @@
                         <label for="isAdminFalse">False</label>
                         <input type="radio" name="isAdmin" id="isAdminFalse" value="False">
                     </div>
-                    <button>Create New User</button>
+                    <button onclick="createUser()">Create New User</button>
                 </div>
                 <div>
                     <h2>Create New Time Slot</h2>
                     <div><label for="StartTime">StartTime</label><input type="text" id="StartTime"></div>
                     <div><label for="EndTime">EndTime</label><input type="text" id="EndTime"></div>
-                    <button>Create Time Slot</button>
+                    <button onclick="createHour()">Create Time Slot</button>
                 </div>
             </div>
             <div class="col-lg-9">
                 <h2>Meetings</h2>
-                <table>
+                <table id="meeting-table">
+                    <script>populateMeetings()</script>
                     <tr>
                         <th>Id</th>
                         <th>studentName</th>
@@ -73,19 +83,21 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <h3>Users</h3>
-                        <table>
+                        <table id="users-Table">
+                            <script>populateUsers()</script>
                             <tr>
-                                <th>userName</th>
-                                <th>firstName</th>
-                                <th>lastName</th>
-                                <th>email</th>
-                                <th>isAdmin</th>
+                                <th> userName </th>
+                                <th> firstName </th>
+                                <th> lastName </th>
+                                <th> email </th>
+                                <th> isAdmin </th>
                             </tr>
                         </table>
                     </div>
                     <div class="col-lg-6">
                         <h3>Time Slots</h3>
-                        <table>
+                        <table id="time-table">
+                            <script>populateTime()</script>
                             <tr>
                                 <th>Id</th>
                                 <th>startTime</th>
