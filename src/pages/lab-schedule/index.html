@@ -1,37 +1,91 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <!-- Page Settings -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
+    <head>
+        <!-- Page Settings -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
 
-    <!-- CSS Stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <!-- Include your other CSS files -->
+        <!-- CSS Stylesheets -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../src/pages/index.css">
+        <!-- Include your other CSS files -->
 
-    <!-- JavaScript Imports -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!-- JavaScript Imports -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <!-- Your JavaScript files -->
-    <script src="../index.js"></script>
-</head>
-<body>
+        <!-- Your JavaScript files -->
+        <script src="../index.js"></script>
+        <script src="../../assets/scripts.js"></script>
+        <script src="./lab-schedule.js"></script>
 
-<!-- Include the reusable read-only table element (readOnlyTable.html) -->
-<div id="readOnlyTable"></div>
+    </head>
 
-<!-- Your content -->
-<div id="body" class="container-fluid text-center">
-    <h1>Welcome to My Page</h1>
-    <!-- Your page content goes here -->
-</div>
+    <body>
 
-    <div class="backGround">
-        <div id="readOnlyTable"><script>importElements("readOnlyTable", "../assets/elements/readOnlyTable.html")</script></div>
+        <!-- Your content -->
+        <div class="backGround">
+            <h1>Lab Schedule</h1>
+            <br><br>
+            <!-- Your page content goes here -->
+            <div id="body" class="container-fluid text-center">
+                <table class="table table-bordered table-striped" >
+                    <thead>
+                        <tr>
+                            <th>Hours</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>GO HOME</th>
+                            <!-- Add more headers as needed -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data 1</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <!-- Add more data cells as needed -->
+                        </tr>
+                        <tr><td>Data 2</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td></tr>
+                
+                                <tr><td>Data 3</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td></tr>
 
-
-       
-    </div>
-</body>
+                                    <tr><td>Data 4</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td>
+                                    <td>Tutors</td></tr>                
+                                    
+                                    <tr><td>Data 5</td>
+                                        <td>Tutors</td>
+                                        <td>Tutors</td>
+                                        <td>Tutors</td>
+                                        <td>Tutors</td>
+                                        <td>Tutors</td></tr>                     
+                              
+                        <!-- Add more rows of data as needed -->
+                    </tbody>
+                </table>
+                <br>
+            </div>
+        
+        </div>      
+  
+    </body>
 </html>

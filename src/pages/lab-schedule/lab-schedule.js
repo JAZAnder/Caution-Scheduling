@@ -17,9 +17,5 @@ function createTable(rows, columns) {
     return table;
 }
 
-// Create the table
-const tableElement = createTable(5, 9);
+importElements('readOnlyTable', './assets/elements/readOnlyTable.html');
 
-// Append the table to a container div with the id 'table-container'
-const container = document.getElementById('table-container');
-container.appendChild(tableElement);
