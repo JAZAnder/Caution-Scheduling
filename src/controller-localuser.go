@@ -86,7 +86,10 @@ func (a *App) createLocalUser(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
-
+	if ( illegalString(u.UserName) || len(u.Password) <= 0 || illegalString(u.FirstName) || illegalString(u.LastName) || illegalString(u.Email)){
+		respondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
+		return
+	}
 	err = u.signUp(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())

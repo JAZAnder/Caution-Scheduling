@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"github.com/gorilla/mux"
 	"net/http"
-	_ "github.com/go-sql-driver/mysql"
 	"os"
+	"strings"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
 
 type App struct {
@@ -74,4 +76,10 @@ func checkDatabase(db *sql.DB){
 
 		}
 	}
+}
+
+func illegalString(test string) bool{
+	if(len(test) <= 0){return true}
+	if(strings.ContainsAny(test, "/\\-;<>'\"\b\n\r\t%_")){return true}
+	return false
 }

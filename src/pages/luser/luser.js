@@ -51,7 +51,6 @@ async function createHour(){
 
     data = await hour_create(StartTime, EndTime)
 
-    data = await user_logout()
     if(data['error']){
         console.log("Logout Error :"+ data['error'])
         document.getElementById("error").innerHTML = data['error']
