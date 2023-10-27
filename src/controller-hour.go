@@ -70,7 +70,7 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 	h.StartTime = r.PostFormValue("startTime")
 	h.EndTime = r.PostFormValue("endTime")
 
-	if len(h.StartTime) <= 0 || len(h.EndTime) <= 0 {
+	if illegalString(h.StartTime) ||illegalString(h.EndTime){
 		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Invalid request payload")
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
