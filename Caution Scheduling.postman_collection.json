@@ -247,6 +247,196 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "All Users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Reset My Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "admin2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/luser/resetmypasswd",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"luser",
+								"resetmypasswd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset My Password Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "admin2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/luser/resetmypasswd",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"luser",
+								"resetmypasswd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "hours",
+			"item": [
+				{
+					"name": "Create hour",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "/api/hour",
+							"path": [
+								"api",
+								"hour"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Lab",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/hour/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hour",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Remove hour",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/hour/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"hour",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "meetings",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get Meeting",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/meeting/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"meeting",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Remove",
+					"request": {
+						"method": "DELETE",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
