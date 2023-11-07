@@ -219,3 +219,10 @@ func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
 	return currentUser.IsAdmin, nil
 
 }
+
+func (a *App) changePassword(w http.ResponseWriter, r *http.Request){
+	//TODOAdd-Change-Password
+}
+func (a *App) resetPassword(w http.ResponseWriter, r *http.Request){
+	//TODOAdd-Reset-Password(Admin)
+}
