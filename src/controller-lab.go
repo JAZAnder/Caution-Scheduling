@@ -110,3 +110,11 @@ func (a *App) deleteLab(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
+
+func openLabTimeSlot(){
+	//TODOAdds-labhour(Requires-Admin)
+}
+
+func removeLabTimeSlot(){
+	//TODOAdds-labhour(Requires-Admin)
+}
