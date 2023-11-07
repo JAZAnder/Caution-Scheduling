@@ -221,8 +221,94 @@ func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
 }
 
 func (a *App) changePassword(w http.ResponseWriter, r *http.Request){
-	//TODOAdd-Change-Password
+	var c sessionCookie
+	var u localUser
+	cookie, err := r.Cookie("key")
+
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+	c.Cookie = cookie.Value
+	user, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	u.UserName = user.UserName
+	u.Password = r.PostFormValue("oldPassword")
+	err = u.login(a.DB)
+	
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Password is Incorrect")
+		return
+	}
+
+	u.Password = r.PostFormValue("newPassword")
+	u.changePassword(a.DB)
+
+	respondWithJSON(w, http.StatusCreated, "Password Changed")
+	return
+	
 }
 func (a *App) resetPassword(w http.ResponseWriter, r *http.Request){
-	//TODOAdd-Reset-Password(Admin)
+	var c sessionCookie
+	var u localUser
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		return
+	}
+
+	u.UserName = r.PostFormValue("UserName")
+	u.Password = r.PostFormValue("password")
+	u.changePassword(a.DB)
+	respondWithJSON(w, http.StatusCreated, "Password Changed")
+	return
+}
+func (a *App) addTime(){
+	//TODOAdds-Time-Userhour
+}
+func (a *App) addTimeAdmin(){
+	//TODOAdds-Time-To-User
+}
+func (a *App) removeTime(){
+	//TODORemove-Time-Userhour
+}
+func (a *App) removeTimeAdmin(){
+	//TODORemoved-Time-To-User
 }

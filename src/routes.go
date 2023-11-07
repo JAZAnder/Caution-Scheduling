@@ -31,6 +31,8 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/whoami", a.whoami).Methods("GET")
 	a.Router.HandleFunc("/api/luser/logout", a.logoutLocalUser).Methods("DELETE")
 	a.Router.HandleFunc("/api/lusers", a.getAllUsers).Methods("GET")
+	a.Router.HandleFunc("/api/luser/resetmypasswd",a.changePassword).Methods("PUT")
+	a.Router.HandleFunc("/apu/luser/resetpasswd", a.resetPassword).Methods("PUT")
 	
 }
 
