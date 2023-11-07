@@ -193,10 +193,10 @@ func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, Users)
 }
 
-func (a *App) isAdmin(r *http.Request, name string) (bool, error) {
+func (a *App) isAdmin(r *http.Request) (bool, error) {
 	var c sessionCookie
 
-	cookie, err := r.Cookie(name)
+	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
 			return false, errors.New("Cookie not Found")
