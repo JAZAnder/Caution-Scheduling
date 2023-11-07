@@ -36,14 +36,14 @@ func (lh *labHour) createLabTimeSlot (db *sql.DB) error{
 	return nil
 }
 
-func (lh *labHour) deleteLabTimeSlot (db *sql.DB) error{
-	query := "DELETE FROM `labHours` WHERE `labs`.`Id` WHERE `Id` = '"+strconv.Itoa(lh.LabId)+"'"
+func (lh *labHour) deleteLabTimeSlot(db *sql.DB) error{
+	query := "DELETE FROM `labHours` WHERE `Id` = '"+strconv.Itoa(lh.LabId)+"'"
 	_, err := db.Exec(query)
 	fmt.Println(query)
 	return err
 }
 
-func (lh *labHour) changeTutor (db *sql.DB) error{
+func (lh *labHour) changeTutor(db *sql.DB) error{
 	query := "UPDATE `labHours` SET `TutorId` = '"+strconv.Itoa(lh.UserHourId) +"'WHERE `Id` = '"+strconv.Itoa(lh.LabId)+"'"
 	_, err := db.Exec(query)
 	fmt.Println(query)
