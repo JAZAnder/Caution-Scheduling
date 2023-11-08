@@ -32,7 +32,9 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/logout", a.logoutLocalUser).Methods("DELETE")
 	a.Router.HandleFunc("/api/lusers", a.getAllUsers).Methods("GET")
 	a.Router.HandleFunc("/api/luser/resetmypasswd",a.changePassword).Methods("PUT")
-	a.Router.HandleFunc("/api/luser/resetpasswd", a.resetPassword).Methods("PUT")
+	a.Router.HandleFunc("/api/luser/admin/resetpasswd", a.resetPassword).Methods("PUT")
+	a.Router.HandleFunc("/api/luser/timeslot", a.addTime).Methods("POST")
+	
 	a.Router.HandleFunc("/api/tutor/availability/{username}", a.getluserAvalibleTime).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/hours/{username}",a.getluserTime).Methods("GET")
 }
