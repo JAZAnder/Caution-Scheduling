@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 
 	//"fmt"
 	"net/http"
@@ -109,4 +110,74 @@ func (a *App) deleteLab(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+}
+
+func (a *App) openLabTimeSlot(w http.ResponseWriter, r *http.Request){
+	var lh labHour
+	var uh userHour
+	var c sessionCookie
+	var err error
+	vars := mux.Vars(r)
+
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Not an Admin")
+		return
+	}
+
+
+	lh.LabId, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid lab Id")
+		return
+	}
+	
+
+	lh.HourId, err = strconv.Atoi(r.PostFormValue("hourId"))
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid Timeslot")
+		return
+	}
+
+	uh.HourId = lh.HourId
+	uh.Tutor = r.PostFormValue("TutorName")
+
+	err = uh.getUserHourId(a.DB)
+
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "This User cannot be sceduled at this Time")
+		return
+	}
+	lh.UserHourId = uh.Id
+	lh.createLabTimeSlot(a.DB);
+	respondWithJSON(w, http.StatusCreated, lh)
+	return 
+
+}
+
+func removeLabTimeSlot(){
+	//TODOAdds-labhour(Requires-Admin)
 }

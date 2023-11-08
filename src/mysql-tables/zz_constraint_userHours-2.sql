@@ -1,0 +1,4 @@
+ ALTER TABLE `userHours` 
+ ADD CONSTRAINT `HourId -> hour.Id` 
+ FOREIGN KEY (`hourId`) REFERENCES `hours`(`Id`) 
+ ON DELETE RESTRICT ON UPDATE RESTRICT;

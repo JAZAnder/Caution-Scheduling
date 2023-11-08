@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"strconv"
 	//"errors"
 )
@@ -14,23 +15,27 @@ type lab struct {
 
 func (l *lab) getLab(db *sql.DB) error {
 	query := "SELECT name, location FROM labs WHERE id=" + strconv.Itoa(l.Id)
+	fmt.Println(query)
 	return db.QueryRow(query).Scan(&l.Name, &l.Location)
 }
 
 func (l *lab) updateLab(db *sql.DB) error {
 	query := "UPDATE `labs` SET `name` = '"+l.Name+"', `location`='"+l.Location+"' WHERE `labs`.`id`="+strconv.Itoa(l.Id)+""
+	fmt.Println(query)
 	_, err := db.Exec(query)
 	return err
 }
 
 func (l *lab) deleteLab(db *sql.DB) error {
 	query := "DELETE FROM `labs` WHERE `labs`.`Id`="+strconv.Itoa(l.Id)+""
+	fmt.Println(query)
 	_, err := db.Exec(query)
 	return err
 }
 
 func (l *lab) createLab(db *sql.DB) error {
 	query := "INSERT INTO `labs` (`name`, `location`) VALUES ('" + l.Name + "','" + l.Location + "')"
+	fmt.Println(query)
 	err := db.QueryRow(query)
 
 	if err != nil {

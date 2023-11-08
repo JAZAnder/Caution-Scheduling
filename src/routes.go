@@ -23,6 +23,7 @@ func (a *App) labRoutes(){
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.getLab).Methods("GET")
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.updateLab).Methods("PUT")
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.deleteLab).Methods("DELETE")
+	a.Router.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", a.openLabTimeSlot).Methods("POST")
 }
 
 func (a *App) userRoutes(){
@@ -31,7 +32,12 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/whoami", a.whoami).Methods("GET")
 	a.Router.HandleFunc("/api/luser/logout", a.logoutLocalUser).Methods("DELETE")
 	a.Router.HandleFunc("/api/lusers", a.getAllUsers).Methods("GET")
-	
+	a.Router.HandleFunc("/api/luser/resetmypasswd",a.changePassword).Methods("PUT")
+	a.Router.HandleFunc("/api/luser/admin/resetpasswd", a.resetPassword).Methods("PUT")
+	a.Router.HandleFunc("/api/luser/timeslot", a.addTime).Methods("POST")
+	a.Router.HandleFunc("/api/luser/admin/timeslot", a.addTimeAdmin).Methods("POST")
+	a.Router.HandleFunc("/api/tutor/availability/{username}", a.getluserAvalibleTime).Methods("GET")
+	a.Router.HandleFunc("/api/tutor/hours/{username}",a.getluserTime).Methods("GET")
 }
 
 func (a *App) hourRoutes(){

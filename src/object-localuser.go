@@ -91,3 +91,18 @@ func getLusers(db *sql.DB, isAdmin bool) ([]localUser, error) {
 	}
 	return lusers, nil
 }
+
+func (u *localUser) changePassword(db *sql.DB)error{
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
+	if err != nil {
+		return err; 
+	}
+	query := "UPDATE `localusers` SET `password` = '"+string(hashedPassword)+"'WHERE `userName` = '"+u.UserName+"';"
+	sqlerr := db.QueryRow(query) 
+
+	if sqlerr != nil {
+		return sqlerr.Err()
+	}
+
+	return nil
+}
