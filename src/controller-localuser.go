@@ -302,8 +302,49 @@ func (a *App) resetPassword(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusCreated, "Password Changed")
 	return
 }
-func (a *App) addTime(){
-	//TODOAdds-Time-Userhour
+func (a *App) addTime(w http.ResponseWriter, r *http.Request){
+	var c sessionCookie
+	var uh userHour
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	uh.Tutor = currentUser.UserName
+	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId")) 
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		return
+	}
+
+	err = uh.createUserHour(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	uh.Available = true
+	
+	respondWithJSON(w, http.StatusCreated, uh)
+
 }
 func (a *App) addTimeAdmin(){
 	//TODOAdds-Time-To-User
