@@ -12,6 +12,46 @@
 			"name": "labs",
 			"item": [
 				{
+					"name": "Admin Options",
+					"item": [
+						{
+							"name": "Add Time Slot",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "hourId",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "TutorName",
+											"value": "jcantu",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/lab/timeslot/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"lab",
+										"timeslot",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get All Labs",
 					"request": {
 						"method": "GET",
@@ -50,25 +90,24 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Envoc2",
+									"value": "CoolPlace",
 									"type": "text"
 								},
 								{
 									"key": "location",
-									"value": "CMPS 20262",
+									"value": "Over there",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/lab/{{id}}",
+							"raw": "{{base_url}}/api/lab",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"lab",
-								"{{id}}"
+								"lab"
 							]
 						}
 					},
@@ -91,14 +130,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/lab/{{id}}",
+							"raw": "{{base_url}}/api/lab/4",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"lab",
-								"{{id}}"
+								"4"
 							],
 							"query": [
 								{
@@ -121,25 +160,25 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Fayard Lounge",
+									"value": "Fayard ",
 									"type": "text"
 								},
 								{
 									"key": "location",
-									"value": "Fayard 125",
+									"value": "Fayard 126",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/lab/{{id}}",
+							"raw": "{{base_url}}/api/lab/4",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"lab",
-								"{{id}}"
+								"4"
 							]
 						}
 					},
@@ -151,14 +190,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/lab/{{id}}",
+							"raw": "{{base_url}}/api/lab/3",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"lab",
-								"{{id}}"
+								"3"
 							]
 						}
 					},
@@ -170,22 +209,238 @@
 			"name": "localUsers",
 			"item": [
 				{
-					"name": "Create User",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/luser",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"luser"
-							]
+					"name": "Admin Options",
+					"item": [
+						{
+							"name": "Create User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "userName",
+											"value": "Stevie3",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "Jow",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "Steve",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "admin@example.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "admin",
+											"type": "text"
+										},
+										{
+											"key": "isAdmin",
+											"value": "false",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/luser",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset User Password",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "UserName",
+											"value": "alyssa",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "password",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/luser/admin/resetpasswd",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"admin",
+										"resetpasswd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Time Slot",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "hourId",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "jcantu",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/luser/admin/timeslot",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"admin",
+										"timeslot"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
+				},
+				{
+					"name": "User Options",
+					"item": [
+						{
+							"name": "whoami",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/luser/whoami",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"whoami"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/luser/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset My Password",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "oldPassword",
+											"value": "admin",
+											"type": "text"
+										},
+										{
+											"key": "newPassword",
+											"value": "admin2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/luser/resetmypasswd",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"resetmypasswd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Time Slot",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "hourId",
+											"value": "8",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/luser/timeslot",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"luser",
+										"timeslot"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "login",
@@ -197,12 +452,12 @@
 							"urlencoded": [
 								{
 									"key": "userName",
-									"value": "Bill",
+									"value": "admin",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "admin",
+									"value": "password",
 									"type": "text"
 								}
 							]
@@ -222,103 +477,58 @@
 					"response": []
 				},
 				{
-					"name": "whoami",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "logout",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/luser/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"luser",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "All Users",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Reset My Password",
-					"request": {
-						"method": "PUT",
 						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "oldPassword",
-									"value": "admin",
-									"type": "text"
-								},
-								{
-									"key": "newPassword",
-									"value": "admin2",
-									"type": "text"
-								}
-							]
-						},
 						"url": {
-							"raw": "{{base_url}}/api/luser/resetmypasswd",
+							"raw": "{{base_url}}/api/lusers",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"luser",
-								"resetmypasswd"
+								"lusers"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Reset My Password Copy",
+					"name": "Get Avalible Time",
 					"request": {
-						"method": "PUT",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "oldPassword",
-									"value": "admin",
-									"type": "text"
-								},
-								{
-									"key": "newPassword",
-									"value": "admin2",
-									"type": "text"
-								}
-							]
-						},
 						"url": {
-							"raw": "{{base_url}}/api/luser/resetmypasswd",
+							"raw": "{{base_url}}/api/tutor/availability/alyssa",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"luser",
-								"resetmypasswd"
+								"tutor",
+								"availability",
+								"alyssa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Time Slots",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tutor/hours/alyssa",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tutor",
+								"hours",
+								"alyssa"
 							]
 						}
 					},
@@ -330,19 +540,61 @@
 			"name": "hours",
 			"item": [
 				{
-					"name": "Create hour",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "/api/hour",
-							"path": [
-								"api",
-								"hour"
-							]
+					"name": "Admin Options",
+					"item": [
+						{
+							"name": "Create hour",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "startTime",
+											"value": "7:00",
+											"type": "text"
+										},
+										{
+											"key": "endTime",
+											"value": "10:00",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/hour",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"hour"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove hour",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/hour/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"hour",
+										"3"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "Get Lab",
@@ -367,24 +619,15 @@
 					"name": "Get All",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Remove hour",
-					"request": {
-						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/hour/1",
+							"raw": "{{base_url}}/api/hours",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"hour",
-								"1"
+								"hours"
 							]
 						}
 					},
@@ -399,15 +642,32 @@
 					"name": "Get All",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/meetings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"meetings"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Get Meeting",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
 						"url": {
 							"raw": "{{base_url}}/api/meeting/2",
 							"host": [
@@ -426,7 +686,42 @@
 					"name": "Create",
 					"request": {
 						"method": "POST",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "tutorHourId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "labId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "studentName",
+									"value": "Joshua Cantu",
+									"type": "text"
+								},
+								{
+									"key": "studentEmail",
+									"value": "joshua@thecantu.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/meeting",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"meeting"
+							]
+						}
 					},
 					"response": []
 				},
@@ -434,7 +729,18 @@
 					"name": "Remove",
 					"request": {
 						"method": "DELETE",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/meeting/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"meeting",
+								"1"
+							]
+						}
 					},
 					"response": []
 				}
