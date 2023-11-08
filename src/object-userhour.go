@@ -16,11 +16,19 @@ type userHour struct {
 func (uh *userHour) getUserHour(db *sql.DB) error{
 	var tempHourId string
 	var tempAvailable string
-	query := "SELECT `Id`, `hourId`, `username`, `available` FROM `userHours` WHERE `Id` = '"+strconv.Itoa(uh.Id) +"'"
-	err := db.QueryRow(query).Scan(&uh.Id, &tempHourId, &uh.Tutor, &tempAvailable)
+	query := "SELECT `hourId`, `username`, `available` FROM `userHours` WHERE `Id` = '"+strconv.Itoa(uh.Id) +"'"
+	err := db.QueryRow(query).Scan(&tempHourId, &uh.Tutor, &tempAvailable)
 	uh.HourId, err = strconv.Atoi(tempHourId)
 	uh.Available, err = strconv.ParseBool(tempAvailable)
 	fmt.Println(query)
+	return err
+}
+
+func (uh *userHour) getUserHourId(db *sql.DB) error{
+	var tempId string
+	query := "SELECT `Id` FROM `userHours` WHERE `username` = '"+uh.Tutor +"' AND `hourId` = '"+strconv.Itoa(uh.HourId)+"'"
+	err := db.QueryRow(query).Scan(&tempId)
+	uh.Id, err = strconv.Atoi(tempId)
 	return err
 }
 
