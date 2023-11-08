@@ -124,7 +124,7 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 		MaxAge:   3600,
 		HttpOnly: false,
 		Secure:   false,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteStrictMode,
 		Path: "/",
 	}
 
@@ -162,7 +162,7 @@ func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
 		MaxAge:   -1,
 		HttpOnly: false,
 		Secure:   false,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteStrictMode,
 		Path: "/",
 	}
 	
