@@ -42,6 +42,15 @@ func (uh *userHour) createUserHour(db *sql.DB)error{
 	return nil
 }
 
+
+func (uh *userHour) deleteUserHourById(db *sql.DB) error{
+	query := "DELETE FROM `userhours` WHERE `Id` = '"+strconv.Itoa(uh.Id)+"';"
+	_, err := db.Exec(query)
+	fmt.Println(query)
+	return err
+}
+
+
 func (uh *userHour) deleteUserHour(db *sql.DB) error{
 	query := "DELETE FROM `userhours` WHERE `hourId` = '"+strconv.Itoa(uh.HourId)+"' AND `username` = '"+uh.Tutor+"'"
 	_, err := db.Exec(query)
