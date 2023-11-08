@@ -48,3 +48,71 @@ func (uh *userHour) deleteUserHour(db *sql.DB) error{
 	fmt.Println(query)
 	return err
 }
+
+func (uh *userHour) getHours(db *sql.DB) ([]userHour, error){
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username`, `available` FROM `userHours` WHERE `username` = '"+uh.Tutor+"'")
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userHours := []userHour{}
+	var tempAva int
+	for rows.Next(){
+		var uh userHour
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor, &tempAva); err != nil{
+			return nil, err
+		}
+		if(tempAva == 1){
+			uh.Available = true
+		}else{
+			uh.Available = false
+		}
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}
+
+func (uh *userHour) getAvailableHours(db *sql.DB) ([]userHour, error){
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `username` = '"+uh.Tutor+"' AND `available` = 1;")
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userHours := []userHour{}
+
+	for rows.Next(){
+		var uh userHour
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor); err != nil{
+			return nil, err
+		}
+		uh.Available = true
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}
+
+
+
+func getUserHours(db *sql.DB) ([]userHour, error){
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username`, `available` FROM `userHours`")
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userHours := []userHour{}
+
+	for rows.Next(){
+		var uh userHour
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor, &uh.Available); err != nil{
+			return nil, err
+		}
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}
