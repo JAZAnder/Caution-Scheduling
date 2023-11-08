@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func (a *App) isLoggedIn(w http.ResponseWriter, r *http.Request) {
@@ -311,4 +313,28 @@ func (a *App) removeTime(){
 }
 func (a *App) removeTimeAdmin(){
 	//TODORemoved-Time-To-User
+}
+func (a *App) getluserTime(w http.ResponseWriter, r *http.Request){
+	var uh userHour
+	vars := mux.Vars(r)
+	uh.Tutor = vars["username"]
+	
+	userHours, err := uh.getHours(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, userHours)
+}
+func (a *App) getluserAvalibleTime(w http.ResponseWriter, r *http.Request){
+	var uh userHour
+	vars := mux.Vars(r)
+	uh.Tutor = vars["username"]
+	
+	userHours, err := uh.getAvailableHours(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, userHours)
 }
