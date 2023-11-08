@@ -133,3 +133,13 @@ function populateMeetingsForEach(item){
     tutorHourId.innerHTML = rowInfo.tutorHourId
 
 }
+
+async function loadNavBar(){
+    const user = new luser(await user_whoami())
+    if(user.isAdmin == true){
+        importElements("navBar", "./admin-zone/header.html")
+    }
+    if(user.isAdmin == false){
+        importElements("navBar", "./user-zone/header.html")
+    }
+}
