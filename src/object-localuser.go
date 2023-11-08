@@ -97,7 +97,7 @@ func (u *localUser) changePassword(db *sql.DB)error{
 	if err != nil {
 		return err; 
 	}
-	query := "UPDATE `localusers` SET `password` = '"+string(hashedPassword)+"';"
+	query := "UPDATE `localusers` SET `password` = '"+string(hashedPassword)+"'WHERE `userName` = '"+u.UserName+"';"
 	sqlerr := db.QueryRow(query) 
 
 	if sqlerr != nil {
