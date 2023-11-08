@@ -1,59 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
 
-<div class="row">
-    <div class="col-lg-1">
-        <img src="../assets/images/caution.jpg" alt="" onload="userOptions()" style="display: none;">
-    </div>
-    <div class="col-lg-5">
-        <div class="row">
-            <div class="col-lg-4">
-                <label for="Name">Your Name</label>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            min-height: 84.5vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .form-group {
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0074cc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Schedule a Meeting</h1>
+        <form>
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="Name" name="Name" placeholder="First Last" class="form-control" required>
             </div>
 
-            <div class="col-lg-8">
-                <input type="text" id="Name" name="Name" placeholder="First Last" class="form-control">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
+            <div class="form-group">
                 <label for="email">Your Email</label>
+                <input type="text" id="email" name="email" placeholder="example@example.com" class="form-control" required>
             </div>
 
-            <div class="col-lg-8">
-                <input type="text" id="email" name="email" placeholder="example@example.com" class="form-control">
+            <div class="form-group">
+                <label for="time">Pick your Time</label>
+                <select name="hourId" id="hourId-Select" class="form-select form-select-lg" required>
+                    <option value="">Select your Time</option>
+                </select>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8">
-                <button onclick="scheduleMeeting()" class="btn btn-primary btn-block">Schedule a Meeting</button>
+
+            <div class="form-group">
+                <label for="tutor">Pick your Tutor</label>
+                <select name="tutorId" id="tutorId-Select" class="form-select form-select-lg" required>
+                    <option value="">Select your Tutor</option>
+                </select>
             </div>
-            <div class="col-lg-2">
-                <img src="../assets/images/caution.jpg" alt="" onload="hourOptions()" style="display: none;">
-            </div>
-            
-        </div>
-            
+
+            <button onclick="scheduleMeeting()" class="btn btn-primary btn-block">Schedule a Meeting</button>
+        </form>
     </div>
-
-
-    <div class="col-lg-5">
-        <div>
-            <label for="tutorId"> Pick your Tutor </label>
-            <select name="tutorId" id="tutorId-Select" class="form-select form-select-lg">
-                <option value="">Select your Tutor</option>
-            </select>
-        </div>
-        <div>
-            <label for="hourId"> Pick your Time </label>
-            <select name="hourId" id="hourId-Select" class="form-select form-select-lg">
-                <option value="">Select your Time</option>
-            </select>
-        </div>
-    </div>
-    <div class="col-lg-1">
-
-    </div>
-</div>
-<div>
-   
-</div>
+</body>
+</html>
