@@ -13,7 +13,7 @@ type labHour struct{
 	UserHourId int `json:"userHourId"`
 }
 
-func (lh *labHour) getLabTimeslot (db *sql.DB) error{
+func (lh *labHour) getLabTimeslot(db *sql.DB) error{
 	var tempLabId string
 	var tempHourId string
 	var tempUserHourId string
@@ -26,7 +26,7 @@ func (lh *labHour) getLabTimeslot (db *sql.DB) error{
 	return err
 }
 
-func (lh *labHour) createLabTimeSlot (db *sql.DB) error{
+func (lh *labHour) createLabTimeSlot(db *sql.DB) error{
 	query := "INSERT INTO `labHours` (`LabId`, `HoursId`, `TutorId`) VALUES ('"+strconv.Itoa(lh.LabId)+"', '"+strconv.Itoa(lh.HourId)+"', '"+strconv.Itoa(lh.UserHourId)+"');"
 	err := db.QueryRow(query)
 	fmt.Println(query)
