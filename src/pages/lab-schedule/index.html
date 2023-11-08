@@ -1,35 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- Page Settings -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta charset="utf-8">
+<head>
+    <!-- Page Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
 
-        <!-- CSS Stylesheets -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../../../src/pages/index.css">
-        <!-- Include your other CSS files -->
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../src/pages/index.css">
+    <!-- Include your other CSS files -->
 
-        <!-- JavaScript Imports -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- JavaScript Imports -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-        <!-- Your JavaScript files -->
-        <script src="../index.js"></script>
-        <script src="../../assets/scripts.js"></script>
-        <script src="./lab-schedule.js"></script>
+    <!-- Your JavaScript files -->
+    <script src="../index.js"></script>
+    <script src="../../assets/scripts.js"></script>
+    <script src="./lab-schedule.js"></script>
 
-    </head>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .backGround {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        #body {
+            flex-grow: 1;
+        }
+        table {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <title>Caution-Scheduling</title>
+</head>
 
-    <body>
+<body>
 
-        <!-- Your content -->
-        <div class="backGround">
-            <h1>Lab Schedule</h1>
-            <br><br>
-            <!-- Your page content goes here -->
-            <div id="body" class="container-fluid text-center">
-                <table class="table table-bordered table-striped" >
+    <!-- Your content -->
+    <div class="backGround">
+        <h1>Lab Schedule</h1>
+        <br><br>
+        <!-- Your page content goes here -->
+        <div id="body" class="container-fluid text-center">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Hours</th>
@@ -51,41 +73,44 @@
                             <td>Tutors</td>
                             <!-- Add more data cells as needed -->
                         </tr>
-                        <tr><td>Data 2</td>
+                        <tr>
+                            <td>Data 2</td>
                             <td>Tutors</td>
                             <td>Tutors</td>
                             <td>Tutors</td>
                             <td>Tutors</td>
-                            <td>Tutors</td></tr>
-                
-                                <tr><td>Data 3</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td></tr>
-
-                                    <tr><td>Data 4</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td>
-                                    <td>Tutors</td></tr>                
-                                    
-                                    <tr><td>Data 5</td>
-                                        <td>Tutors</td>
-                                        <td>Tutors</td>
-                                        <td>Tutors</td>
-                                        <td>Tutors</td>
-                                        <td>Tutors</td></tr>                     
-                              
+                            <td>Tutors</td>
+                        </tr>
+                        <tr>
+                            <td>Data 3</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                        </tr>
+                        <tr>
+                            <td>Data 4</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                        </tr>
+                        <tr>
+                            <td>Data 5</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                            <td>Tutors</td>
+                        </tr>
                         <!-- Add more rows of data as needed -->
                     </tbody>
                 </table>
-                <br>
             </div>
-        
-        </div>      
-  
-    </body>
+        </div>
+    </div>
+
+</body>
 </html>
