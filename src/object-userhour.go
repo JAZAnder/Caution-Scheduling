@@ -43,7 +43,7 @@ func (uh *userHour) createUserHour(db *sql.DB)error{
 }
 
 func (uh *userHour) deleteUserHour(db *sql.DB) error{
-	query := "DELETE FROM `userhours` WHERE `Id` = '"+strconv.Itoa(uh.Id)+"'"
+	query := "DELETE FROM `userhours` WHERE `hourId` = '"+strconv.Itoa(uh.HourId)+"' AND `username` = '"+uh.Tutor+"'"
 	_, err := db.Exec(query)
 	fmt.Println(query)
 	return err
