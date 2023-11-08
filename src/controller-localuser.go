@@ -88,7 +88,7 @@ func (a *App) createLocalUser(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
-	if ( illegalString(u.UserName) || len(u.Password) <= 0 || illegalString(u.FirstName) || illegalString(u.LastName) || illegalString(u.Email)){
+	if illegalString(u.UserName) || len(u.Password) <= 0 || illegalString(u.FirstName) || illegalString(u.LastName) || illegalString(u.Email) {
 		respondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
 		return
 	}
@@ -125,7 +125,7 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteStrictMode,
-		Path: "/",
+		Path:     "/",
 	}
 
 	http.SetCookie(w, &cookie)
@@ -134,7 +134,7 @@ func (a *App) loginLocalUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
+func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 	var c sessionCookie
 	cookie, err := r.Cookie("key")
 
@@ -163,17 +163,16 @@ func (a *App) logoutLocalUser(w http.ResponseWriter, r *http.Request){
 		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteStrictMode,
-		Path: "/",
+		Path:     "/",
 	}
-	
-	http.SetCookie(w, &newcookie)
 
+	http.SetCookie(w, &newcookie)
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 	return
 }
 
-func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request){
+func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var c sessionCookie
 	isAdmin := false
 	cookie, err := r.Cookie("key")
@@ -190,7 +189,6 @@ func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 
 	respondWithJSON(w, http.StatusOK, Users)
 }
@@ -222,7 +220,7 @@ func (a *App) isAdmin(r *http.Request) (bool, error) {
 
 }
 
-func (a *App) changePassword(w http.ResponseWriter, r *http.Request){
+func (a *App) changePassword(w http.ResponseWriter, r *http.Request) {
 	var c sessionCookie
 	var u localUser
 	cookie, err := r.Cookie("key")
@@ -251,7 +249,7 @@ func (a *App) changePassword(w http.ResponseWriter, r *http.Request){
 	u.UserName = user.UserName
 	u.Password = r.PostFormValue("oldPassword")
 	err = u.login(a.DB)
-	
+
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Password is Incorrect")
 		return
@@ -262,9 +260,9 @@ func (a *App) changePassword(w http.ResponseWriter, r *http.Request){
 
 	respondWithJSON(w, http.StatusCreated, "Password Changed")
 	return
-	
+
 }
-func (a *App) resetPassword(w http.ResponseWriter, r *http.Request){
+func (a *App) resetPassword(w http.ResponseWriter, r *http.Request) {
 	var c sessionCookie
 	var u localUser
 	cookie, err := r.Cookie("key")
@@ -302,7 +300,7 @@ func (a *App) resetPassword(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusCreated, "Password Changed")
 	return
 }
-func (a *App) addTime(w http.ResponseWriter, r *http.Request){
+func (a *App) addTime(w http.ResponseWriter, r *http.Request) {
 	var c sessionCookie
 	var uh userHour
 	cookie, err := r.Cookie("key")
@@ -330,7 +328,7 @@ func (a *App) addTime(w http.ResponseWriter, r *http.Request){
 	}
 
 	uh.Tutor = currentUser.UserName
-	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId")) 
+	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId"))
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
 		return
@@ -342,24 +340,71 @@ func (a *App) addTime(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	uh.Available = true
-	
+
+	respondWithJSON(w, http.StatusCreated, uh)
+}
+
+func (a *App) addTimeAdmin(w http.ResponseWriter, r *http.Request) {
+	var c sessionCookie
+	var uh userHour
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		return
+	}
+
+	hourId := r.PostFormValue("hourId")
+	uh.HourId, err = strconv.Atoi(hourId)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		return
+	}
+	uh.Tutor = r.PostFormValue("username")
+
+	err = uh.createUserHour(a.DB)
+
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	uh.Available = true
 	respondWithJSON(w, http.StatusCreated, uh)
 
 }
-func (a *App) addTimeAdmin(){
-	//TODOAdds-Time-To-User
-}
-func (a *App) removeTime(){
+func (a *App) removeTime() {
 	//TODORemove-Time-Userhour
 }
-func (a *App) removeTimeAdmin(){
+func (a *App) removeTimeAdmin() {
 	//TODORemoved-Time-To-User
 }
-func (a *App) getluserTime(w http.ResponseWriter, r *http.Request){
+func (a *App) getluserTime(w http.ResponseWriter, r *http.Request) {
 	var uh userHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
-	
+
 	userHours, err := uh.getHours(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -367,11 +412,11 @@ func (a *App) getluserTime(w http.ResponseWriter, r *http.Request){
 	}
 	respondWithJSON(w, http.StatusOK, userHours)
 }
-func (a *App) getluserAvalibleTime(w http.ResponseWriter, r *http.Request){
+func (a *App) getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 	var uh userHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
-	
+
 	userHours, err := uh.getAvailableHours(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
