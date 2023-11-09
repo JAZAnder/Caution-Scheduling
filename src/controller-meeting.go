@@ -31,6 +31,22 @@ func (a *App) getMeeting(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, m)
 }
 
+func (a *App) getMyMeeting(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil{
+		respondWithError(w, http.StatusBadRequest, "Invalid meeting Id")
+		return
+	}
+
+	meetings, err := getMyMeetings(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, meetings)
+}
+
 func (a *App) createMeeting(w http.ResponseWriter, r *http.Request){
 	var m meeting
 	var err error
@@ -94,10 +110,6 @@ func (a *App) getMeetings(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	respondWithJSON(w, http.StatusOK, meetings)
-}
-
-func (a *App) getMyMeetings(w http.ResponseWriter, r *http.Request){
-
 }
 
 func (a *App) deleteMeeting(w http.ResponseWriter, r *http.Request){
