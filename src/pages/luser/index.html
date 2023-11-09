@@ -37,9 +37,24 @@
 <body>
     <script>checkLogin()</script>
 
-    <div id="navBar"><script> loadNavBar()</script></div>
-    <div id="body" class="container-fluid text-center"></div>
-    <div id="footer"><script>importElements("footer", "../assets/elements/footer.html")</script></div>
+    <div id="navBar">
+        <script> loadNavBar()</script>
+    </div>
+    <div id="body" class="container-fluid ">
+        <div class="text-center">
+<h1>Hello <t id="username"></t>,</h1>
+        <h3>Welcome to Caution Scheduling!</h3>
+        <h4>This is your user portal, can veiw your events and change your settings.</h4>
+        <h4>To navigate between pages use the tabs at the top of the page (click the hamberger if on mobile). Along the
+            bottom of the page you will see menus to
+            bring you to differnt areas of the website </h4>
+        </div>
+        
+
+    </div>
+    <div id="footer">
+        <script>importElements("footer", "../assets/elements/footer.html")</script>
+    </div>
     <!-- <div class="container">
         <div class="row">
             <div class="col-lg-3">
