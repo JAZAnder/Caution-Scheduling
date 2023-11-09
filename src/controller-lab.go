@@ -51,7 +51,7 @@ func (a *App) createLab(w http.ResponseWriter, r *http.Request) {
 	l.Location = r.PostFormValue("location")
 	l.Name = r.PostFormValue("name")
 
-	if illegalString(l.Name) || illegalString(l.Location) {
+	if (illegalString(l.Name) || illegalString(l.Location)) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
