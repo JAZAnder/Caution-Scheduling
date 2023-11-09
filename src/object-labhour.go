@@ -13,6 +13,36 @@ type labHour struct{
 	UserHourId int `json:"userHourId"`
 }
 
+func getLabHous(db *sql.DB) ([]labHour, error){
+	var tempLabId string
+	var tempHourId string
+	var tempUserHourId string
+	var tempId string
+
+	rows, err := db.Query("SELECT Id, LabId, HoursId, TutorId FROM `labHours`")
+	if err != nil{
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	labHours := []labHour{}
+
+	for rows.Next(){
+		var lh labHour
+		if err := rows.Scan(&tempId,&tempLabId, &tempHourId, &tempUserHourId); err != nil {
+			return nil, err
+		}
+		lh.Id, err = strconv.Atoi(tempId)
+		lh.LabId, err = strconv.Atoi(tempLabId)
+		lh.HourId, err = strconv.Atoi(tempHourId)
+		lh.UserHourId, err = strconv.Atoi(tempUserHourId)
+
+		labHours = append(labHours, lh)
+	}
+	return labHours, nil
+}
+
 func (lh *labHour) getLabTimeslot(db *sql.DB) error{
 	var tempLabId string
 	var tempHourId string
