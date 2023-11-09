@@ -35,7 +35,7 @@ func (a *App) createMeeting(w http.ResponseWriter, r *http.Request){
 	var m meeting
 	var err error
 
-	m.TutorHourId, err = strconv.Atoi(r.PostFormValue("tutorHourId"))
+	m.UserHourId, err = strconv.Atoi(r.PostFormValue("userHourId"))
 	m.LabId, err = strconv.Atoi(r.PostFormValue("labId")) 
 	m.StudentName = r.PostFormValue("studentName")
 	m.StudentEmail = r.PostFormValue("studentEmail")
@@ -94,6 +94,10 @@ func (a *App) getMeetings(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	respondWithJSON(w, http.StatusOK, meetings)
+}
+
+func (a *App) getMyMeetings(w http.ResponseWriter, r *http.Request){
+
 }
 
 func (a *App) deleteMeeting(w http.ResponseWriter, r *http.Request){
