@@ -143,3 +143,11 @@ async function loadNavBar(){
         importElements("navBar", "./user-zone/header.html")
     }
 }
+async function fillInMyAccount(){
+    const user = new luser(await user_whoami())
+    document.getElementById('headName').innerHTML = user.firstName
+    document.getElementById('userName').innerHTML = user.username
+    document.getElementById('firstName').innerHTML = user.firstName
+    document.getElementById('lastName').innerHTML = user.lastName
+    document.getElementById('emailAddress').innerHTML = user.email
+}
