@@ -5,6 +5,7 @@ const user_login_Url = baseUrl+"/api/luser/login"
 const user_logout_Url = baseUrl+"/api/luser/logout"
 const user_create_Url = baseUrl+"/api/luser"
 const user_getall_Url = baseUrl+"/api/lusers"
+const user_resetpassword_Url = baseUrl+"/api/luser/resetmypasswd"
 
 
 function luser(user){
@@ -96,6 +97,26 @@ async function user_create(userName, firstName, lastName, email, password, isAdm
   };
 
   const result = await fetch(user_create_Url, requestOptions)
+  const data = await result.json();
+  console.log(data)
+  return data
+}
+
+async function user_resetpassword(oldPassword, newPassword){
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  var urlencoded = new URLSearchParams();
+  urlencoded.append("oldPassword", oldPassword);
+  urlencoded.append("newPassword", newPassword);
+  var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow'
+  };
+
+  const result = await fetch(user_resetpassword_Url, requestOptions)
   const data = await result.json();
   console.log(data)
   return data
