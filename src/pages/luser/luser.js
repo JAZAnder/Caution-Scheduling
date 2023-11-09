@@ -151,3 +151,56 @@ async function fillInMyAccount(){
     document.getElementById('lastName').innerHTML = user.lastName
     document.getElementById('emailAddress').innerHTML = user.email
 }
+
+async function resetpassword(){
+    oldPassword = document.getElementById('oldPW').value
+    newPassword = document.getElementById('newPW').value
+    data = await user_resetpassword(oldPassword, newPassword);
+    if(data['error']){
+        console.log("Logout Error :"+ data['error'])
+        alert("Failed to Reset Password")
+        document.getElementById('oldPW').value = ""
+        document.getElementById('newPW').value = ""
+    }else{
+        alert("Password Reset")
+        document.getElementById('oldPW').value = ""
+        document.getElementById('newPW').value = ""
+    }
+}
+
+async function newLab(){
+    labName = document.getElementById('labName').value
+    lablocation = document.getElementById('lablocation').value
+    data = await lab_create(labName, lablocation);
+    if(data['error']){
+        console.log("Creation Errer :"+ data['error'])
+        alert("Failed to Create New Lab")
+    }else{
+        alert("New Lab Created")
+        document.getElementById('labName').value = ""
+        document.getElementById('lablocation').value = ""
+    }
+}
+
+
+async function populateLabs(){
+    data = await lab_getall()
+    
+    data.forEach(populatelabsForEach)
+}
+
+function populatelabsForEach(item){
+    const rowInfo = new lab(item)
+
+    var table = document.getElementById("lab-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var labName = row.insertCell(1);
+    var labLocation = row.insertCell(2);
+
+
+    id.innerHTML = rowInfo.Id
+    labName.innerHTML = rowInfo.name
+    labLocation.innerHTML = rowInfo.labLocation
+}
