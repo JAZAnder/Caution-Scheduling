@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+        <div>
+            <h2>Create a Lab</h2>
+            <div><label for="LabName">Lab Name</label><input type="text" id="labName"></div>
+            <div><label for="lablocation">Lab Location</label><input type="text" id="lablocation"></div>
+            <button type="button" onclick="newLab()" class="btn btn-secondary">Create Lab</button>
+            <hr>
+            <div>
+                <h2>All Labs</h2>
+                <table id="lab-table" class="table table-bordered">
+
+                    <tr>
+                        <th>Id</th>
+                        <th>Lab Name</th>
+                        <th>Lab Location</th>
+                    </tr>
+                </table>
+                <img src="../assets/images/caution.jpg" alt="" onload="populateLabs()" style="display: none;">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div>
+            <div style="height: 25%;">&nbsp;</div>
+            <div class="error"></div>
+            <hr>
+            <center>
+                <div>
+                    <h2>Create New Lab Timeslot</h2>
+                    &nbsp;
+                    <div>
+                        <select name="LabId" id="LabId">
+                            <label for="LabId"> Select Lab</label>
+                            <option value="">Select Lab</option>
+                        </select>
+                    </div>
+                    &nbsp;
+                    <div>
+                        <select name="HoursId" id="HoursId" class="form-select form-select-lg">
+                            <option value="">Select a Timeslot</option>
+                        </select>
+                    </div>
+                    &nbsp;
+                    <div>
+                        <select name="TutorId" id="TutorId" class="form-select form-select-lg">
+                            <option value="">Select a Tutor</option>
+                        </select>
+                    </div>
+                    &nbsp;
+                    <div><button type="button" onclick="" class="btn btn-secondary">Create Time Slot</button></div>
+                </div>
+            </center>
+            
+            <hr>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div>
+            <center><h2>Lab Summaries</h2></center>
+            <table id="labhour-table" class="table table-bordered">
+                <script>populateMeetings()</script>
+                <tr>
+                    <th>Id</th>
+                    <th>Lab Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Tutor on Duty</th>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="col-lg-1"></div>
+</div>
