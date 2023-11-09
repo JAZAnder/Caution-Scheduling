@@ -40,3 +40,16 @@ async function hour_getAll(){
       console.log(data)
       return data
 }
+
+async function hour_getById(Id){
+    url = hour_get_Url + Id
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+    
+      const result = await fetch(url, requestOptions)
+      const data = await result.json();
+      console.log(data)
+      return data
+}

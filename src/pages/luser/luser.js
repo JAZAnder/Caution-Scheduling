@@ -204,3 +204,31 @@ function populatelabsForEach(item){
     labName.innerHTML = rowInfo.name
     labLocation.innerHTML = rowInfo.labLocation
 }
+
+async function populateLabHours(){
+    data = await labHour_getall()
+
+    data.forEach(populateLabHoursForEach)
+}
+async function populateLabHoursForEach(item){
+    const rowInfo = new labHour(item)
+
+    var table = document.getElementById("labhour-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var labName = row.insertCell(1);
+    var StartTime = row.insertCell(2);
+    var EndTime = row.insertCell(3);
+    var Tutor = row.insertCell(4);
+
+    var itemLab = new lab(await lab_getById(item.labId)) 
+    var itemTime = new hour(await hour_getById(item.hourId))
+    var itemUser = new userHour(await userhour_GetById(item.userHourId))
+
+    id.innerHTML = rowInfo.Id
+    labName.innerHTML = itemLab.name
+    StartTime.innerHTML = itemTime.startTime
+    EndTime.innerHTML = itemTime.endTime
+    Tutor.innerHTML = itemUser.tutor
+}
