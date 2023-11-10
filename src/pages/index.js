@@ -56,7 +56,7 @@ function userOptionsForEach(item){
     var options = document.getElementById("tutorId-Select")
     var option = document.createElement("option")
 
-    option.text = optionInfo.firstName + " " + optionInfo.lastName
+    option.text = optionInfo.firstName + "  " + optionInfo.lastName
     option.value = optionInfo.username
 
     options.add(option)

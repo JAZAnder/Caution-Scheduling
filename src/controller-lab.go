@@ -177,7 +177,15 @@ func (a *App) openLabTimeSlot(w http.ResponseWriter, r *http.Request){
 	return 
 
 }
+func (a *App) getAllLabHours(w http.ResponseWriter, r *http.Request) {
+	labhours, err := getLabHous(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	respondWithJSON(w, http.StatusOK, labhours)
+}
 func removeLabTimeSlot(){
 	//TODOAdds-labhour(Requires-Admin)
 }

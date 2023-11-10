@@ -1,5 +1,39 @@
+
 <div>
-    <div class="row">
-        
+    <div>
+    <h3>Users</h3>
+                    <table id="users-Table">
+                        <script>populateUsers()</script>
+                        <tr>
+                            <th> userName </th>
+                            <th> firstName </th>
+                            <th> lastName </th>
+                            <th> email </th>
+                            <th> isAdmin </th>
+                            <th> PASSWORD </th>
+                            <th> Button</th>
+                        </tr>
+                    </table>
+<img src="../../../assets/images/caution.jpg" alt="" onload="populateUsers()" style="display: none;">
+
+</div>
+<div>
+
+    <div>
+        <h2>Create New User</h2>
+        <div><label for="userName">Username</label><input type="text" id="userName"></div>
+        <div><label for="firstName">First Name</label><input type="text" id="firstName"></div>
+        <div><label for="lastName">Last Name</label><input type="text" id="lastName"></div>
+        <div><label for="email">Email</label><input type="text" id="email"></div>
+        <div><label for="password">Password</label><input type="password" id="password"></div>
+        <div>
+            <p>Is Admin</p>
+            <label for="isAdminTrue">True</label>
+            <input type="radio" name="isAdmin" id="isAdminTrue" value="True">
+            <label for="isAdminFalse">False</label>
+            <input type="radio" name="isAdmin" id="isAdminFalse" value="False">
+        </div>
+        <button onclick="createUser()">Create New User</button>
     </div>
+</div>
 </div>

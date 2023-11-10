@@ -204,3 +204,98 @@ function populatelabsForEach(item){
     labName.innerHTML = rowInfo.name
     labLocation.innerHTML = rowInfo.labLocation
 }
+
+async function populateLabHours(){
+    data = await labHour_getall()
+
+    data.forEach(populateLabHoursForEach)
+}
+async function populateLabHoursForEach(item){
+    const rowInfo = new labHour(item)
+
+    var table = document.getElementById("labhour-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var labName = row.insertCell(1);
+    var StartTime = row.insertCell(2);
+    var EndTime = row.insertCell(3);
+    var Tutor = row.insertCell(4);
+
+    var itemLab = new lab(await lab_getById(item.labId)) 
+    var itemTime = new hour(await hour_getById(item.hourId))
+    var itemUser = new userHour(await userhour_GetById(item.userHourId))
+
+    id.innerHTML = rowInfo.Id
+    labName.innerHTML = itemLab.name
+    StartTime.innerHTML = itemTime.startTime
+    EndTime.innerHTML = itemTime.endTime
+    Tutor.innerHTML = itemUser.tutor
+}
+
+async function addLab(){
+    var options = document.getElementById("Lab-Id-Select")
+    var option = document.createElement("option")
+    data = await lab_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(addLabForEach)
+
+}
+function addLabForEach(item){
+    const optionInfo = new lab(item)
+    var options = document.getElementById("Lab-Id-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.name
+    option.value = optionInfo.Id
+
+    options.add(option)
+}
+
+
+async function userOptions(){
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+    data = await user_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(userOptionsForEach)
+}
+
+function userOptionsForEach(item){
+    const optionInfo = new luser(item)
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.firstName + "  " + optionInfo.lastName
+    option.value = optionInfo.username
+
+    options.add(option)
+}
+
+async function hourOptions(){
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+    data = await hour_getAll()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(hourOptionsForEach)
+}
+
+function hourOptionsForEach(item){
+    const optionInfo = new hour(item)
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.startTime + " - " + optionInfo.endTime
+    option.value = optionInfo.id
+
+    options.add(option)
+}
