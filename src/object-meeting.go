@@ -83,49 +83,29 @@ func getMeetings(db *sql.DB) ([]meeting, error){
 	return meetings, nil
 }
 
-// func getMyMeetings(db *sql.DB) ([]meeting, error){
-// 	var c sessionCookie
-//     cookie, err := r.Cookie("key")
-//     if err != nil {
-//         if errors.Is(err, http.ErrNoCookie) {
-//             return
-//         } else {
-//             return
-//         }
-//     }
+func getMyMeetings(db *sql.DB, userName string) ([]meeting, error){
+	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
 
-//     c.Cookie = cookie.Value
+	if err != nil{
+		return nil, err
+	}
 
-//     currentUser, err := c.checkSession(a.DB)
-//     if err != nil {
-//         if err == sql.ErrNoRows {
-//             respondWithError(w, http.StatusUnauthorized, "Session Expired")
-//             return
-//         } else {
-//             respondWithError(w, http.StatusInternalServerError, err.Error())
-//             return
-//         }
-//     } 
+	defer rows.Close()
 
-// 	rows, err := db.Query("SELECT id, userHourId, labId, studentName, studentEmail FROM meetings m join userHours u on m.userHourId = u.id where u.userId = " + currentUser)
+	meetings := []meeting{}
 
-// 	if err != nil{
-// 		return nil, err
-// 	}
+	for rows.Next(){
+		var m meeting
+		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail); err != nil{
+			return nil, err
+		}
+		meetings = append(meetings, m)
+	}
+	return meetings, nil
+}
 
-// 	defer rows.Close()
 
-// 	meetings := []meeting{}
 
-// 	for rows.Next(){
-// 		var m meeting
-// 		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail); err != nil{
-// 			return nil, err
-// 		}
-// 		meetings = append(meetings, m)
-// 	}
-// 	return meetings, nil
-// }
 
 func (m *meeting) deleteMeeting(db *sql.DB) error{
 	query := "DELETE FROM `meetings` WHERE `meetings`.`Id`="+strconv.Itoa(m.Id)+""
