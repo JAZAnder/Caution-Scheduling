@@ -31,22 +31,27 @@
                     <h2>Create New Lab Timeslot</h2>
                     &nbsp;
                     <div>
-                        <select name="LabId" id="LabId">
+                        <select name="Lab-Id-Select" id="Lab-Id-Select">
                             <label for="LabId"> Select Lab</label>
                             <option value="">Select Lab</option>
+                            
                         </select>
+                        <img src="../assets/images/caution.jpg" alt="" onload="addLab()" style="display: none;">
                     </div>
                     &nbsp;
                     <div>
-                        <select name="HoursId" id="HoursId" class="form-select form-select-lg">
+                        <select name="hourId-Select" id="hourId-Select" class="form-select form-select-lg">
                             <option value="">Select a Timeslot</option>
                         </select>
+                        <img src="../assets/images/caution.jpg" alt="" onload="hourOptions()" style="display: none;">
+                        
                     </div>
                     &nbsp;
                     <div>
-                        <select name="TutorId" id="TutorId" class="form-select form-select-lg">
+                        <select name="tutorId-Select" id="tutorId-Select" class="form-select form-select-lg">
                             <option value="">Select a Tutor</option>
                         </select>
+                        <img src="../assets/images/caution.jpg" alt="" onload="userOptions()" style="display: none;">
                     </div>
                     &nbsp;
                     <div><button type="button" onclick="" class="btn btn-secondary">Create Time Slot</button></div>
