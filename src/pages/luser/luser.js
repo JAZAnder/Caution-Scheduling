@@ -8,6 +8,18 @@ async function checkLogin(){
     document.getElementById('username').innerHTML = user.firstName
 }
 
+
+async function loadNavBar(){
+    const user = new luser(await user_whoami())
+    if(user.isAdmin == true){
+        importElements("navBar", "./admin-zone/header.html")
+    }
+    if(user.isAdmin == false){
+        importElements("navBar", "./user-zone/header.html")
+    }
+}
+
+
 async function logout(){
     data = await user_logout()
     if(data['error']){
@@ -86,6 +98,15 @@ function populateUsersForEach(item){
     isAdmin.innerHTML = rowInfo.isAdmin
 }
 
+
+
+
+
+
+
+
+
+//START TIMESLOTS PAGE =======================================================
 async function populateTime(){
     data = await hour_getAll()
     
@@ -107,8 +128,16 @@ function populateTimeForEach(item){
     startTime.innerHTML = rowInfo.startTime
     endTime.innerHTML = rowInfo.endTime
 }
+//END TIMESLOTS PAGE =======================================================
 
 
+
+
+
+
+
+
+//START MEETINGS PAGE =======================================================
 async function populateMeetings(){
     data = await meeting_GetAll()
     
@@ -133,16 +162,16 @@ function populateMeetingsForEach(item){
     tutorHourId.innerHTML = rowInfo.tutorHourId
 
 }
+//END MEETINGS PAGE =======================================================
 
-async function loadNavBar(){
-    const user = new luser(await user_whoami())
-    if(user.isAdmin == true){
-        importElements("navBar", "./admin-zone/header.html")
-    }
-    if(user.isAdmin == false){
-        importElements("navBar", "./user-zone/header.html")
-    }
-}
+
+
+
+
+
+
+
+//START MY ACCOUNT PAGE==================================================
 async function fillInMyAccount(){
     const user = new luser(await user_whoami())
     document.getElementById('headName').innerHTML = user.firstName
@@ -167,7 +196,16 @@ async function resetpassword(){
         document.getElementById('newPW').value = ""
     }
 }
+//END MY ACCOUNT PAGE==================================================
 
+
+
+
+
+
+
+
+//START LAB PAGE =======================================================
 async function newLab(){
     labName = document.getElementById('labName').value
     lablocation = document.getElementById('lablocation').value
@@ -299,3 +337,19 @@ function hourOptionsForEach(item){
 
     options.add(option)
 }
+
+async function createlabHour(){
+    const labId = document.getElementById("Lab-Id-Select").value
+    const timeSlotId = document.getElementById("hourId-Select").value
+    const userName = document.getElementById("tutorId-Select").value
+    data = await labHour_Create(labId, timeSlotId, userName)
+    if(data['error']){
+        console.log("Logout Error :"+ data['error'])
+
+        alert("Failed to Create a new Timeslot\n"+data['error'])
+    }else{
+        alert("New Lab Hours Created, refresh to populate")
+    }
+
+}
+//START END PAGE =======================================================
