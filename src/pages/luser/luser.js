@@ -232,3 +232,70 @@ async function populateLabHoursForEach(item){
     EndTime.innerHTML = itemTime.endTime
     Tutor.innerHTML = itemUser.tutor
 }
+
+async function addLab(){
+    var options = document.getElementById("Lab-Id-Select")
+    var option = document.createElement("option")
+    data = await lab_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(addLabForEach)
+
+}
+function addLabForEach(item){
+    const optionInfo = new lab(item)
+    var options = document.getElementById("Lab-Id-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.name
+    option.value = optionInfo.Id
+
+    options.add(option)
+}
+
+
+async function userOptions(){
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+    data = await user_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(userOptionsForEach)
+}
+
+function userOptionsForEach(item){
+    const optionInfo = new luser(item)
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.firstName + "  " + optionInfo.lastName
+    option.value = optionInfo.username
+
+    options.add(option)
+}
+
+async function hourOptions(){
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+    data = await hour_getAll()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(hourOptionsForEach)
+}
+
+function hourOptionsForEach(item){
+    const optionInfo = new hour(item)
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.startTime + " - " + optionInfo.endTime
+    option.value = optionInfo.id
+
+    options.add(option)
+}
