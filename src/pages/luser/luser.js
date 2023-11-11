@@ -144,7 +144,6 @@ async function populateMeetingsForEach(item){
     tutorName.innerHTML = itemUserHour.tutor
     time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
     location.innerHTML = itemLab.name
-
 }
 //END MEETINGS PAGE =======================================================
 
@@ -415,4 +414,34 @@ function populateUsersForEach(item){
 
 function changeUserPassword(){
 
+}
+
+//START USER MEETINGS
+async function populateMyMeetings(){
+    data = await meeting_GetMine()
+    
+    data.forEach(populateMyMeetingsForEach)
+}
+
+async function populateMyMeetingsForEach(item){
+    const rowInfo = new meeting(item)
+
+    var table = document.getElementById("meeting-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var studentName = row.insertCell(1);
+    var studentEmail = row.insertCell(2);
+    var time = row.insertCell(3);
+    var location = row.insertCell(4);
+
+    var itemLab = new lab(await lab_getById(item.labId)) 
+    var itemUserHour = new userHour(await userhour_GetById(item.userHourId))
+    var itemTime = new hour(await hour_getById(itemUserHour.hourId))
+
+    id.innerHTML = rowInfo.id
+    studentName.innerHTML = rowInfo.studentName
+    studentEmail.innerHTML = rowInfo.studentEmail
+    time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
+    location.innerHTML = itemLab.name
 }

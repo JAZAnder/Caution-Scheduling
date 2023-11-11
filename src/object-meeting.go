@@ -2,7 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
+	//"errors"
 	"strconv"
 )
 
@@ -33,31 +34,32 @@ func (m *meeting) updateMeeting(db *sql.DB) error{
 }
 
 func (m *meeting) createMeeting(db *sql.DB) error{
-	var available bool
-	query := "SELECT `Available` FROM `UserHours` WHERE `userHourId` = " + strconv.Itoa(m.UserHourId)
-	err := db.QueryRow(query).Scan(&available)
+	// var available bool
+	// query := "SELECT `Available` FROM `UserHours` WHERE `userHourId` = " + strconv.Itoa(m.UserHourId)
+	// err := db.QueryRow(query).Scan(&available)
 
-	if err != nil{
-		return err
-	}
+	// if err != nil{
+	// 	return err
+	// }
 	
-	if !available{
-		return errors.New("This tutor is not available for that given time")
-	}
+	// if !available{
+	// 	return errors.New("This tutor is not available for that given time")
+	// }
 
-	query = "INSERT INTO `meetings` (`userHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"');"
+	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"');"
+	fmt.Print(query)
 	errsql := db.QueryRow(query)
 
 	if errsql.Err() != nil{
 		return errsql.Err()
 	}
 
-	query = "UPDATE `UserHours` SET `Available` = 'false' WHERE `userHourId` = " + strconv.Itoa(m.UserHourId)
-	errsql = db.QueryRow(query)
+	// query = "UPDATE `UserHours` SET `Available` = 'false' WHERE `userHourId` = " + strconv.Itoa(m.UserHourId)
+	// errsql = db.QueryRow(query)
 
-	if errsql.Err() != nil{
-		return errsql.Err()
-	}
+	// if errsql.Err() != nil{
+	// 	return errsql.Err()
+	// }
 
 	return nil
 }

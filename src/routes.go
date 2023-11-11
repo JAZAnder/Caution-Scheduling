@@ -55,6 +55,7 @@ func (a *App) meetingRoutes(){
 	a.Router.HandleFunc("/api/meeting/{id:[0-9]+}",a.getMeeting).Methods("GET")
 	a.Router.HandleFunc("/api/meetings", a.getMeetings).Methods("GET")
 	a.Router.HandleFunc("/api/meeting/{id:[0-9]+}",a.deleteMeeting).Methods("DELETE")
+	a.Router.HandleFunc("/api/meetings/mine", a.getMyMeetings).Methods("GET")
 }
 
 func (a *App) staticRoutes(){
