@@ -63,7 +63,7 @@ func (m *meeting) createMeeting(db *sql.DB) error{
 }
 
 func getMeetings(db *sql.DB) ([]meeting, error){
-	rows, err := db.Query("SELECT id, userHourId, labId, studentName, studentEmail FROM meetings")
+	rows, err := db.Query("SELECT `Id`, `tutorHourId`, `labId`, `studentName`, `studentEmail` FROM `meetings`")
 
 	if err != nil{
 		return nil, err
@@ -74,10 +74,17 @@ func getMeetings(db *sql.DB) ([]meeting, error){
 	meetings := []meeting{}
 
 	for rows.Next(){
+		var tempId string
+		var tempuserHourId string
+		var labId string
+
 		var m meeting
-		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail); err != nil{
+		if err := rows.Scan(&tempId, &tempuserHourId, &labId, &m.StudentName, &m.StudentEmail); err != nil{
 			return nil, err
 		}
+		m.Id, err = strconv.Atoi(tempId)
+		m.UserHourId, err = strconv.Atoi(tempuserHourId)
+		m.LabId, err = strconv.Atoi(labId)
 		meetings = append(meetings, m)
 	}
 	return meetings, nil

@@ -73,30 +73,7 @@ async function createHour(){
     }
 }
 
-async function populateUsers(){
-    data = await user_getall()
-    
-    data.forEach(populateUsersForEach)
-}
 
-function populateUsersForEach(item){
-    const rowInfo = new luser(item)
-
-    var table = document.getElementById("users-Table");
-    var row = table.insertRow(1);
-
-    var userName = row.insertCell(0);
-    var firstName = row.insertCell(1);
-    var lastName = row.insertCell(2);
-    var email = row.insertCell(3);
-    var isAdmin = row.insertCell(4);
-
-    userName.innerHTML = rowInfo.username
-    firstName.innerHTML = rowInfo.firstName
-    lastName.innerHTML = rowInfo.lastName
-    email.innerHTML = rowInfo.email
-    isAdmin.innerHTML = rowInfo.isAdmin
-}
 
 
 
@@ -144,7 +121,7 @@ async function populateMeetings(){
     data.forEach(populateMeetingsForEach)
 }
 
-function populateMeetingsForEach(item){
+async function populateMeetingsForEach(item){
     const rowInfo = new meeting(item)
 
     var table = document.getElementById("meeting-table");
@@ -153,13 +130,20 @@ function populateMeetingsForEach(item){
     var id = row.insertCell(0);
     var studentName = row.insertCell(1);
     var studentEmail = row.insertCell(2);
-    var tutorHourId = row.insertCell(3);
+    var tutorName = row.insertCell(3);
+    var time = row.insertCell(4);
+    var location = row.insertCell(5);
 
+    var itemLab = new lab(await lab_getById(item.labId)) 
+    var itemUserHour = new userHour(await userhour_GetById(item.userHourId))
+    var itemTime = new hour(await hour_getById(itemUserHour.hourId))
 
     id.innerHTML = rowInfo.id
     studentName.innerHTML = rowInfo.studentName
     studentEmail.innerHTML = rowInfo.studentEmail
-    tutorHourId.innerHTML = rowInfo.tutorHourId
+    tutorName.innerHTML = itemUserHour.tutor
+    time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
+    location.innerHTML = itemLab.name
 
 }
 //END MEETINGS PAGE =======================================================
@@ -354,6 +338,10 @@ async function createlabHour(){
 }
 //START END PAGE =======================================================
 
+
+
+
+
 //START EMPLOYEE PAGE ======================================== 
 async function createUserHour(){
     const timeSlotId = document.getElementById("hourId-Select").value
@@ -392,3 +380,39 @@ async function loadUserHourForEach(item){
     EndTime.innerHTML = itemTime.endTime
 }
 
+async function populateUsers(){
+    data = await user_getall()
+    
+    data.forEach(populateUsersForEach)
+}
+
+function populateUsersForEach(item){
+    const rowInfo = new luser(item)
+
+    var table = document.getElementById("users-Table");
+    var row = table.insertRow(1);
+
+    var userName = row.insertCell(0);
+    var firstName = row.insertCell(1);
+    var lastName = row.insertCell(2);
+    var email = row.insertCell(3);
+    var isAdmin = row.insertCell(4);
+    var resetPasswordField = row.insertCell(5);
+    var resetPasswordButton = row.insertCell(6);
+
+    userName.innerHTML = rowInfo.username
+    firstName.innerHTML = rowInfo.firstName
+    lastName.innerHTML = rowInfo.lastName
+    email.innerHTML = rowInfo.email
+    isAdmin.innerHTML = rowInfo.isAdmin
+    
+    var PasswordField = "<input type='password' id='password_" + rowInfo.username + "' placeholder='* * * * * * * * * * * * * * * * * * * * * * * *'> </th>"
+    resetPasswordField.innerHTML = PasswordField
+
+    var PasswordButton = '<button onclick='+"'changeUserPassword("+'"'+ "password_"+ rowInfo.username +"'"+')"> Reset Password </button>'
+    resetPasswordButton.innerHTML = PasswordButton
+}
+
+function changeUserPassword(){
+
+}
