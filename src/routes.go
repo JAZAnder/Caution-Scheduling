@@ -40,6 +40,7 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/tutor/availability/{username}", a.getluserAvalibleTime).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/hours/{username}",a.getluserTime).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/timeslot/whois/{id:[0-9]+}", a.getUserHourById).Methods("GET")
+	a.Router.HandleFunc("/api/tutor/timeslots",a.getAllUserHours).Methods("GET")
 }
 
 func (a *App) hourRoutes(){

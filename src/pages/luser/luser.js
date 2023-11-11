@@ -353,3 +353,42 @@ async function createlabHour(){
 
 }
 //START END PAGE =======================================================
+
+//START EMPLOYEE PAGE ======================================== 
+async function createUserHour(){
+    const timeSlotId = document.getElementById("hourId-Select").value
+    const userName = document.getElementById("tutorId-Select").value
+    data = await userHour_Create(timeSlotId, userName)
+    if(data['error']){
+        console.log("Logout Error :"+ data['error'])
+
+        alert("Failed to Create a new Timeslot\n"+data['error'])
+    }else{
+        alert("New Availability Created, refresh to populate")
+    }
+}
+
+async function loadUserhours(){
+    data = await userHour_GetAll()
+
+    data.forEach(loadUserHourForEach)
+}
+
+async function loadUserHourForEach(item){
+    const rowInfo = new userHour(item)
+    var table = document.getElementById("userhour-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var Employee = row.insertCell(1);
+    var StartTime = row.insertCell(2);
+    var EndTime = row.insertCell(3);
+
+    var itemTime = new hour(await hour_getById(item.hourId))
+    
+    id.innerHTML = rowInfo.id
+    Employee.innerHTML = rowInfo.tutor
+    StartTime.innerHTML = itemTime.startTime
+    EndTime.innerHTML = itemTime.endTime
+}
+
