@@ -85,11 +85,11 @@ function hourOptionsForEach(item){
 }
 
 async function scheduleMeeting(){
-    tutorHourId = 0
+    userHourId = 0
     labId = document.getElementById("hourId-Select").value
     studentName = document.getElementById("Name").value
     studentEmail = document.getElementById("email").value
-    data = await meeting_create(tutorHourId, labId, studentName, studentEmail)
+    data = await meeting_create(userHourId, labId, studentName, studentEmail)
     if(data['error']){
         document.getElementById("error").innerHTML = data['error']
         alert("Error : "+data['error'])
