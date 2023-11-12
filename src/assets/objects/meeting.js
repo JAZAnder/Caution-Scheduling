@@ -15,7 +15,7 @@ async function meeting_create(tutorHourId, labId, studentName, studentEmail){
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   var urlencoded = new URLSearchParams();
-  urlencoded.append("tutorHourId", tutorHourId);
+  urlencoded.append("userHourId", tutorHourId);
   urlencoded.append("labId", labId);
   urlencoded.append("studentName", studentName);
   urlencoded.append("studentEmail", studentEmail);

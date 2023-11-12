@@ -85,16 +85,17 @@ function hourOptionsForEach(item){
 }
 
 async function scheduleMeeting(){
-    userHourId = 0
-    labId = document.getElementById("hourId-Select").value
+    userHourId = document.getElementById("hourId-Select").value
+    labId = document.getElementById("Lab-Id-Select").value
     studentName = document.getElementById("Name").value
     studentEmail = document.getElementById("email").value
     data = await meeting_create(userHourId, labId, studentName, studentEmail)
     if(data['error']){
-        document.getElementById("error").innerHTML = data['error']
-        alert("Error : "+data['error'])
+        alert("Error : Could not Create Meeting")
     }else{
         alert("Meeting Sceduled!!")
+        document.getElementById("Name").value = ""
+        document.getElementById("email").value = ""
     }
 }
 // Load the readOnlyTable.html into the 'readOnlyTable' div
