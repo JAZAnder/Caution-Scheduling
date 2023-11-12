@@ -445,3 +445,44 @@ async function populateMyMeetingsForEach(item){
     time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
     location.innerHTML = itemLab.name
 }
+
+//END USER MEETINGS
+
+//START USER-MEETINGS
+async function createUserHour(){
+    const timeSlotId = document.getElementById("hourId-Select").value
+    console.log(document.getElementById("hourId-Select").value)
+    data = await userHour_MyCreate(timeSlotId)
+    if(data['error']){
+        console.log("Logout Error :"+ data['error'])
+
+        alert("Failed to Create a new Timeslot\n"+data['error'])
+    }else{
+        alert("New Availability Created, refresh to populate")
+    }
+}
+
+async function loadMyUserhours(){
+
+    var user = new luser(await user_whoami())
+
+    data = await userHour_GetMine(user.username)
+
+    data.forEach(loadUserHourForEach)
+}
+
+async function loadMyUserHourForEach(item){
+    const rowInfo = new userHour(item)
+    var table = document.getElementById("userhour-table");
+    var row = table.insertRow(1);
+
+    var id = row.insertCell(0);
+    var StartTime = row.insertCell(2);
+    var EndTime = row.insertCell(3);
+
+    var itemTime = new hour(await hour_getById(item.hourId))
+    
+    id.innerHTML = rowInfo.id
+    StartTime.innerHTML = itemTime.startTime
+    EndTime.innerHTML = itemTime.endTime
+}
