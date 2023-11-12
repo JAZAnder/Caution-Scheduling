@@ -24,6 +24,7 @@ func (a *App) labRoutes(){
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.updateLab).Methods("PUT")
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.deleteLab).Methods("DELETE")
 	a.Router.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", a.openLabTimeSlot).Methods("POST")
+	a.Router.HandleFunc("/api/lab/timeslots", a.getAllLabHours).Methods("GET")
 }
 
 func (a *App) userRoutes(){
@@ -38,6 +39,8 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser/admin/timeslot", a.addTimeAdmin).Methods("POST")
 	a.Router.HandleFunc("/api/tutor/availability/{username}", a.getluserAvalibleTime).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/hours/{username}",a.getluserTime).Methods("GET")
+	a.Router.HandleFunc("/api/tutor/timeslot/whois/{id:[0-9]+}", a.getUserHourById).Methods("GET")
+	a.Router.HandleFunc("/api/tutor/timeslots",a.getAllUserHours).Methods("GET")
 }
 
 func (a *App) hourRoutes(){
@@ -52,6 +55,7 @@ func (a *App) meetingRoutes(){
 	a.Router.HandleFunc("/api/meeting/{id:[0-9]+}",a.getMeeting).Methods("GET")
 	a.Router.HandleFunc("/api/meetings", a.getMeetings).Methods("GET")
 	a.Router.HandleFunc("/api/meeting/{id:[0-9]+}",a.deleteMeeting).Methods("DELETE")
+	a.Router.HandleFunc("/api/meetings/mine", a.getMyMeetings).Methods("GET")
 }
 
 func (a *App) staticRoutes(){

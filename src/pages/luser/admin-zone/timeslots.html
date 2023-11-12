@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-lg-6">
+        <h3>Time Slots</h3>
+        <table id="time-table" class="table table-bordered">
+            <img src="../assets/images/caution.jpg" alt="" onload="populateTime()" style="display: none;">
+            <!-- <script>populateTime()</script> -->
+            <tr>
+                <th>Id</th>
+                <th>startTime</th>
+                <th>endTime</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <h2>Create New Time Slot</h2>
+        <div><label for="StartTime">StartTime</label><input type="text" id="StartTime"></div>
+        <div><label for="EndTime">EndTime</label><input type="text" id="EndTime"></div>
+        <button onclick="createHour()">Create Time Slot</button>
+    </div>
+</div>

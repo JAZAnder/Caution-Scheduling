@@ -51,7 +51,7 @@ func (a *App) createLab(w http.ResponseWriter, r *http.Request) {
 	l.Location = r.PostFormValue("location")
 	l.Name = r.PostFormValue("name")
 
-	if illegalString(l.Name) || illegalString(l.Location) {
+	if (illegalString(l.Name) || illegalString(l.Location)) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -177,7 +177,15 @@ func (a *App) openLabTimeSlot(w http.ResponseWriter, r *http.Request){
 	return 
 
 }
+func (a *App) getAllLabHours(w http.ResponseWriter, r *http.Request) {
+	labhours, err := getLabHous(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	respondWithJSON(w, http.StatusOK, labhours)
+}
 func removeLabTimeSlot(){
 	//TODOAdds-labhour(Requires-Admin)
 }

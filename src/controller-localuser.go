@@ -424,3 +424,33 @@ func (a *App) getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 	}
 	respondWithJSON(w, http.StatusOK, userHours)
 }
+
+func (a *App) getUserHourById(w http.ResponseWriter, r *http.Request){
+	var uh userHour
+	var err error
+	vars := mux.Vars(r)
+	uh.Id, err = strconv.Atoi(vars["id"])
+
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid Id")
+		return
+	}
+
+	err = uh.getUserHour(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return 
+	}
+
+	respondWithJSON(w, http.StatusCreated, uh)
+
+}
+
+func (a *App) getAllUserHours(w http.ResponseWriter, r *http.Request){
+	userHours, err := getUserHours(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, userHours)
+}
