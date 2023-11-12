@@ -119,3 +119,29 @@ function addLabForEach(item){
 
     options.add(option)
 }
+
+async function loadTime(){
+    userName = document.getElementById("tutorId-Select").value
+    data = await userHour_GetMine(userName)
+    var options = document.getElementById("hourId-Select")
+    objectlength = options.length
+    for (var i=options.length; i>=0; i--) {
+        options.remove(i);
+    }
+
+    data.forEach(loadTimeForEach)
+}
+
+async function loadTimeForEach(item){
+    const optionInfo = new userHour(item)
+    var options = document.getElementById("hourId-Select")
+    var option = document.createElement("option")
+
+    var hourItem = new hour(await hour_getById(optionInfo.hourId)) 
+
+    option.text = hourItem.startTime + " - " + hourItem.endTime
+    option.value = optionInfo.id
+
+    options.add(option)
+
+}
