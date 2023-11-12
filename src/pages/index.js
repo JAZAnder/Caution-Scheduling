@@ -100,3 +100,22 @@ async function scheduleMeeting(){
 // Load the readOnlyTable.html into the 'readOnlyTable' div
 importElements('readOnlyTable', './assets/elements/readOnlyTable.html');
 
+async function addLab(){
+    data = await lab_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(addLabForEach)
+
+}
+function addLabForEach(item){
+    const optionInfo = new lab(item)
+    var options = document.getElementById("Lab-Id-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.name + "(" + optionInfo.labLocation + ")"
+    option.value = optionInfo.Id
+
+    options.add(option)
+}
