@@ -41,7 +41,7 @@ func (uh *userHour) makeUnavailabe(db *sql.DB) error {
 }
 
 func (uh *userHour) createUserHour(db *sql.DB) error {
-	query := "INSERT INTO `userhours` (`hourId`,`username`) VALUES ('" + strconv.Itoa(uh.HourId) + "','" + uh.Tutor + "')"
+	query := "INSERT INTO `userHours` (`hourId`,`username`) VALUES ('" + strconv.Itoa(uh.HourId) + "','" + uh.Tutor + "')"
 	err := db.QueryRow(query)
 	fmt.Println(query)
 	if err != nil {
@@ -51,14 +51,14 @@ func (uh *userHour) createUserHour(db *sql.DB) error {
 }
 
 func (uh *userHour) deleteUserHourById(db *sql.DB) error {
-	query := "DELETE FROM `userhours` WHERE `Id` = '" + strconv.Itoa(uh.Id) + "';"
+	query := "DELETE FROM `userHours` WHERE `Id` = '" + strconv.Itoa(uh.Id) + "';"
 	_, err := db.Exec(query)
 	fmt.Println(query)
 	return err
 }
 
 func (uh *userHour) deleteUserHour(db *sql.DB) error {
-	query := "DELETE FROM `userhours` WHERE `hourId` = '" + strconv.Itoa(uh.HourId) + "' AND `username` = '" + uh.Tutor + "'"
+	query := "DELETE FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(uh.HourId) + "' AND `username` = '" + uh.Tutor + "'"
 	_, err := db.Exec(query)
 	fmt.Println(query)
 	return err
