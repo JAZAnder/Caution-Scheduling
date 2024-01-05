@@ -1,5 +1,5 @@
 <div>
-    
+
     <div>
 
 
@@ -19,13 +19,13 @@
                     <div><label for="email">Email</label><input type="text" id="email"></div>
                     <div><label for="password">Password</label><input type="password" id="password"></div>
                     <div>
-                        <p>Is Admin</p>
+                        <p>Is Admin : 
                         <label for="isAdminTrue">True</label>
                         <input type="radio" name="isAdmin" id="isAdminTrue" value="True">
                         <label for="isAdminFalse">False</label>
-                        <input type="radio" name="isAdmin" id="isAdminFalse" value="False">
+                        <input type="radio" name="isAdmin" id="isAdminFalse" value="False"></p>
                     </div>
-                    <button onclick="createUser()">Create New User</button>
+                    <button class="btn btn-success" onclick="createUser()">Create New User</button>
                 </div>
             </div>
         </div>
@@ -55,8 +55,18 @@
                                 style="display: none;">
                         </div>
                         &nbsp;
-                        <div><button type="button" onclick="createUserHour()" class="btn btn-secondary">Create Time
-                                Slot</button></div>
+                        <div><button type="button" onclick="createUserHour()" class="btn btn-success">Create Time
+                                Slot</button>
+                        </div>
+                        &nbsp;
+                        <div class="form-group">
+                            <label for="usr">Remove Timeslot:</label>
+                            <input type="text" name="emp_avaiblity_to_remove" class="form-control"
+                                id="emp_avaiblity_to_remove" placeholder="Id" style="width: 10%;">
+
+                            <button type="button" onclick="createUserHour()" class="btn btn-danger">Remove Time
+                                Slot</button>
+                        </div>
                     </div>
                 </center>
 
@@ -88,28 +98,84 @@
         <div class="col-lg-10">
             <center>
                 <div>
-                <h3>All Employees</h3>
-                <table id="users-Table" class="table table-bordered">
-                    <script>populateUsers()</script>
-                    <tr>
-                        <th> Username </th>
-                        <th> First Name </th>
-                        <th> Last Name </th>
-                        <th> Email </th>
-                        <th> isAdmin </th>
-                        <th> New Password </th>
-                        <th> Reset Button</th>
-                    </tr>
-                </table>
-                <img src="../../../assets/images/caution.jpg" alt="" onload="populateUsers()" style="display: none;">
-        
-            </div>
+                    <Button style="width: 15%;" class="btn btn-primary" disabled>Modify User</Button>
+                    <Button style="width: 15%;" disabled class="btn btn-warning">Disable User</Button>
+                    <Button style="width: 15%;" disabled class="btn btn-danger">Delete User</Button>
+                    <Button style="width: 15%;" class="btn btn-warning" onclick="resetPasswordModel()">Reset
+                        Password</Button>
+                    <Button style="width: 15%;" class="btn" disabled>Master Access</Button>
+                    <h3>All Employees</h3>
+                    <table id="users-Table" class="table table-bordered">
+                        <script>populateUsers()</script>
+                        <tr>
+                            <th> User Id </th>
+                            <th> Username </th>
+                            <th> First Name </th>
+                            <th> Last Name </th>
+                            <th> Email </th>
+                            <th> isAdmin </th>
+
+                        </tr>
+                    </table>
+                    <img src="../../../assets/images/caution.jpg" alt="" onload="populateUsers()"
+                        style="display: none;">
+
+                </div>
             </center>
-            
+
         </div>
         <div class="col-lg-1"></div>
 
     </div>
     <hr>
     &nbsp;
+</div>
+
+<!-- The Modal -->
+<div id="Password_Reset_Modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+
+        <span class="close"><button onclick="{
+            document.getElementById('Password_Reset_Modal').style.display = 'none'
+        }">&times;</button></span>
+        <center>
+            <h2>Reset a Password</h2>
+            <hr>
+            <div>
+                <label for="userName">User Name</label>
+                <select name="userNameForReset-select" id="userNameForReset-select" class="form-select form-select-lg">
+                    <option value="">Select a User</option>
+                </select>
+            </div>
+            <div style="height: 25px;">
+
+            </div>
+            <div>
+                <label for="NewPassword">New Password</label>
+                <input type="text" placeholder="* * * * * * * * * * * * * * * * * * * *" id="NewPassword">
+            </div>
+            <div style="height: 25px;">
+                <button type="button" class="btn" onclick="{
+            var user = document.getElementById('userNameForReset-select').value
+            var password = document.getElementById('NewPassword').value
+
+            user_changeUserPassword(user, password);
+
+            
+            var password = document.getElementById('NewPassword').value = ''
+
+            document.getElementById('Password_Reset_Modal').style.display = 'none'
+        }">Change Password</button>
+        </center>
+
+        <img src="../assets/images/caution.jpg" alt="" onload="userOptionsForReset()" style="display: none;">
+
+
+
+
+
+    </div>
+
 </div>

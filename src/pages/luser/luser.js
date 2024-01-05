@@ -391,29 +391,45 @@ function populateUsersForEach(item){
     var table = document.getElementById("users-Table");
     var row = table.insertRow(1);
 
-    var userName = row.insertCell(0);
-    var firstName = row.insertCell(1);
-    var lastName = row.insertCell(2);
-    var email = row.insertCell(3);
-    var isAdmin = row.insertCell(4);
-    var resetPasswordField = row.insertCell(5);
-    var resetPasswordButton = row.insertCell(6);
+    var UserId = row.insertCell(0);
+    var userName = row.insertCell(1);
+    var firstName = row.insertCell(2);
+    var lastName = row.insertCell(3);
+    var email = row.insertCell(4);
+    var isAdmin = row.insertCell(5);
 
+    UserId.innerHTML = "0"
     userName.innerHTML = rowInfo.username
     firstName.innerHTML = rowInfo.firstName
     lastName.innerHTML = rowInfo.lastName
     email.innerHTML = rowInfo.email
     isAdmin.innerHTML = rowInfo.isAdmin
     
-    var PasswordField = "<input type='password' id='password_" + rowInfo.username + "' placeholder='* * * * * * * * * * * * * * * * * * * * * * * *'> </th>"
-    resetPasswordField.innerHTML = PasswordField
-
-    var PasswordButton = '<button onclick='+"'changeUserPassword("+'"'+ "password_"+ rowInfo.username +"'"+')"> Reset Password </button>'
-    resetPasswordButton.innerHTML = PasswordButton
 }
 
-function changeUserPassword(){
+function resetPasswordModel(){
+    var modal = document.getElementById("Password_Reset_Modal");
+    modal.style.display = "block";
+}
 
+async function userOptionsForReset(){
+    data = await user_getall()
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+    data.forEach(userOptionsForResetForEach)
+}
+
+function userOptionsForResetForEach(item){
+    const optionInfo = new luser(item)
+    var options = document.getElementById("userNameForReset-select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.firstName + "  " + optionInfo.lastName
+    option.value = optionInfo.username
+
+    options.add(option)
 }
 
 //START USER MEETINGS
@@ -429,7 +445,7 @@ async function populateMyMeetingsForEach(item){
     var table = document.getElementById("meeting-table");
     var row = table.insertRow(1);
 
-    var id = row.insertCell(0);
+    var id = row.insertCell();
     var studentName = row.insertCell(1);
     var studentEmail = row.insertCell(2);
     var time = row.insertCell(3);
