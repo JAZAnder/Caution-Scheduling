@@ -18,7 +18,7 @@ type meeting struct{
 func (m *meeting) getMeeting(db *sql.DB) error{
 	var tempTutorHourId string
 	var tempLabId string
-	query := "SELECT userHourId, labId, studentName, studentEmail FROM meetings WHERE id=" + strconv.Itoa(m.Id)
+	query := "SELECT tutorHourId, labId, studentName, studentEmail FROM meetings WHERE id=" + strconv.Itoa(m.Id)
 	err := db.QueryRow(query).Scan(&tempTutorHourId, &tempLabId, &m.StudentName, &m.StudentEmail)
 	m.UserHourId, err = strconv.Atoi(tempTutorHourId)
 	m.LabId, err = strconv.Atoi(tempLabId)

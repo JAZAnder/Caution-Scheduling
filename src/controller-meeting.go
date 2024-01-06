@@ -16,7 +16,6 @@ func (a *App) getMeeting(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusBadRequest, "Invalid meeting Id")
 		return
 	}
-
 	m := meeting{Id: id}
 	err = m.getMeeting(a.DB)
 	if err != nil{
@@ -163,6 +162,7 @@ func (a *App) deleteMeeting(w http.ResponseWriter, r *http.Request){
 	}
 
 	vars := mux.Vars(r)
+	
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil{
 		respondWithError(w, http.StatusBadRequest, "Invalid meeting ID")

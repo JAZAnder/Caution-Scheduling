@@ -145,6 +145,17 @@ async function populateMeetingsForEach(item){
     time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
     location.innerHTML = itemLab.name
 }
+
+async function loadMeetingById(location){
+    id = document.getElementById('MeetingId').value
+    var mymeeting  = new meeting(await meeting_GetById(id))
+    var itemUserHour = new userHour(await userhour_GetById(mymeeting.tutorHourId))
+    
+
+    document.getElementById(location).innerHTML = "Student: "+mymeeting.studentName + " | Email: " + mymeeting.studentEmail + " | Tutor: "+ itemUserHour.tutor
+
+
+}
 //END MEETINGS PAGE =======================================================
 
 
