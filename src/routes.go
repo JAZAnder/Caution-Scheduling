@@ -25,6 +25,7 @@ func (a *App) labRoutes(){
     a.Router.HandleFunc("/api/lab/{id:[0-9]+}", a.deleteLab).Methods("DELETE")
 	a.Router.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", a.openLabTimeSlot).Methods("POST")
 	a.Router.HandleFunc("/api/lab/timeslots", a.getAllLabHours).Methods("GET")
+	a.Router.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", a.removeLabTimeSlot).Methods("DELETE")
 }
 
 func (a *App) userRoutes(){
