@@ -1,5 +1,6 @@
 const hour_create_Url = baseUrl+"/api/hour"
 const hour_get_Url = baseUrl+"/api/hour/"
+const hour_delete_Url = baseUrl+"/api/hour/"
 const hour_getAll_Url = baseUrl+"/api/hours"
 
 function hour(hour){
@@ -45,6 +46,19 @@ async function hour_getById(Id){
     url = hour_get_Url + Id
     var requestOptions = {
         method: 'GET',
+        redirect: 'follow'
+      };
+    
+      const result = await fetch(url, requestOptions)
+      const data = await result.json();
+      console.log(data)
+      return data
+}
+
+async function hour_deleteById(Id){
+    url = hour_delete_Url + Id
+    var requestOptions = {
+        method: 'DELETE',
         redirect: 'follow'
       };
     
