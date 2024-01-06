@@ -63,8 +63,17 @@
                         <img src="../assets/images/caution.jpg" alt="" onload="userOptions()" style="display: none;">
                     </div>
                     &nbsp;
-                    <div><button type="button" onclick="createlabHour()" class="btn btn-secondary">Create Time
+                    <div><button type="button" onclick="createlabHour()" class="btn btn btn-success">Create Time
                             Slot</button></div>
+                    <div>
+                        <button type="button" class="btn btn btn-danger" onclick="{
+                            let deleteId = prompt('Please enter the Id of the Time Slot you wish to remove', '')
+                            if (deleteId != null) {
+                                response = labHour_deleteById(deleteId)
+                                alert('Timeslot ' + deleteId + ' has been deleted')
+                            }
+                        }">Remove Time Slot</button>
+                    </div>
                 </div>
             </center>
 
