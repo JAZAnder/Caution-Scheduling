@@ -17,13 +17,12 @@ func(a *App) getHour(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
 		return
 	}
-
 	h := hour{Id: id}
 	err = h.getHour(a.DB)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "Lab not Found")
+			respondWithError(w, http.StatusNotFound, "Timeslot not Found")
 		default:
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
@@ -69,6 +68,12 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 	var h hour
 	h.StartTime = r.PostFormValue("startTime")
 	h.EndTime = r.PostFormValue("endTime")
+	h.DayOfWeek, err = strconv.Atoi(r.PostFormValue("dayOfWeek"))
+
+	if (err != nil || h.DayOfWeek > 6 || h.DayOfWeek < 0) {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
 
 	if illegalString(h.StartTime) ||illegalString(h.EndTime){
 		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Invalid request payload")

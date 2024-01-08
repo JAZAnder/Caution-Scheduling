@@ -60,8 +60,9 @@ async function createUser(){
 async function createHour(){
     const StartTime = document.getElementById("StartTime").value
     const EndTime = document.getElementById("EndTime").value
+    const dayOfWeek = document.getElementById("dayOfWeek-Select").value
 
-    data = await hour_create(StartTime, EndTime)
+    data = await hour_create(StartTime, EndTime, dayOfWeek)
 
     if(data['error']){
         console.log("Logout Error :"+ data['error'])
@@ -97,13 +98,37 @@ function populateTimeForEach(item){
     var row = table.insertRow(1);
 
     var id = row.insertCell(0);
-    var startTime = row.insertCell(1);
-    var endTime = row.insertCell(2);
+    var dayOfWeek = row.insertCell(1);
+    var startTime = row.insertCell(2);
+    var endTime = row.insertCell(3);
 
 
     id.innerHTML = rowInfo.id
     startTime.innerHTML = rowInfo.startTime
     endTime.innerHTML = rowInfo.endTime
+    switch(rowInfo.dayOfWeek){
+        case 0:
+            dayOfWeek.innerHTML = "Sunday"
+            break;
+        case 1:
+            dayOfWeek.innerHTML = "Monday"
+            break;
+        case 2:
+            dayOfWeek.innerHTML = "Tuesday"
+            break;
+        case 3:
+            dayOfWeek.innerHTML = "Wednesday"
+            break;
+        case 4:
+            dayOfWeek.innerHTML = "Thursday"
+            break;
+        case 5:
+            dayOfWeek.innerHTML = "Friday"
+            break;
+        case 6:
+            dayOfWeek.innerHTML = "Saturday"
+            break;
+    }
 }
 //END TIMESLOTS PAGE =======================================================
 
@@ -250,9 +275,10 @@ async function populateLabHoursForEach(item){
 
     var id = row.insertCell(0);
     var labName = row.insertCell(1);
-    var StartTime = row.insertCell(2);
-    var EndTime = row.insertCell(3);
-    var Tutor = row.insertCell(4);
+    var dayOfWeek = row.insertCell(2);
+    var StartTime = row.insertCell(3);
+    var EndTime = row.insertCell(4);
+    var Tutor = row.insertCell(5);
 
     var itemLab = new lab(await lab_getById(item.labId)) 
     var itemTime = new hour(await hour_getById(item.hourId))
@@ -263,6 +289,30 @@ async function populateLabHoursForEach(item){
     StartTime.innerHTML = itemTime.startTime
     EndTime.innerHTML = itemTime.endTime
     Tutor.innerHTML = itemUser.tutor
+
+    switch(itemTime.dayOfWeek){
+        case 0:
+            dayOfWeek.innerHTML = "Sunday"
+            break;
+        case 1:
+            dayOfWeek.innerHTML = "Monday"
+            break;
+        case 2:
+            dayOfWeek.innerHTML = "Tuesday"
+            break;
+        case 3:
+            dayOfWeek.innerHTML = "Wednesday"
+            break;
+        case 4:
+            dayOfWeek.innerHTML = "Thursday"
+            break;
+        case 5:
+            dayOfWeek.innerHTML = "Friday"
+            break;
+        case 6:
+            dayOfWeek.innerHTML = "Saturday"
+            break;
+    }
 }
 
 async function addLab(){
@@ -326,7 +376,31 @@ function hourOptionsForEach(item){
     var options = document.getElementById("hourId-Select")
     var option = document.createElement("option")
 
-    option.text = optionInfo.startTime + " - " + optionInfo.endTime
+    switch(optionInfo.dayOfWeek){
+        case 0:
+            dayOfWeek = "Sunday"
+            break;
+        case 1:
+            dayOfWeek = "Monday"
+            break;
+        case 2:
+            dayOfWeek = "Tuesday"
+            break;
+        case 3:
+            dayOfWeek = "Wednesday"
+            break;
+        case 4:
+            dayOfWeek = "Thursday"
+            break;
+        case 5:
+            dayOfWeek = "Friday"
+            break;
+        case 6:
+            dayOfWeek = "Saturday"
+            break;
+    }
+
+    option.text = dayOfWeek +": "+ optionInfo.startTime + " - " + optionInfo.endTime
     option.value = optionInfo.id
 
     options.add(option)
@@ -379,8 +453,9 @@ async function loadUserHourForEach(item){
 
     var id = row.insertCell(0);
     var Employee = row.insertCell(1);
-    var StartTime = row.insertCell(2);
-    var EndTime = row.insertCell(3);
+    var dayOfWeek = row.insertCell(2);
+    var StartTime = row.insertCell(3);
+    var EndTime = row.insertCell(4);
 
     var itemTime = new hour(await hour_getById(item.hourId))
     
@@ -388,6 +463,31 @@ async function loadUserHourForEach(item){
     Employee.innerHTML = rowInfo.tutor
     StartTime.innerHTML = itemTime.startTime
     EndTime.innerHTML = itemTime.endTime
+
+    switch(itemTime.dayOfWeek){
+        case 0:
+            dayOfWeek.innerHTML = "Sunday"
+            break;
+        case 1:
+            dayOfWeek.innerHTML = "Monday"
+            break;
+        case 2:
+            dayOfWeek.innerHTML = "Tuesday"
+            break;
+        case 3:
+            dayOfWeek.innerHTML = "Wednesday"
+            break;
+        case 4:
+            dayOfWeek.innerHTML = "Thursday"
+            break;
+        case 5:
+            dayOfWeek.innerHTML = "Friday"
+            break;
+        case 6:
+            dayOfWeek.innerHTML = "Saturday"
+            break;
+    }
+
 }
 
 async function populateUsers(){
@@ -443,7 +543,7 @@ function userOptionsForResetForEach(item){
     options.add(option)
 }
 
-//START USER MEETINGS
+//START USER MEETINGS ======================================== 
 async function populateMyMeetings(){
     data = await meeting_GetMine()
     
@@ -512,4 +612,6 @@ async function loadMyUserHourForEach(item){
     id.innerHTML = rowInfo.id
     StartTime.innerHTML = itemTime.startTime
     EndTime.innerHTML = itemTime.endTime
+
+    
 }

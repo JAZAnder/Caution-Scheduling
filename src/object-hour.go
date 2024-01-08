@@ -8,11 +8,16 @@ type hour struct{
 	Id int `json:"id"`
 	StartTime string `json:"startTime"`
 	EndTime string `json:"endTime"`
+	DayOfWeek int `json:"dayOfWeek"`
 }
 
 func (h *hour) getHour(db *sql.DB) error{
-	query := "SELECT startTime, endTime FROM hours WHERE id=" + strconv.Itoa(h.Id)
-	return db.QueryRow(query).Scan(&h.StartTime, &h.EndTime)
+	var tempDayOfWeek string
+	query := "SELECT startTime, endTime, dayOfWeek  FROM hours WHERE id=" + strconv.Itoa(h.Id)
+	err := db.QueryRow(query).Scan(&h.StartTime, &h.EndTime, &tempDayOfWeek)
+
+	h.DayOfWeek, err = strconv.Atoi(tempDayOfWeek)
+	return err
 }
 
 func (h *hour) updateHour(db *sql.DB) error{
@@ -22,7 +27,7 @@ func (h *hour) updateHour(db *sql.DB) error{
 }
 
 func (h *hour) createHour(db *sql.DB) error{
-	query := "INSERT INTO `hours` (`startTime`, `endTime`) VALUES ('"+h.StartTime+"','"+h.EndTime+"')"
+	query := "INSERT INTO `hours` (`startTime`, `endTime`, `dayOfWeek`) VALUES ('"+h.StartTime+"','"+h.EndTime+"','"+strconv.Itoa(h.DayOfWeek)+"')"
 	err := db.QueryRow(query)
 
 	if err != nil{
@@ -32,7 +37,7 @@ func (h *hour) createHour(db *sql.DB) error{
 }
 
 func getHours(db *sql.DB) ([]hour, error){
-	rows, err := db.Query("SELECT id, startTime, endTime FROM hours")
+	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek FROM hours")
 
 	if err != nil{
 		return nil, err
@@ -44,7 +49,30 @@ func getHours(db *sql.DB) ([]hour, error){
 
 	for rows.Next(){
 		var h hour
-		if err:= rows.Scan(&h.Id, &h.StartTime, &h.EndTime); err!= nil{
+		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek);
+		if err!= nil{
+			return nil,err
+		}
+		hours = append(hours, h)
+	}
+	return hours, nil
+}
+
+func getHoursByDay(db *sql.DB, dayOfWeek int) ([]hour, error){
+	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek FROM hours WHERE dayOfWeek = " + strconv.Itoa(dayOfWeek))
+
+	if err != nil{
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	hours := []hour{}
+
+	for rows.Next(){
+		var h hour
+		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek);
+		if err!= nil{
 			return nil,err
 		}
 		hours = append(hours, h)

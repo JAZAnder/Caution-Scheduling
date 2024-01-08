@@ -7,15 +7,17 @@ function hour(hour){
     this.id = hour['id']
     this.startTime = hour['startTime']
     this.endTime = hour['endTime']
+    this.dayOfWeek = hour['dayOfWeek']
 }
 
-async function hour_create(startTime, EndTime){
+async function hour_create(startTime, EndTime, dayOfWeek){
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
     var urlencoded = new URLSearchParams();
     urlencoded.append("startTime", startTime);
     urlencoded.append("endTime", EndTime);
+    urlencoded.append("dayOfWeek", dayOfWeek);
 
     var requestOptions = {
         method: 'POST',
