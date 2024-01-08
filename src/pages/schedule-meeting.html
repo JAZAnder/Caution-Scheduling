@@ -69,10 +69,12 @@
                 <input type="text" id="email" name="email" placeholder="example@example.com" class="form-control" required>
             </div>
 
+           
+
             <div class="form-group">
-                <label for="Lab-Id">Pick Location</label>
-                <select name="Lab-Id" id="Lab-Id-Select" class="form-select form-select-lg">
-                    <option value="">Select your Location</option>
+                <label for="time">Pick your Time</label>
+                <select name="hourId" id="hourId-Select" class="form-select form-select-lg" required>
+                    <option value="">Select your Time</option>
                 </select>
             </div>
 
@@ -84,11 +86,13 @@
             </div>
 
             <div class="form-group">
-                <label for="time">Pick your Time</label>
-                <select name="hourId" id="hourId-Select" class="form-select form-select-lg" required>
-                    <option value="">Select your Time</option>
+                <label for="Lab-Id">Pick Location (Look at Schedule)</label>
+                <select name="Lab-Id" id="Lab-Id-Select" class="form-select form-select-lg">
+                    <option value="">Select your Location</option>
                 </select>
             </div>
+
+            
 
             
         </form>
