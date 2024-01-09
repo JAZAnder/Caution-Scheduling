@@ -102,6 +102,22 @@ func (a *App) getHours(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, hours)
 }
 
+func (a *App) getHoursByDay(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
+		return
+	}
+
+	hours, err := getHoursByDay(a.DB, id)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, hours)
+}
+
 func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 	var c sessionCookie
 
@@ -150,4 +166,20 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 
+}
+
+func (a *App) getUsersByHour(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
+		return
+	}
+
+	users, err := getUsersByHour(a.DB, id)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, users)
 }

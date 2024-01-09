@@ -7,6 +7,7 @@ const user_create_Url = baseUrl+"/api/luser"
 const user_getall_Url = baseUrl+"/api/lusers"
 const user_resetpassword_Url = baseUrl+"/api/luser/resetmypasswd"
 const user_changeUserPassword_Url = baseUrl+"/api/luser/admin/resetpasswd"
+const user_getInfo_Url = baseUrl + "/api/tutor/whois/"
 
 
 function luser(user){
@@ -142,4 +143,17 @@ async function user_changeUserPassword(userName, password){
   const data = await result.json();
   alert(data)
 
+}
+
+async function user_getInfo(userId){
+  url = user_getInfo_Url + userId
+  var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+  
+    const result = await fetch(url, requestOptions)
+    const data = await result.json();
+    console.log(data)
+    return data
 }

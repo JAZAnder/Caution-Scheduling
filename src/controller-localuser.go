@@ -493,7 +493,6 @@ func (a *App) getUserHourById(w http.ResponseWriter, r *http.Request){
 	}
 
 	respondWithJSON(w, http.StatusCreated, uh)
-
 }
 
 func (a *App) getAllUserHours(w http.ResponseWriter, r *http.Request){
@@ -503,4 +502,25 @@ func (a *App) getAllUserHours(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	respondWithJSON(w, http.StatusOK, userHours)
+}
+
+func (a *App) getUserInfo(w http.ResponseWriter, r *http.Request){
+	var u localUser
+	vars := mux.Vars(r)
+	u.UserName = vars["id"]
+
+	if illegalString(u.UserName){
+		respondWithError(w, http.StatusBadRequest, "Invaild UserId")
+		return
+	}
+
+	err := u.getUser(a.DB)
+
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, u)
+	
 }

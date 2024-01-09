@@ -3,6 +3,7 @@ const userHour_create_Url = baseUrl + "/api/luser/admin/timeslot"
 const userHour_GetAll_Url = baseUrl + "/api/tutor/timeslots"
 const userHour_MyCreate_Url = baseUrl + "/api/luser/timeslot"
 const userHour_GetMine_Url = baseUrl + "/api/tutor/hours/"
+const userHour_GetTutorByHour_Url = baseUrl  + "/api/hour/availability/"
 
 function userHour(userHour){
     this.id = userHour['id']
@@ -87,4 +88,17 @@ async function userHour_GetMine(userName){
       const data = await result.json();
       console.log(data)
       return data
+}
+
+async function userhour_GetTutorByHour(hourId){
+  url = userHour_GetTutorByHour_Url + hourId
+  var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+  
+    const result = await fetch(url, requestOptions)
+    const data = await result.json();
+    console.log(data)
+    return data
 }

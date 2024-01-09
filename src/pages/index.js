@@ -63,8 +63,6 @@ function userOptionsForEach(item){
 }
 
 async function hourOptions(){
-    var options = document.getElementById("hourId-Select")
-    var option = document.createElement("option")
     data = await hour_getAll()
     if(data['error']){
         document.getElementById("error").innerHTML = data['error']
@@ -146,3 +144,47 @@ async function loadTimeForEach(item){
     options.add(option)
 
 }
+
+
+// NEW CODES
+
+async function loadTimesFromDate(dayOfWeek){
+    data = await hour_getByDay(dayOfWeek)
+    var options = document.getElementById("hourId-Select")
+    objectlength = options.length
+    for (var i=options.length; i>=0; i--) {
+        options.remove(i);
+    }
+    data.forEach(hourOptionsForEach)
+}
+
+async function userOptionsByHour(hourId){
+    var options = document.getElementById("tutorId-Select")
+    userHours = await userhour_GetTutorByHour(hourId)
+    if(data['error']){
+        document.getElementById("error").innerHTML = data['error']
+        console.log("error : " + data['error'])
+    }
+
+    for (var i=options.length; i>=0; i--) {
+        options.remove(i);
+    }
+    userHours.forEach(userHoursForEach)
+}
+
+async function userHoursForEach(item){
+    const uh = new userHour(item) 
+    const optionInfo =  new luser(await user_getInfo(uh.tutor))
+
+    var options = document.getElementById("tutorId-Select")
+    var option = document.createElement("option")
+
+    option.text = optionInfo.firstName + "  " + optionInfo.lastName
+    option.value = uh.tutor
+
+    options.add(option)
+}
+
+
+
+                    

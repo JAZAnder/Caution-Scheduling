@@ -43,6 +43,7 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/tutor/hours/{username}",a.getluserTime).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/timeslot/whois/{id:[0-9]+}", a.getUserHourById).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/timeslots",a.getAllUserHours).Methods("GET")
+	a.Router.HandleFunc("/api/tutor/whois/{id}", a.getUserInfo).Methods("GET")
 
 }
 
@@ -50,7 +51,9 @@ func (a *App) hourRoutes(){
 	a.Router.HandleFunc("/api/hour", a.createHour).Methods("POST")
 	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.getHour).Methods("GET")
 	a.Router.HandleFunc("/api/hours", a.getHours).Methods("GET")
+	a.Router.HandleFunc("/api/hour/day/{id:[0-9]+}", a.getHoursByDay).Methods("GET")
 	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.deleteHour).Methods("DELETE")
+	a.Router.HandleFunc("/api/hour/availability/{id:[0-9]+}", a.getUsersByHour).Methods("GET")
 }
 
 func (a *App) meetingRoutes(){
