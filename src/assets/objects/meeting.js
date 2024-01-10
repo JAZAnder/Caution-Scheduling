@@ -9,6 +9,7 @@ function meeting(meeting){
     this.labId = meeting['labId']
     this.studentName = meeting['studentName']
     this.studentEmail = meeting['studentEmail']
+    this.date = meeting['date']
 }
 
 async function meeting_create(tutorHourId, labId, studentName, studentEmail, date){

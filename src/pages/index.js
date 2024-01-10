@@ -150,7 +150,10 @@ async function loadTimeForEach(item){
 async function loadTimesFromDate(dayOfWeek){
     data = await hour_getByDay(dayOfWeek)
     var options = document.getElementById("hourId-Select")
-    objectlength = options.length
+    for (var i=options.length; i>=0; i--) {
+        options.remove(i);
+    }
+    var options = document.getElementById("tutorId-Select")
     for (var i=options.length; i>=0; i--) {
         options.remove(i);
     }
@@ -179,7 +182,7 @@ async function userHoursForEach(item){
     var option = document.createElement("option")
 
     option.text = optionInfo.firstName + "  " + optionInfo.lastName
-    option.value = uh.tutor
+    option.value = uh.id
 
     options.add(option)
 }
