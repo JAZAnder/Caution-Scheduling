@@ -13,6 +13,7 @@ type meeting struct{
 	LabId int `json:"labId"`
 	StudentName string `json:"studentName"`
 	StudentEmail string `json:"studentEmail"`
+	Date int `json:"date"`
 }
 
 func (m *meeting) getMeeting(db *sql.DB) error{
@@ -46,7 +47,7 @@ func (m *meeting) createMeeting(db *sql.DB) error{
 	// 	return errors.New("This tutor is not available for that given time")
 	// }
 
-	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"');"
+	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`, `date`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"', "+strconv.Itoa(m.Date)+");"
 	fmt.Print(query)
 	errsql := db.QueryRow(query)
 

@@ -11,7 +11,7 @@ function meeting(meeting){
     this.studentEmail = meeting['studentEmail']
 }
 
-async function meeting_create(tutorHourId, labId, studentName, studentEmail){
+async function meeting_create(tutorHourId, labId, studentName, studentEmail, date){
     var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -20,6 +20,7 @@ async function meeting_create(tutorHourId, labId, studentName, studentEmail){
   urlencoded.append("labId", labId);
   urlencoded.append("studentName", studentName);
   urlencoded.append("studentEmail", studentEmail);
+  urlencoded.append("date", date);
 
   var requestOptions = {
       method: 'POST',

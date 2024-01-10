@@ -108,7 +108,24 @@
 
 
         </form>
-        <button onclick="scheduleMeeting()" class="btn btn-primary btn-block">Schedule a Meeting</button>
+        <button class="btn btn-primary btn-block" onclick="
+        {
+            userHourId = document.getElementById('hourId-Select').value
+            labId = document.getElementById('Lab-Id-Select').value
+            studentName = document.getElementById('Name').value
+            studentEmail = document.getElementById('email').value
+
+            date = new Date(document.getElementById('DayId').value + '\n')
+            today = new Date()
+            
+            if(date.getTime() > today.getTime()){
+                scheduleMeeting(userHourId, labId, studentName, studentEmail, date.getTime())
+            }else{
+                alert('Please pick a Date in the future')
+            }
+
+            
+        }">Schedule a Meeting</button>
     </div>
 </body>
 

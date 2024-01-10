@@ -82,12 +82,11 @@ function hourOptionsForEach(item){
     options.add(option)
 }
 
-async function scheduleMeeting(){
-    userHourId = document.getElementById("hourId-Select").value
-    labId = document.getElementById("Lab-Id-Select").value
-    studentName = document.getElementById("Name").value
-    studentEmail = document.getElementById("email").value
-    data = await meeting_create(userHourId, labId, studentName, studentEmail)
+async function scheduleMeeting(userHourId, labId, studentName, studentEmail, date){
+    
+    
+
+    data = await meeting_create(userHourId, labId, studentName, studentEmail, date)
     if(data['error']){
         alert("Error : Could not Create Meeting")
     }else{
