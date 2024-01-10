@@ -97,7 +97,7 @@ func getMeetings(db *sql.DB) ([]meeting, error){
 }
 
 func getMyMeetings(db *sql.DB, userName string) ([]meeting, error){
-	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
+	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail, m.date FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
 
 	if err != nil{
 		return nil, err
@@ -109,7 +109,7 @@ func getMyMeetings(db *sql.DB, userName string) ([]meeting, error){
 
 	for rows.Next(){
 		var m meeting
-		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail); err != nil{
+		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail, &m.Date); err != nil{
 			return nil, err
 		}
 		meetings = append(meetings, m)

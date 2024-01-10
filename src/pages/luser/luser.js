@@ -566,18 +566,23 @@ async function populateMyMeetingsForEach(item){
     var id = row.insertCell();
     var studentName = row.insertCell(1);
     var studentEmail = row.insertCell(2);
-    var time = row.insertCell(3);
-    var location = row.insertCell(4);
+    var date = row.insertCell(3);
+    var time = row.insertCell(4);
+    var location = row.insertCell(5);
 
     var itemLab = new lab(await lab_getById(item.labId)) 
     var itemUserHour = new userHour(await userhour_GetById(item.userHourId))
     var itemTime = new hour(await hour_getById(itemUserHour.hourId))
+    var meetingDate = new Date(rowInfo.date)
+
+
 
     id.innerHTML = rowInfo.id
     studentName.innerHTML = rowInfo.studentName
     studentEmail.innerHTML = rowInfo.studentEmail
     time.innerHTML = itemTime.startTime + " - " + itemTime.endTime
     location.innerHTML = itemLab.name
+    date.innerHTML = meetingDate.toDateString()
 }
 
 //END USER MEETINGS
