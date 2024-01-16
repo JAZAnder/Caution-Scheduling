@@ -129,3 +129,24 @@ func getUserHours(db *sql.DB) ([]userHour, error) {
 	}
 	return userHours, nil
 }
+
+func getUsersByHour(db *sql.DB, hourId int)([]userHour, error){
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(hourId)  + "' AND `available` = 1;")
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userHours := []userHour{}
+
+	for rows.Next() {
+		var uh userHour
+		if err := rows.Scan(&uh.Id, &uh.HourId ,&uh.Tutor); err != nil {
+			return nil, err
+		}
+		uh.Available = true
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}

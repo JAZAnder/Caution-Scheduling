@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
         body {
@@ -39,7 +40,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            
+
         }
 
         button {
@@ -52,11 +53,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <img src="../assets/images/caution.jpg" alt="" onload="userOptions()" style="display: none;"/>
         <!-- <img src="../assets/images/caution.jpg" alt="" onload="hourOptions()" style="display: none;"/> -->
-        <img src="../assets/images/caution.jpg" alt="" onload="addLab()" style="display: none;"/>
+        <img src="../assets/images/caution.jpg" alt="" onload="addLab()" style="display: none;" />
         <h1>Schedule a Meeting</h1>
         <form>
             <div class="form-group">
@@ -66,34 +67,66 @@
 
             <div class="form-group">
                 <label for="email">Your Email</label>
-                <input type="text" id="email" name="email" placeholder="example@example.com" class="form-control" required>
+                <input type="text" id="email" name="email" placeholder="example@example.com" class="form-control"
+                    required>
             </div>
 
             <div class="form-group">
-                <label for="Lab-Id">Pick Location</label>
-                <select name="Lab-Id" id="Lab-Id-Select" class="form-select form-select-lg">
-                    <option value="">Select your Location</option>
+                <label for="time">Pick your Day</label>
+                <input type="date" name="DayId" id="DayId" style="width: 100%;" required onchange="{
+                    var myDate = new Date(document.getElementById('DayId').value + '\n')
+                    loadTimesFromDate(myDate.getDay())
+                }">
+            </div>
+
+            <div class="form-group">
+                <label for="time">Pick your Time</label>
+                <select name="hourId" id="hourId-Select" class="form-select form-select-lg" onchange="{
+                    var hourId = document.getElementById('hourId-Select').value
+                    userOptionsByHour(hourId)
+
+                }" required>
+                    <option value="">Select your Time</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="tutor">Pick your Tutor</label>
-                <select name="tutorId" id="tutorId-Select" class="form-select form-select-lg" onchange="loadTime()" >
+                <select name="tutorId" id="tutorId-Select" class="form-select form-select-lg" onchange="//loadTime()">
                     <option value="">Select your Tutor</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="time">Pick your Time</label>
-                <select name="hourId" id="hourId-Select" class="form-select form-select-lg" required>
-                    <option value="">Select your Time</option>
+                <label for="Lab-Id">Pick Location (Look at Schedule)</label>
+                <select name="Lab-Id" id="Lab-Id-Select" class="form-select form-select-lg">
+                    <option value="">Select your Location</option>
                 </select>
             </div>
 
-            
+
+
+
         </form>
-        <button onclick="scheduleMeeting()" class="btn btn-primary btn-block">Schedule a Meeting</button>
+        <button class="btn btn-primary btn-block" onclick="
+        {
+            userHourId = document.getElementById('tutorId-Select').value
+            labId = document.getElementById('Lab-Id-Select').value
+            studentName = document.getElementById('Name').value
+            studentEmail = document.getElementById('email').value
+
+            date = new Date(document.getElementById('DayId').value + '\n')
+            today = new Date()
+            
+            if(date.getTime() > today.getTime()){
+                scheduleMeeting(userHourId, labId, studentName, studentEmail, date.getTime())
+            }else{
+                alert('Please pick a Date in the future')
+            }
+
+            
+        }">Schedule a Meeting</button>
     </div>
 </body>
+
 </html>
- 

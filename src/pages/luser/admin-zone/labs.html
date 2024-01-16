@@ -5,7 +5,16 @@
             <h2>Create a Lab</h2>
             <div><label for="LabName">Lab Name</label><input type="text" id="labName"></div>
             <div><label for="lablocation">Lab Location</label><input type="text" id="lablocation"></div>
-            <button type="button" onclick="newLab()" class="btn btn-secondary">Create Lab</button>
+            <button type="button" class="btn btn-danger" onclick="{
+                let deleteId = prompt('Please enter the Id of the Lab you wish to remove', '')
+                if (deleteId != null) {
+                    response = lab_deleteById(deleteId)
+                    alert('Lab ' + deleteId + ' has been deleted')
+                }
+
+            }">Delete Lab</button>
+            <button type="button" class="btn btn-success" onclick="newLab() ">Create Lab</button>
+
             <hr>
             <div>
                 <h2>All Labs</h2>
@@ -34,7 +43,7 @@
                         <select name="Lab-Id-Select" id="Lab-Id-Select">
                             <label for="LabId"> Select Lab</label>
                             <option value="">Select Lab</option>
-                            
+
                         </select>
                         <img src="../assets/images/caution.jpg" alt="" onload="addLab()" style="display: none;">
                     </div>
@@ -44,7 +53,7 @@
                             <option value="">Select a Timeslot</option>
                         </select>
                         <img src="../assets/images/caution.jpg" alt="" onload="hourOptions()" style="display: none;">
-                        
+
                     </div>
                     &nbsp;
                     <div>
@@ -54,21 +63,34 @@
                         <img src="../assets/images/caution.jpg" alt="" onload="userOptions()" style="display: none;">
                     </div>
                     &nbsp;
-                    <div><button type="button" onclick="createlabHour()" class="btn btn-secondary">Create Time Slot</button></div>
+                    <div><button type="button" onclick="createlabHour()" class="btn btn btn-success">Create Time
+                            Slot</button></div>
+                    <div>
+                        <button type="button" class="btn btn btn-danger" onclick="{
+                            let deleteId = prompt('Please enter the Id of the Time Slot you wish to remove', '')
+                            if (deleteId != null) {
+                                response = labHour_deleteById(deleteId)
+                                alert('Timeslot ' + deleteId + ' has been deleted')
+                            }
+                        }">Remove Time Slot</button>
+                    </div>
                 </div>
             </center>
-            
+
             <hr>
         </div>
     </div>
     <div class="col-lg-5">
         <div>
-            <center><h2>Lab Summaries</h2></center>
+            <center>
+                <h2>Lab Summaries</h2>
+            </center>
             <table id="labhour-table" class="table table-bordered">
                 <img src="../assets/images/caution.jpg" alt="" onload="populateLabHours()" style="display: none;">
                 <tr>
                     <th>Id</th>
                     <th>Lab Name</th>
+                    <th>Day Of Week</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Tutor on Duty</th>

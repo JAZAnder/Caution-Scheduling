@@ -13,12 +13,13 @@ type meeting struct{
 	LabId int `json:"labId"`
 	StudentName string `json:"studentName"`
 	StudentEmail string `json:"studentEmail"`
+	Date int `json:"date"`
 }
 
 func (m *meeting) getMeeting(db *sql.DB) error{
 	var tempTutorHourId string
 	var tempLabId string
-	query := "SELECT userHourId, labId, studentName, studentEmail FROM meetings WHERE id=" + strconv.Itoa(m.Id)
+	query := "SELECT tutorHourId, labId, studentName, studentEmail FROM meetings WHERE id=" + strconv.Itoa(m.Id)
 	err := db.QueryRow(query).Scan(&tempTutorHourId, &tempLabId, &m.StudentName, &m.StudentEmail)
 	m.UserHourId, err = strconv.Atoi(tempTutorHourId)
 	m.LabId, err = strconv.Atoi(tempLabId)
@@ -46,7 +47,7 @@ func (m *meeting) createMeeting(db *sql.DB) error{
 	// 	return errors.New("This tutor is not available for that given time")
 	// }
 
-	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"');"
+	query := "INSERT INTO `meetings` (`tutorHourId`, `labId`, `studentName`, `studentEmail`, `date`) VALUES ('"+strconv.Itoa(m.UserHourId)+"', '"+strconv.Itoa(m.LabId)+"', '"+m.StudentName+"', '"+m.StudentEmail+"', "+strconv.Itoa(m.Date)+");"
 	fmt.Print(query)
 	errsql := db.QueryRow(query)
 
@@ -65,7 +66,7 @@ func (m *meeting) createMeeting(db *sql.DB) error{
 }
 
 func getMeetings(db *sql.DB) ([]meeting, error){
-	rows, err := db.Query("SELECT `Id`, `tutorHourId`, `labId`, `studentName`, `studentEmail` FROM `meetings`")
+	rows, err := db.Query("SELECT `Id`, `tutorHourId`, `labId`, `studentName`, `studentEmail`, `date` FROM `meetings`")
 
 	if err != nil{
 		return nil, err
@@ -79,21 +80,24 @@ func getMeetings(db *sql.DB) ([]meeting, error){
 		var tempId string
 		var tempuserHourId string
 		var labId string
+		var date string
 
 		var m meeting
-		if err := rows.Scan(&tempId, &tempuserHourId, &labId, &m.StudentName, &m.StudentEmail); err != nil{
+		if err := rows.Scan(&tempId, &tempuserHourId, &labId, &m.StudentName, &m.StudentEmail, &date); err != nil{
 			return nil, err
 		}
 		m.Id, err = strconv.Atoi(tempId)
 		m.UserHourId, err = strconv.Atoi(tempuserHourId)
 		m.LabId, err = strconv.Atoi(labId)
+		m.Date, err = strconv.Atoi(date)
+
 		meetings = append(meetings, m)
 	}
 	return meetings, nil
 }
 
 func getMyMeetings(db *sql.DB, userName string) ([]meeting, error){
-	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
+	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail, m.date FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
 
 	if err != nil{
 		return nil, err
@@ -105,7 +109,7 @@ func getMyMeetings(db *sql.DB, userName string) ([]meeting, error){
 
 	for rows.Next(){
 		var m meeting
-		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail); err != nil{
+		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail, &m.Date); err != nil{
 			return nil, err
 		}
 		meetings = append(meetings, m)

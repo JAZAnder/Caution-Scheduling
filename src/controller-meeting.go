@@ -16,7 +16,6 @@ func (a *App) getMeeting(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusBadRequest, "Invalid meeting Id")
 		return
 	}
-
 	m := meeting{Id: id}
 	err = m.getMeeting(a.DB)
 	if err != nil{
@@ -73,6 +72,8 @@ func (a *App) createMeeting(w http.ResponseWriter, r *http.Request){
 	m.LabId, err = strconv.Atoi(r.PostFormValue("labId")) 
 	m.StudentName = r.PostFormValue("studentName")
 	m.StudentEmail = r.PostFormValue("studentEmail")
+	m.Date, err = strconv.Atoi(r.PostFormValue("date"))
+	
 	if err != nil || len(m.StudentName) <= 0 || len(m.StudentEmail) <= 0{
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
@@ -163,6 +164,7 @@ func (a *App) deleteMeeting(w http.ResponseWriter, r *http.Request){
 	}
 
 	vars := mux.Vars(r)
+	
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil{
 		respondWithError(w, http.StatusBadRequest, "Invalid meeting ID")

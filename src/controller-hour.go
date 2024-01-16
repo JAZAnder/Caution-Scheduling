@@ -17,13 +17,12 @@ func(a *App) getHour(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
 		return
 	}
-
 	h := hour{Id: id}
 	err = h.getHour(a.DB)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "Lab not Found")
+			respondWithError(w, http.StatusNotFound, "Timeslot not Found")
 		default:
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
@@ -69,6 +68,12 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 	var h hour
 	h.StartTime = r.PostFormValue("startTime")
 	h.EndTime = r.PostFormValue("endTime")
+	h.DayOfWeek, err = strconv.Atoi(r.PostFormValue("dayOfWeek"))
+
+	if (err != nil || h.DayOfWeek > 6 || h.DayOfWeek < 0) {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
 
 	if illegalString(h.StartTime) ||illegalString(h.EndTime){
 		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Invalid request payload")
@@ -90,6 +95,22 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 
 func (a *App) getHours(w http.ResponseWriter, r *http.Request){
 	hours, err := getHours(a.DB)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, hours)
+}
+
+func (a *App) getHoursByDay(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
+		return
+	}
+
+	hours, err := getHoursByDay(a.DB, id)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -145,4 +166,20 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 
+}
+
+func (a *App) getUsersByHour(w http.ResponseWriter, r *http.Request){
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
+		return
+	}
+
+	users, err := getUsersByHour(a.DB, id)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, users)
 }

@@ -1,6 +1,7 @@
 const lab_getall_Url = baseUrl+"/api/labs"
 const lab_create_Url = baseUrl+"/api/lab"
 const lab_getById_Url = baseUrl+"/api/lab/"
+const lab_deleteById_Url = baseUrl+"/api/lab/"
 
 function lab(lab){
     this.Id = lab['id']
@@ -43,6 +44,20 @@ async function lab_getById(id){
     url = lab_getById_Url + id
     var requestOptions = {
         method: 'GET',
+        redirect: 'follow'
+      }; 
+
+      const result = await fetch(url, requestOptions)
+      const data = await result.json();
+      console.log(data)
+      return data
+}
+
+
+async function lab_deleteById(id){
+    url = lab_deleteById_Url + id
+    var requestOptions = {
+        method: 'DELETE',
         redirect: 'follow'
       }; 
 

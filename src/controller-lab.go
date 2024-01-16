@@ -186,6 +186,51 @@ func (a *App) getAllLabHours(w http.ResponseWriter, r *http.Request) {
 
 	respondWithJSON(w, http.StatusOK, labhours)
 }
-func removeLabTimeSlot(){
-	//TODOAdds-labhour(Requires-Admin)
+func (a *App) removeLabTimeSlot(w http.ResponseWriter, r *http.Request){
+	var lh labHour
+	var c sessionCookie
+	var err error
+	vars := mux.Vars(r)
+
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Not an Admin")
+		return
+	}
+
+	lh.LabId, err = strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invaid lab Id")
+		return
+	}
+
+	lh.deleteLabTimeSlot(a.DB);
+
+	respondWithJSON(w, http.StatusOK, lh)
+	return 
+
+
 }

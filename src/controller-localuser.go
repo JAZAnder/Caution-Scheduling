@@ -396,9 +396,59 @@ func (a *App) addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 }
 func (a *App) removeTime() {
 	//TODORemove-Time-Userhour
+
 }
-func (a *App) removeTimeAdmin() {
-	//TODORemoved-Time-To-User
+func (a *App) removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
+	var c sessionCookie
+	var uh userHour
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			respondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.checkSession(a.DB)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			respondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	if !currentUser.IsAdmin {
+		respondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		return
+	}
+
+
+	vars := mux.Vars(r)
+	uh.Id, err = strconv.Atoi(vars["id"])
+
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		return
+	}
+
+	err = uh.deleteUserHourById(a.DB)
+
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	uh.Available = true
+	respondWithJSON(w, http.StatusOK, uh)
+
+
 }
 func (a *App) getluserTime(w http.ResponseWriter, r *http.Request) {
 	var uh userHour
@@ -443,7 +493,6 @@ func (a *App) getUserHourById(w http.ResponseWriter, r *http.Request){
 	}
 
 	respondWithJSON(w, http.StatusCreated, uh)
-
 }
 
 func (a *App) getAllUserHours(w http.ResponseWriter, r *http.Request){
@@ -453,4 +502,25 @@ func (a *App) getAllUserHours(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	respondWithJSON(w, http.StatusOK, userHours)
+}
+
+func (a *App) getUserInfo(w http.ResponseWriter, r *http.Request){
+	var u localUser
+	vars := mux.Vars(r)
+	u.UserName = vars["id"]
+
+	if illegalString(u.UserName){
+		respondWithError(w, http.StatusBadRequest, "Invaild UserId")
+		return
+	}
+
+	err := u.getUser(a.DB)
+
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, u)
+	
 }
