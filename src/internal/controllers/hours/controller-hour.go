@@ -1,4 +1,4 @@
-package main
+package hours
 
 import (
 	"database/sql"
@@ -6,19 +6,23 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
+	. "github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/gorilla/mux"
 )
+type HourController struct {
+	DB     *sql.DB
+}
 
-func(a *App) getHour(w http.ResponseWriter, r *http.Request){
+
+func(a *HourController) GetHour(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invaid hour Id")
 		return
 	}
-	h := hour{Id: id}
-	err = h.getHour(a.DB)
+	h := Hour{Id: id}
+	err = h.GetHour(a.DB)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
@@ -31,7 +35,7 @@ func(a *App) getHour(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, h)
 }
 
-func (a *App) createHour(w http.ResponseWriter, r *http.Request){
+func (a *HourController) CreateHour(w http.ResponseWriter, r *http.Request){
 	var c sessionCookie
 
 	cookie, err := r.Cookie("key")
@@ -65,7 +69,7 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	var h hour
+	var h Hour
 	h.StartTime = r.PostFormValue("startTime")
 	h.EndTime = r.PostFormValue("endTime")
 	h.DayOfWeek, err = strconv.Atoi(r.PostFormValue("dayOfWeek"))
@@ -81,7 +85,7 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	err = h.createHour(a.DB)
+	err = h.CreateHour(a.DB)
 	if err != nil {
 		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ err.Error())
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -93,8 +97,8 @@ func (a *App) createHour(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusCreated, h)
 }
 
-func (a *App) getHours(w http.ResponseWriter, r *http.Request){
-	hours, err := getHours(a.DB)
+func (a *HourController) GetHours(w http.ResponseWriter, r *http.Request){
+	hours, err := GetHours(a.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -102,7 +106,7 @@ func (a *App) getHours(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, hours)
 }
 
-func (a *App) getHoursByDay(w http.ResponseWriter, r *http.Request){
+func (a *HourController) GetHoursByDay(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -110,7 +114,7 @@ func (a *App) getHoursByDay(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	hours, err := getHoursByDay(a.DB, id)
+	hours, err := GetHoursByDay(a.DB, id)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -118,7 +122,7 @@ func (a *App) getHoursByDay(w http.ResponseWriter, r *http.Request){
 	respondWithJSON(w, http.StatusOK, hours)
 }
 
-func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
+func (a *HourController) DeleteHour(w http.ResponseWriter, r *http.Request){
 	var c sessionCookie
 
 	cookie, err := r.Cookie("key")
@@ -158,8 +162,8 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 		respondWithError(w, http.StatusBadRequest, "Invalid hour ID")
 		return
 	}
-	h := hour{Id: id}
-	if err := h.deleteHour(a.DB); err != nil {
+	h := Hour{Id: id}
+	if err := h.FeleteHour(a.DB); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -168,7 +172,7 @@ func (a *App) deleteHour(w http.ResponseWriter, r *http.Request){
 
 }
 
-func (a *App) getUsersByHour(w http.ResponseWriter, r *http.Request){
+func (a *HourController) GetUsersByHour(w http.ResponseWriter, r *http.Request){
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -176,7 +180,7 @@ func (a *App) getUsersByHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	users, err := getUsersByHour(a.DB, id)
+	users, err := GetUsersByHour(a.DB, id)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
