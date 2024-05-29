@@ -9,6 +9,7 @@ import (
 	//"github.com/markbates/goth"
 	//"github.com/markbates/goth/providers/google"
 	//"github.com/gin-gonic/gin"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/app"
 )
 
 // Entry Point

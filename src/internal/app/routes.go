@@ -1,10 +1,11 @@
-package main
+package App
 
 import (
 	"net/http"
 	//"github.com/gorilla/mux"
 	//"github.com/gin-gonic/gin"
 	//"example.com/controllers"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
 )
 
 //Routes
@@ -48,12 +49,13 @@ func (a *App) userRoutes(){
 }
 
 func (a *App) hourRoutes(){
-	a.Router.HandleFunc("/api/hour", a.createHour).Methods("POST")
-	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.getHour).Methods("GET")
-	a.Router.HandleFunc("/api/hours", a.getHours).Methods("GET")
-	a.Router.HandleFunc("/api/hour/day/{id:[0-9]+}", a.getHoursByDay).Methods("GET")
-	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.deleteHour).Methods("DELETE")
-	a.Router.HandleFunc("/api/hour/availability/{id:[0-9]+}", a.getUsersByHour).Methods("GET")
+	hC := HourController{ DB : a.DB}
+	a.Router.HandleFunc("/api/hour", hC.CreateHour).Methods("POST")
+	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", hC.GetHour).Methods("GET")
+	a.Router.HandleFunc("/api/hours", hC.GetHours).Methods("GET")
+	a.Router.HandleFunc("/api/hour/day/{id:[0-9]+}", hC.GetHoursByDay).Methods("GET")
+	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", hC.DeleteHour).Methods("DELETE")
+	a.Router.HandleFunc("/api/hour/availability/{id:[0-9]+}", hC.GetUsersByHour).Methods("GET")
 }
 
 func (a *App) meetingRoutes(){
