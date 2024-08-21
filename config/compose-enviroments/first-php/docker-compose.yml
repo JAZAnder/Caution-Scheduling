@@ -1,4 +1,4 @@
-1version: '3.5'
+version: '3.5'
 services:
     go-environment:
         container_name: go
