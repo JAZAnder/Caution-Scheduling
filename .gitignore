@@ -7,7 +7,7 @@
 *.dll
 *.so
 *.dylib
-
+!nginx.exe
 # Test binary, built with `go test -c`
 *.test
 
@@ -31,3 +31,4 @@ go.work.sum
 ./src/go.mod
 ./src/go.sum
 /config/go/pkg/*
+logs
