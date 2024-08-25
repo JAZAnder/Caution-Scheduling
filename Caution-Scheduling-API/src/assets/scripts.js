@@ -1,4 +1,4 @@
-const baseUrl = "http://local.techwall.xyz"
+const baseUrl = ""
 
 async function importElements(id, url){
     fetch(url).then(function (response) {
