@@ -7,7 +7,7 @@
 *.dll
 *.so
 *.dylib
-!nginx.exe
+!nginx*.exe
 # Test binary, built with `go test -c`
 *.test
 
