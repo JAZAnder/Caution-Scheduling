@@ -1,4 +1,4 @@
-package main
+package labs
 
 import (
 	"database/sql"

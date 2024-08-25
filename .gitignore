@@ -31,3 +31,4 @@ go.work.sum
 ./src/go.mod
 ./src/go.sum
 /config/go/pkg/*
+.vscode/settings.json
