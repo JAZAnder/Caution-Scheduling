@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Page Settings-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <!--CSS Stylesheets-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- load fontawesome -->
+    <link rel="stylesheet" href="../index.css">
+    <!-- BS Imports -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Javascript Files -->
+    <script src="../../assets/scripts.js"></script>
+    <script src="./luser.js"></script>
+
+    <!--Objects-->
+    <script src="../../assets/objects/localusers.js"></script>
+    <script src="../../assets/objects/hour.js"> </script>
+    <script src="../../assets/objects/meeting.js"> </script>
+    <script src="../assets/objects/lab.js"></script>
+    <script src="../assets/objects/labhour.js"></script>
+    <script src="../../assets/objects/userhour.js"></script>
+
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <script>checkLogin()</script>
+
+    <div id="navBar">
+        <script> loadNavBar()</script>
+    </div>
+    <div id="body" class="container-fluid ">
+        <div class="text-center">
+<h1>Hello <t id="username"></t>,</h1>
+        <h3>Welcome to Caution Scheduling!</h3>
+        <h4>This is your user portal, can veiw your events and change your settings.</h4>
+        <h4>To navigate between pages use the tabs at the top of the page (click the hamberger if on mobile). Along the
+            bottom of the page you will see menus to
+            bring you to differnt areas of the website </h4>
+        </div>
+        
+
+    </div>
+    <div id="footer">
+        <script>importElements("footer", "../assets/elements/footer.html")</script>
+    </div>
+    <!-- <div class="container">
+
+    <div class="row">
+        <div id="error"></div>
+        <div class="col-lg-3">
+            <div>
+                <h2>Create New User</h2>
+                <div><label for="userName">Username</label><input type="text" id="userName"></div>
+                <div><label for="firstName">First Name</label><input type="text" id="firstName"></div>
+                <div><label for="lastName">Last Name</label><input type="text" id="lastName"></div>
+                <div><label for="email">Email</label><input type="text" id="email"></div>
+                <div><label for="password">Password</label><input type="password" id="password"></div>
+                <div>
+                    <p>Is Admin</p>
+                    <label for="isAdminTrue">True</label>
+                    <input type="radio" name="isAdmin" id="isAdminTrue" value="True">
+                    <label for="isAdminFalse">False</label>
+                    <input type="radio" name="isAdmin" id="isAdminFalse" value="False">
+                </div>
+                <button onclick="createUser()">Create New User</button>
+            </div>
+            <div>
+                <h2>Create New Time Slot</h2>
+                <div><label for="StartTime">StartTime</label><input type="text" id="StartTime"></div>
+                <div><label for="EndTime">EndTime</label><input type="text" id="EndTime"></div>
+                <button onclick="createHour()">Create Time Slot</button>
+            </div>lab
+        </div>
+        <div class="col-lg-9">
+            <h2>Meetings</h2>
+            <table id="meeting-table" class="table table-bordered">
+                <script>populateMeetings()</script>
+                <tr>
+                    <th>Id</th>
+                    <th>studentName</th>
+                    <th>studentEmail</th>
+                    <th>Hour</th>
+                </tr>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Users</h3>
+                    <table id="users-Table">
+                        <script>populateUsers()</script>
+                        <tr>
+                            <th> userName </th>
+                            <th> firstName </th>
+                            <th> lastName </th>
+                            <th> email </th>
+                            <th> isAdmin </th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-6">
+                    <h3>Time Slots</h3>
+                    <table id="time-table">
+                        <script>populateTime()</script>
+                        <tr>
+                            <th>Id</th>
+                            <th>startTime</th>
+                            <th>endTime</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+
+
+</body>
+
+</html>

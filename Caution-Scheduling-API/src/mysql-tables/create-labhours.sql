@@ -1,0 +1,5 @@
+CREATE TABLE `MYSQL_DATABASE`.`labHours` (
+    `Id` INT AUTO_INCREMENT PRIMARY KEY, 
+    `LabId` INT NOT NULL , 
+    `HoursId` INT NOT NULL , 
+    `TutorId` INT NOT NULL) ;
