@@ -2,7 +2,7 @@ package helpers
 
 import "strings"
 
-func illegalString(test string) bool {
+func IllegalString(test string) bool {
 	if len(test) <= 0 {
 		return true
 	}
