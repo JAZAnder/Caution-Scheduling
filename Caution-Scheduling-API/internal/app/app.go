@@ -6,10 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
 )
 
 type App struct {
@@ -17,16 +16,10 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (a *App) Initialize(user, password, db, dbname string) {
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", user, password, db ,dbname)
+func (a *App) Initialize() {
 
-	var err error
+	a.DB = GetDatabase()
 
-	//Creates MySQL Connection
-	a.DB, err = sql.Open("mysql", connectionString)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	checkDatabase(a.DB)
 
