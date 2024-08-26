@@ -1,8 +1,7 @@
-package main
+package app
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -43,17 +42,6 @@ func (a *App) Run(addr string) {
 	http.ListenAndServe(":" + addr, a.Router)
 }
 
-func respondWithError(w http.ResponseWriter, code int, message string) {
-    respondWithJSON(w, code, map[string]string{"error": message})
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-    response, _ := json.Marshal(payload)
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(code)
-    w.Write(response)
-}
 
 func checkDatabase(db *sql.DB){
 	dir := "./mysql-tables"
@@ -76,10 +64,4 @@ func checkDatabase(db *sql.DB){
 
 		}
 	}
-}
-
-func illegalString(test string) bool{
-	if(len(test) <= 0){return true}
-	if(strings.ContainsAny(test, "/\\-;<>'\"\b\n\r\t%_")){return true}
-	return false
 }
