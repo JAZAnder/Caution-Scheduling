@@ -2,9 +2,8 @@ package app
 
 import (
 	"net/http"
-	//"github.com/gorilla/mux"
-	//"github.com/gin-gonic/gin"
-	//"example.com/controllers"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
+
 )
 
 //Routes
@@ -12,7 +11,7 @@ import (
 func (a *App) initializeRoutes() {
     a.labRoutes()
 	a.userRoutes()
-	a.hourRoutes()
+	AddHourRoutes(a.Router)
 	a.meetingRoutes()
 	a.staticRoutes()
 }
@@ -27,6 +26,8 @@ func (a *App) labRoutes(){
 	a.Router.HandleFunc("/api/lab/timeslots", a.getAllLabHours).Methods("GET")
 	a.Router.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", a.removeLabTimeSlot).Methods("DELETE")
 }
+
+
 
 func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/luser", a.createLocalUser).Methods("POST")
@@ -45,15 +46,6 @@ func (a *App) userRoutes(){
 	a.Router.HandleFunc("/api/tutor/timeslots",a.getAllUserHours).Methods("GET")
 	a.Router.HandleFunc("/api/tutor/whois/{id}", a.getUserInfo).Methods("GET")
 
-}
-
-func (a *App) hourRoutes(){
-	a.Router.HandleFunc("/api/hour", a.createHour).Methods("POST")
-	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.getHour).Methods("GET")
-	a.Router.HandleFunc("/api/hours", a.getHours).Methods("GET")
-	a.Router.HandleFunc("/api/hour/day/{id:[0-9]+}", a.getHoursByDay).Methods("GET")
-	a.Router.HandleFunc("/api/hour/{id:[0-9]+}", a.deleteHour).Methods("DELETE")
-	a.Router.HandleFunc("/api/hour/availability/{id:[0-9]+}", a.getUsersByHour).Methods("GET")
 }
 
 func (a *App) meetingRoutes(){
