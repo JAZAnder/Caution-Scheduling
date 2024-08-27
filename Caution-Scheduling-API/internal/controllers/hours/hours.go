@@ -1,4 +1,4 @@
-package main
+package hours
 
 import (
 	"database/sql"
