@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	. "github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	. "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
 	"github.com/gorilla/mux"
 )
@@ -50,7 +51,7 @@ func getHour(w http.ResponseWriter, r *http.Request){
 }
 
 func createHour(w http.ResponseWriter, r *http.Request){
-	var c sessionCookie
+	var c SessionCookie
 
 	cookie, err := r.Cookie("key")
 	if err != nil {
@@ -66,7 +67,7 @@ func createHour(w http.ResponseWriter, r *http.Request){
 
 	c.Cookie = cookie.Value
 
-	currentUser, err := c.checkSession(a.DB)
+	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			RespondWithError(w, http.StatusUnauthorized, "Session Expired")
@@ -99,7 +100,7 @@ func createHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	err = h.CreateHour(a.DB)
+	err = h.CreateHour(database)
 	if err != nil {
 		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ err.Error())
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
@@ -112,7 +113,7 @@ func createHour(w http.ResponseWriter, r *http.Request){
 }
 
 func getHours(w http.ResponseWriter, r *http.Request){
-	hours, err := GetHours(a.DB)
+	hours, err := GetHours(database)
 	if err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -128,7 +129,7 @@ func getHoursByDay(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	hours, err := GetHoursByDay(a.DB, id)
+	hours, err := GetHoursByDay(database, id)
 	if err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -137,7 +138,7 @@ func getHoursByDay(w http.ResponseWriter, r *http.Request){
 }
 
 func deleteHour(w http.ResponseWriter, r *http.Request){
-	var c sessionCookie
+	var c SessionCookie
 
 	cookie, err := r.Cookie("key")
 	if err != nil {
@@ -153,7 +154,7 @@ func deleteHour(w http.ResponseWriter, r *http.Request){
 
 	c.Cookie = cookie.Value
 
-	currentUser, err := c.checkSession(a.DB)
+	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			RespondWithError(w, http.StatusUnauthorized, "Session Expired")
@@ -177,7 +178,7 @@ func deleteHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	h := Hour{Id: id}
-	if err := h.DeleteHour(a.DB); err != nil {
+	if err := h.DeleteHour(database); err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -194,7 +195,7 @@ func getUsersByHour(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	users, err := GetUsersByHour(a.DB, id)
+	users, err := GetUsersByHour(database, id)
 	if err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return

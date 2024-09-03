@@ -1,4 +1,4 @@
-package main
+package labs
 
 import (
 	"database/sql"
@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	. "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
 	. "github.com/JAZAnder/Caution-Scheduling/internal/objects/lab"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 )
 
 func AddLabRoutes(a *mux.Router){
@@ -149,7 +150,7 @@ func openLabTimeSlot(w http.ResponseWriter, r *http.Request){
 
 	c.Cookie = cookie.Value
 
-	currentUser, err := c.checkSession(database)
+	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			RespondWithError(w, http.StatusUnauthorized, "Session Expired")
@@ -182,14 +183,14 @@ func openLabTimeSlot(w http.ResponseWriter, r *http.Request){
 	uh.HourId = lh.HourId
 	uh.Tutor = r.PostFormValue("TutorName")
 
-	err = uh.getUserHourId(database)
+	err = uh.GetUserHourId(database)
 
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, "This User cannot be scheduled at this Time")
 		return
 	}
 	lh.UserHourId = uh.Id
-	lh.createLabTimeSlot(database);
+	lh.CreateLabTimeSlot(database);
 	RespondWithJSON(w, http.StatusCreated, lh)
 	return 
 
@@ -204,8 +205,8 @@ func getAllLabHours(w http.ResponseWriter, r *http.Request) {
 	RespondWithJSON(w, http.StatusOK, labHours)
 }
 func removeLabTimeSlot(w http.ResponseWriter, r *http.Request){
-	var lh labHour
-	var c sessionCookie
+	var lh LabHour
+	var c SessionCookie
 	var err error
 	vars := mux.Vars(r)
 
@@ -222,7 +223,7 @@ func removeLabTimeSlot(w http.ResponseWriter, r *http.Request){
 
 	c.Cookie = cookie.Value
 
-	currentUser, err := c.checkSession(database)
+	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			RespondWithError(w, http.StatusUnauthorized, "Session Expired")
@@ -244,7 +245,7 @@ func removeLabTimeSlot(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	lh.deleteLabTimeSlot(database);
+	lh.DeleteLabTimeSlot(database);
 
 	RespondWithJSON(w, http.StatusOK, lh)
 	return 
