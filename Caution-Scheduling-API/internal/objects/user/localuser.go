@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type localUser struct{
+type LocalUser struct{
 	UserName string `json:"userName"`
 	FirstName string `json:"firstName"`
 	LastName string `json:"lastName"`
@@ -16,11 +16,11 @@ type localUser struct{
 	IsAdmin bool `json:"isAdmin"`
 }
 
-func (u *localUser) login(db *sql.DB) (error) {
+func (u *LocalUser) Login(db *sql.DB) (error) {
 	query := "SELECT `password` FROM `localusers` WHERE `userName` = '"+u.UserName+"';"
 	result := db.QueryRow(query)
 
-	var storedCreds localUser
+	var storedCreds LocalUser
 
 	err := result.Scan(&storedCreds.Password)
 	if err == sql.ErrNoRows {
@@ -44,7 +44,7 @@ func (u *localUser) login(db *sql.DB) (error) {
 	return nil
 }
 
-func (u *localUser) signUp(db *sql.DB) error {
+func (u *LocalUser) SignUp(db *sql.DB) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
 		return err; 
@@ -65,7 +65,7 @@ func (u *localUser) signUp(db *sql.DB) error {
 	return nil
 }
 
-func getLusers(db *sql.DB, isAdmin bool) ([]localUser, error) {
+func GetLusers(db *sql.DB, isAdmin bool) ([]LocalUser, error) {
 	rows, err := db.Query("SELECT * FROM `localusers`")
 
 	if err != nil {
@@ -74,10 +74,10 @@ func getLusers(db *sql.DB, isAdmin bool) ([]localUser, error) {
 
 	defer rows.Close()
 
-	lusers := []localUser{}
+	lusers := []LocalUser{}
 
 	for rows.Next() {
-		var u localUser
+		var u LocalUser
 		var uAdmin string
 		if err := rows.Scan(&u.UserName, &u.FirstName, &u.LastName, &u.Email, &u.Password, &uAdmin); err != nil {
 			return nil, err
@@ -92,7 +92,7 @@ func getLusers(db *sql.DB, isAdmin bool) ([]localUser, error) {
 	return lusers, nil
 }
 
-func (u *localUser) changePassword(db *sql.DB)error{
+func (u *LocalUser) ChangePassword(db *sql.DB)error{
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
 		return err; 
@@ -107,7 +107,7 @@ func (u *localUser) changePassword(db *sql.DB)error{
 	return nil
 }
 
-func (u *localUser) getUser(db *sql.DB) error{
+func (u *LocalUser) GetUser(db *sql.DB) error{
 	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
 	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
 	u.Email = "REDACTED"
