@@ -2,35 +2,36 @@ package app
 
 import (
 	"net/http"
-	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
-	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/labs"
-	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/users"
-	. "github.com/JAZAnder/Caution-Scheduling/internal/controllers/meetings"
+	"github.com/gorilla/mux"
+	hourController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
+	labController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/labs"
+	userController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/users"
+	meetingController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/meetings"
 
 )
 
 //Routes
 
 func (a *App) initializeRoutes() {
-	AddLabRoutes(a.Router)
-	AddUserRoutes(a.Router)
-	AddHourRoutes(a.Router)
-	AddMeetingRoutes(a.Router)
-	a.staticRoutes()
+	labController.AddLabRoutes(a.Router)
+	userController.AddUserRoutes(a.Router)
+	hourController.AddHourRoutes(a.Router)
+	meetingController.AddMeetingRoutes(a.Router)
+	AddStaticRoutes(a.Router)
 }
 
 
 
 
 
-func (a *App) staticRoutes(){
+func AddStaticRoutes(a *mux.Router){
 	//Assets
 	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
-	a.Router.PathPrefix("/assets/").Handler(fs)
+	a.PathPrefix("/assets/").Handler(fs)
 
 
     // Serve the homepage when the root URL ("/") is accessed
 	rf := http.StripPrefix("/", http.FileServer(http.Dir("./pages/")))
-	a.Router.PathPrefix("/").Handler(rf)
+	a.PathPrefix("/").Handler(rf)
 
 }
