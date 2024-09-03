@@ -156,7 +156,6 @@ func loginLocalUser(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &cookie)
 	helpers.RespondWithJSON(w, http.StatusOK, u)
-	return
 
 }
 
@@ -195,7 +194,6 @@ func logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &newcookie)
 
 	helpers.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
-	return
 }
 
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -225,7 +223,7 @@ func isAdmin(r *http.Request) (bool, error) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			return false, errors.New("Cookie not Found")
+			return false, errors.New("cookie not Found")
 		} else {
 			return false, errors.New(err.Error())
 		}
@@ -236,7 +234,7 @@ func isAdmin(r *http.Request) (bool, error) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return false, errors.New("Session Expired")
+			return false, errors.New("session Expired")
 		} else {
 			return false, errors.New(err.Error())
 		}
@@ -285,7 +283,6 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 	u.ChangePassword(database)
 
 	helpers.RespondWithJSON(w, http.StatusCreated, "Password Changed")
-	return
 
 }
 func resetPassword(w http.ResponseWriter, r *http.Request) {
@@ -324,7 +321,6 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	u.Password = r.PostFormValue("password")
 	u.ChangePassword(database)
 	helpers.RespondWithJSON(w, http.StatusCreated, "Password Changed")
-	return
 }
 func addTime(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
