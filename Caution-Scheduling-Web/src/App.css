@@ -1,8 +1,102 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
+/* Header styling */
+.topheader, .bottomheader {
+  background-color: #1a5632;
+  padding: 10px 30px; /* Padding on left and right */
+  color: white;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.topheader {
+  top: 0; /* Ensure the topheader is at the very top */
+  z-index: 1000; /* Ensure the header is above other content */
+}
+
+.bottomheader {
+  top: 75px; /* Adjust to fit below the topheader */
+  z-index: 999; /* Ensure it is just below the topheader */
+  display: flex;
+  justify-content: center; /* Center nav items horizontally */
+}
+
+.header-logo {
+  height: 50px;
+  margin-left: 20px;
+}
+
+.center-text {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-right: 20px; /* Added padding on the right side */
+  flex: 1; /* Allow center text to take available space */
+}
+
+/* Nav list styling */
+.nav-list {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  justify-content: center; /* Center nav items within the list */
+}
+
+.nav-list li {
+  margin: 0 15px;
+}
+
+.nav-list a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-list a:hover {
+  text-decoration: underline;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  padding-top: 120px; /* Adjust based on combined height of both headers */
+}
+
+.footer {
+  background-color: #1a5632;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer a {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .logo {
@@ -11,9 +105,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
