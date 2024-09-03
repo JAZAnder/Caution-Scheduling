@@ -1,4 +1,4 @@
-package helpers
+package database
 
 import (
 	"database/sql"
@@ -16,22 +16,20 @@ type database struct {
 	DB *sql.DB
 }
 
-var(
+var (
 	db database
 )
 
-func GetDatabase() *sql.DB{
+func GetDatabase() *sql.DB {
 
-	once.Do(func ()  {
+	once.Do(func() {
 		createDatabase()
 	})
 
 	return db.DB
 }
 
-
-func createDatabase(){
-
+func createDatabase() {
 
 	user := "APP_DB_USERNAME"
 	password := "APP_DB_PASSWORD"
@@ -42,16 +40,14 @@ func createDatabase(){
 	if err != nil {
 		log.Println("Error Loading .env file in database")
 
-	}else{
+	} else {
 		user = os.Getenv("APP_DB_USERNAME")
 		password = os.Getenv("APP_DB_PASSWORD")
 		dbServer = os.Getenv("APP_DB")
 		dbName = os.Getenv("APP_DB_NAME")
 	}
 
-
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", user, password, dbServer, dbName)
-
 
 	//Creates MySQL Connection
 	db.DB, err = sql.Open("mysql", connectionString)
