@@ -8,6 +8,9 @@ import (
 	"sync"
 
 	"github.com/joho/godotenv"
+
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database/seeding"
+
 )
 
 var once sync.Once
@@ -54,5 +57,7 @@ func createDatabase() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	seeding.CreateTables(db.DB)
 
 }
