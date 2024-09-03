@@ -9,9 +9,10 @@ import (
 
 	"github.com/gorilla/mux"
 
-	helpers "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
-	user "github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
+	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 )
 
 func AddUserRoutes(a *mux.Router) {
@@ -34,15 +35,15 @@ func AddUserRoutes(a *mux.Router) {
 }
 
 var (
-	database = helpers.GetDatabase()
+	database = db.GetDatabase()
 )
 
 func isLoggedIn(w http.ResponseWriter, r *http.Request) {
 	if true {
-		helpers.RespondWithJSON(w, http.StatusOK, map[string]string{"loggedin": "true"})
+		responses.RespondWithJSON(w, http.StatusOK, map[string]string{"loggedin": "true"})
 	}
 
-	helpers.RespondWithError(w, http.StatusUnauthorized, "Not Logged In")
+	responses.RespondWithError(w, http.StatusUnauthorized, "Not Logged In")
 }
 
 func whoami(w http.ResponseWriter, r *http.Request) {
@@ -51,10 +52,10 @@ func whoami(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -65,15 +66,15 @@ func whoami(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
-	helpers.RespondWithJSON(w, http.StatusOK, user)
+	responses.RespondWithJSON(w, http.StatusOK, user)
 }
 
 func createLocalUser(w http.ResponseWriter, r *http.Request) {
@@ -90,10 +91,10 @@ func createLocalUser(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -103,29 +104,29 @@ func createLocalUser(w http.ResponseWriter, r *http.Request) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		helpers.RespondWithError(w, http.StatusForbidden, "Not an Admin")
+		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
 	if helpers.IllegalString(u.UserName) || len(u.Password) <= 0 || helpers.IllegalString(u.FirstName) || helpers.IllegalString(u.LastName) || helpers.IllegalString(u.Email) {
-		helpers.RespondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
+		responses.RespondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
 		return
 	}
 	err = u.SignUp(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	fmt.Println("	User Created by " + currentUser.UserName)
-	helpers.RespondWithJSON(w, http.StatusCreated, u)
+	responses.RespondWithJSON(w, http.StatusCreated, u)
 }
 
 func loginLocalUser(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +139,7 @@ func loginLocalUser(w http.ResponseWriter, r *http.Request) {
 	u.Password = "REDACTED"
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusUnauthorized, "Username or Password Incorrect")
+		responses.RespondWithError(w, http.StatusUnauthorized, "Username or Password Incorrect")
 		return
 	}
 
@@ -155,7 +156,7 @@ func loginLocalUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
-	helpers.RespondWithJSON(w, http.StatusOK, u)
+	responses.RespondWithJSON(w, http.StatusOK, u)
 
 }
 
@@ -165,10 +166,10 @@ func logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -177,7 +178,7 @@ func logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 
 	err = c.DeleteSession(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -193,7 +194,7 @@ func logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &newcookie)
 
-	helpers.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+	responses.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -210,11 +211,11 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	Users, err := user.GetLusers(database, isAdmin)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	helpers.RespondWithJSON(w, http.StatusOK, Users)
+	responses.RespondWithJSON(w, http.StatusOK, Users)
 }
 
 func isAdmin(r *http.Request) (bool, error) {
@@ -251,10 +252,10 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -262,10 +263,10 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 	user, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -275,14 +276,14 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 	err = u.Login(database)
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusUnauthorized, "Password is Incorrect")
+		responses.RespondWithError(w, http.StatusUnauthorized, "Password is Incorrect")
 		return
 	}
 
 	u.Password = r.PostFormValue("newPassword")
 	u.ChangePassword(database)
 
-	helpers.RespondWithJSON(w, http.StatusCreated, "Password Changed")
+	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
 
 }
 func resetPassword(w http.ResponseWriter, r *http.Request) {
@@ -291,10 +292,10 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -304,23 +305,23 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		helpers.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
 		return
 	}
 
 	u.UserName = r.PostFormValue("UserName")
 	u.Password = r.PostFormValue("password")
 	u.ChangePassword(database)
-	helpers.RespondWithJSON(w, http.StatusCreated, "Password Changed")
+	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
 }
 func addTime(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
@@ -328,10 +329,10 @@ func addTime(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -341,10 +342,10 @@ func addTime(w http.ResponseWriter, r *http.Request) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -352,18 +353,18 @@ func addTime(w http.ResponseWriter, r *http.Request) {
 	uh.Tutor = currentUser.UserName
 	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId"))
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
 		return
 	}
 
 	err = uh.CreateUserHour(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	uh.Available = true
 
-	helpers.RespondWithJSON(w, http.StatusCreated, uh)
+	responses.RespondWithJSON(w, http.StatusCreated, uh)
 }
 
 func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
@@ -372,10 +373,10 @@ func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -385,23 +386,23 @@ func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		helpers.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
 		return
 	}
 
 	hourId := r.PostFormValue("hourId")
 	uh.HourId, err = strconv.Atoi(hourId)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
 		return
 	}
 	uh.Tutor = r.PostFormValue("username")
@@ -409,11 +410,11 @@ func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	err = uh.CreateUserHour(database)
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	uh.Available = true
-	helpers.RespondWithJSON(w, http.StatusCreated, uh)
+	responses.RespondWithJSON(w, http.StatusCreated, uh)
 
 }
 func removeTime() {
@@ -426,10 +427,10 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -439,16 +440,16 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		helpers.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
 		return
 	}
 
@@ -456,18 +457,18 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	uh.Id, err = strconv.Atoi(vars["id"])
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
 		return
 	}
 
 	err = uh.DeleteUserHourById(database)
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	uh.Available = true
-	helpers.RespondWithJSON(w, http.StatusOK, uh)
+	responses.RespondWithJSON(w, http.StatusOK, uh)
 
 }
 func getluserTime(w http.ResponseWriter, r *http.Request) {
@@ -477,10 +478,10 @@ func getluserTime(w http.ResponseWriter, r *http.Request) {
 
 	userHours, err := uh.GetHours(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, userHours)
+	responses.RespondWithJSON(w, http.StatusOK, userHours)
 }
 func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 	var uh user.UserHour
@@ -489,10 +490,10 @@ func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 
 	userHours, err := uh.GetAvailableHours(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, userHours)
+	responses.RespondWithJSON(w, http.StatusOK, userHours)
 }
 
 func getUserHourById(w http.ResponseWriter, r *http.Request) {
@@ -502,26 +503,26 @@ func getUserHourById(w http.ResponseWriter, r *http.Request) {
 	uh.Id, err = strconv.Atoi(vars["id"])
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid Id")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Id")
 		return
 	}
 
 	err = uh.GetUserHour(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	helpers.RespondWithJSON(w, http.StatusCreated, uh)
+	responses.RespondWithJSON(w, http.StatusCreated, uh)
 }
 
 func getAllUserHours(w http.ResponseWriter, r *http.Request) {
 	userHours, err := user.GetUserHours(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, userHours)
+	responses.RespondWithJSON(w, http.StatusOK, userHours)
 }
 
 func getUserInfo(w http.ResponseWriter, r *http.Request) {
@@ -530,17 +531,17 @@ func getUserInfo(w http.ResponseWriter, r *http.Request) {
 	u.UserName = vars["id"]
 
 	if helpers.IllegalString(u.UserName) {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invaild UserId")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invaild UserId")
 		return
 	}
 
 	err := u.GetUser(database)
 
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	helpers.RespondWithJSON(w, http.StatusOK, u)
+	responses.RespondWithJSON(w, http.StatusOK, u)
 
 }

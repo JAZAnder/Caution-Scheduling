@@ -6,17 +6,22 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	hour "github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
-	user "github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-	helpers "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
+
 	"github.com/gorilla/mux"
+
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
+	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+
 )
 
 type HourController struct {
-	DB     *sql.DB
+	DB *sql.DB
 }
 
-func AddHourRoutes(a *mux.Router){
+func AddHourRoutes(a *mux.Router) {
 	a.HandleFunc("/api/hour", createHour).Methods("POST")
 	a.HandleFunc("/api/hour/{id:[0-9]+}", getHour).Methods("GET")
 	a.HandleFunc("/api/hours", getHours).Methods("GET")
@@ -25,15 +30,15 @@ func AddHourRoutes(a *mux.Router){
 	a.HandleFunc("/api/hour/availability/{id:[0-9]+}", getUsersByHour).Methods("GET")
 }
 
-var(
-	database = helpers.GetDatabase()
+var (
+	database = db.GetDatabase()
 )
 
-func getHour(w http.ResponseWriter, r *http.Request){
+func getHour(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
 		return
 	}
 	h := hour.Hour{Id: id}
@@ -41,26 +46,26 @@ func getHour(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			helpers.RespondWithError(w, http.StatusNotFound, "Timeslot not Found")
+			responses.RespondWithError(w, http.StatusNotFound, "Timeslot not Found")
 		default:
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		}
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, h)
+	responses.RespondWithJSON(w, http.StatusOK, h)
 }
 
-func createHour(w http.ResponseWriter, r *http.Request){
+func createHour(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
 
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -70,17 +75,17 @@ func createHour(w http.ResponseWriter, r *http.Request){
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Not an Admin")
-		helpers.RespondWithError(w, http.StatusForbidden, "Not an Admin")
+		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName + " : " + "Not an Admin")
+		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
 
@@ -89,65 +94,65 @@ func createHour(w http.ResponseWriter, r *http.Request){
 	h.EndTime = r.PostFormValue("endTime")
 	h.DayOfWeek, err = strconv.Atoi(r.PostFormValue("dayOfWeek"))
 
-	if (err != nil || h.DayOfWeek > 6 || h.DayOfWeek < 0) {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
+	if err != nil || h.DayOfWeek > 6 || h.DayOfWeek < 0 {
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
-	if helpers.IllegalString(h.StartTime) ||helpers.IllegalString(h.EndTime){
-		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ "Invalid request payload")
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
+	if helpers.IllegalString(h.StartTime) || helpers.IllegalString(h.EndTime) {
+		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName + " : " + "Invalid request payload")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
 	err = h.CreateHour(database)
 	if err != nil {
-		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName +" : "+ err.Error())
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		fmt.Println("	Fail : Time Not Created by " + currentUser.UserName + " : " + err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	fmt.Println("	Time Created by " + currentUser.UserName)
 
-	helpers.RespondWithJSON(w, http.StatusCreated, h)
+	responses.RespondWithJSON(w, http.StatusCreated, h)
 }
 
-func getHours(w http.ResponseWriter, r *http.Request){
+func getHours(w http.ResponseWriter, r *http.Request) {
 	hours, err := hour.GetHours(database)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, hours)
+	responses.RespondWithJSON(w, http.StatusOK, hours)
 }
 
-func getHoursByDay(w http.ResponseWriter, r *http.Request){
+func getHoursByDay(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
 		return
 	}
 
 	hours, err := hour.GetHoursByDay(database, id)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, hours)
+	responses.RespondWithJSON(w, http.StatusOK, hours)
 }
 
-func deleteHour(w http.ResponseWriter, r *http.Request){
+func deleteHour(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
 
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
@@ -157,48 +162,48 @@ func deleteHour(w http.ResponseWriter, r *http.Request){
 	currentUser, err := c.CheckSession(database)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			helpers.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
 			return
 		} else {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 	}
 
 	if !currentUser.IsAdmin {
-		fmt.Println("	Fail : Time Not Deleted by " + currentUser.UserName +" : "+ "Not an Admin")
-		helpers.RespondWithError(w, http.StatusForbidden, "Not an Admin")
+		fmt.Println("	Fail : Time Not Deleted by " + currentUser.UserName + " : " + "Not an Admin")
+		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid hour ID")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour ID")
 		return
 	}
 	h := hour.Hour{Id: id}
 	if err := h.DeleteHour(database); err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	helpers.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+	responses.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 
 }
 
-func getUsersByHour(w http.ResponseWriter, r *http.Request){
+func getUsersByHour(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
+		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
 		return
 	}
 
 	users, err := user.GetUsersByHour(database, id)
 	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	helpers.RespondWithJSON(w, http.StatusOK, users)
+	responses.RespondWithJSON(w, http.StatusOK, users)
 }

@@ -6,9 +6,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	. "github.com/JAZAnder/Caution-Scheduling/internal/helpers"
+
+	database "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+
 )
 
 type App struct {
@@ -18,7 +21,7 @@ type App struct {
 
 func (a *App) Initialize() {
 
-	a.DB = GetDatabase()
+	a.DB = database.GetDatabase()
 
 
 	checkDatabase(a.DB)
