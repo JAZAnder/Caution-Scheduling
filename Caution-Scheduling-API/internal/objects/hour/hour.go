@@ -1,17 +1,17 @@
-package main
+package hour
 import(
 	"database/sql"
 	"strconv"
 )
 
-type hour struct{
+type Hour struct{
 	Id int `json:"id"`
 	StartTime string `json:"startTime"`
 	EndTime string `json:"endTime"`
 	DayOfWeek int `json:"dayOfWeek"`
 }
 
-func (h *hour) getHour(db *sql.DB) error{
+func (h *Hour) GetHour(db *sql.DB) error{
 	var tempDayOfWeek string
 	query := "SELECT startTime, endTime, dayOfWeek  FROM hours WHERE id=" + strconv.Itoa(h.Id)
 	err := db.QueryRow(query).Scan(&h.StartTime, &h.EndTime, &tempDayOfWeek)
@@ -20,13 +20,13 @@ func (h *hour) getHour(db *sql.DB) error{
 	return err
 }
 
-func (h *hour) updateHour(db *sql.DB) error{
+func (h *Hour) UpdateHour(db *sql.DB) error{
 	query := "UPDATE `hours` SET `startTime` = '"+h.StartTime+"', `endTime` = '"+h.EndTime+"' WHERE `hours`.`id` = "+strconv.Itoa(h.Id)+""
 	_, err := db.Exec(query)
 	return err
 }
 
-func (h *hour) createHour(db *sql.DB) error{
+func (h *Hour) CreateHour(db *sql.DB) error{
 	query := "INSERT INTO `hours` (`startTime`, `endTime`, `dayOfWeek`) VALUES ('"+h.StartTime+"','"+h.EndTime+"','"+strconv.Itoa(h.DayOfWeek)+"')"
 	err := db.QueryRow(query)
 
@@ -36,7 +36,7 @@ func (h *hour) createHour(db *sql.DB) error{
 	return nil
 }
 
-func getHours(db *sql.DB) ([]hour, error){
+func GetHours(db *sql.DB) ([]Hour, error){
 	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek FROM hours")
 
 	if err != nil{
@@ -45,10 +45,10 @@ func getHours(db *sql.DB) ([]hour, error){
 
 	defer rows.Close()
 
-	hours := []hour{}
+	hours := []Hour{}
 
 	for rows.Next(){
-		var h hour
+		var h Hour
 		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek);
 		if err!= nil{
 			return nil,err
@@ -58,7 +58,7 @@ func getHours(db *sql.DB) ([]hour, error){
 	return hours, nil
 }
 
-func getHoursByDay(db *sql.DB, dayOfWeek int) ([]hour, error){
+func GetHoursByDay(db *sql.DB, dayOfWeek int) ([]Hour, error){
 	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek FROM hours WHERE dayOfWeek = " + strconv.Itoa(dayOfWeek))
 
 	if err != nil{
@@ -67,10 +67,10 @@ func getHoursByDay(db *sql.DB, dayOfWeek int) ([]hour, error){
 
 	defer rows.Close()
 
-	hours := []hour{}
+	hours := []Hour{}
 
 	for rows.Next(){
-		var h hour
+		var h Hour
 		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek);
 		if err!= nil{
 			return nil,err
@@ -80,7 +80,7 @@ func getHoursByDay(db *sql.DB, dayOfWeek int) ([]hour, error){
 	return hours, nil
 }
 
-func (h *hour) deleteHour(db *sql.DB) error{
+func (h *Hour) DeleteHour(db *sql.DB) error{
 	query := "DELETE FROM `hours` WHERE `hours`.`Id`="+strconv.Itoa(h.Id)+""
 	_, err := db.Exec(query)
 	return err

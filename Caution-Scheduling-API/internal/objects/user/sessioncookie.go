@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"crypto/rand"
@@ -7,14 +7,14 @@ import (
 	"strconv"
 )
 
-type sessionCookie struct {
+type SessionCookie struct {
 	Id      int    `json:"id"`
 	UserName string    `json:"userName"`
 	Cookie  string `json:"cookie"`
 }
 
-func (c *sessionCookie) checkSession(db *sql.DB) (localUser, error) {
-	var user localUser
+func (c *SessionCookie) CheckSession(db *sql.DB) (LocalUser, error) {
+	var user LocalUser
 	query :="SELECT `localusers`.`userName`, `localusers`.`firstName`, `localusers`.`lastName`, `localusers`.`email`, `localusers`.`isAdmin`"+
 			"FROM `localusers`"+ 
 				"LEFT JOIN `sessionCookie` ON `sessionCookie`.`username` = `localusers`.`userName`" +
@@ -35,8 +35,8 @@ func (c *sessionCookie) checkSession(db *sql.DB) (localUser, error) {
 }
 
 
-func (c *sessionCookie) createSession(db *sql.DB) (error) {
-	c.Cookie = generateRandomString(10)
+func (c *SessionCookie) CreateSession(db *sql.DB) (error) {
+	c.Cookie = GenerateRandomString(10)
 	query := "INSERT INTO `sessionCookie` (`cookie`, `username`) VALUES ('"+c.Cookie+"', '"+c.UserName+"');"
 	err := db.QueryRow(query)
 
@@ -47,13 +47,13 @@ func (c *sessionCookie) createSession(db *sql.DB) (error) {
 	return nil 
 }
 
-func (c* sessionCookie) deleteSession(db *sql.DB) error {
+func (c* SessionCookie) DeleteSession(db *sql.DB) error {
 	query := "DELETE FROM `sessionCookie` WHERE `cookie` = '"+c.Cookie+"';"
 	_, err := db.Exec(query)
 	return err
 }
 
-func generateRandomString(length int) string {
+func GenerateRandomString(length int) string {
 	b := make([]byte, length)
 	_, err := rand.Read(b)
 	if err != nil {

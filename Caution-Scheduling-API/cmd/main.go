@@ -9,6 +9,7 @@ import (
 	//"github.com/markbates/goth"
 	//"github.com/markbates/goth/providers/google"
 	//"github.com/gin-gonic/gin"
+	. "github.com/JAZAnder/Caution-Scheduling/internal/app"
 )
 
 // Entry Point
@@ -21,15 +22,12 @@ func main() {
 	
 	a := App{}
 
-	a.Initialize(
-		os.Getenv("APP_DB_USERNAME"),
-		os.Getenv("APP_DB_PASSWORD"),
-		os.Getenv("APP_DB"),
-		os.Getenv("APP_DB_NAME"))
+	a.Initialize()
+		
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8000"
 	}
 
 	a.Run(port)
