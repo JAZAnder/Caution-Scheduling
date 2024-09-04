@@ -29,15 +29,15 @@ func createLocalUserTables() {
 		"`password` varchar(225) NOT NULL," +
 		"`isAdmin` boolean NOT NULL);"
 
-	logger.Log(2, "database", "Creating localUsers table")
+	logger.Log(2, "database", "Create Table", "System", "Creating localUsers table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "localUsers table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "localUsers table either created or already existed")
 	}
 }
 
@@ -48,15 +48,15 @@ func createHoursTable() {
 		"`endTime` varchar(225) NOT NULL," +
 		"`dayOfWeek` int DEFAULT NULL);"
 
-	logger.Log(2, "database", "Creating hours table")
+	logger.Log(2, "database", "Create Table", "System", "Creating hours table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "hours table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "hours table either created or already existed")
 	}
 
 }
@@ -67,15 +67,15 @@ func createLabsTable() {
 		"`name` varchar(255) NOT NULL," +
 		"`location` varchar(225) DEFAULT NULL);"
 
-	logger.Log(2, "database", "Creating labs table")
+	logger.Log(2, "database", "Create Table", "System", "Creating labs table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "labs table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "labs table either created or already existed")
 	}
 
 }
@@ -84,39 +84,39 @@ func createMeetingsTable() {
 	query := "CREATE TABLE IF NOT EXISTS meetings(" +
 		"`tutorHourId` int DEFAULT NULL," +
 		"`labId` int DEFAULT NULL," +
-		"`studentName` varchar(255) NOT NULL" +
+		"`studentName` varchar(255) NOT NULL," +
 		"`studentEmail` varchar(255) NOT NULL," +
 		"`date` BIGINT NOT NULL );"
 
-	logger.Log(2, "database", "Creating meetings table")
+	logger.Log(2, "database", "Create Table", "System", "Creating meetings table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "meetings table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "meetings table either created or already existed")
 	}
 
 }
 
 func createLabHoursTable() {
-	query := "CREATE TABLE `MYSQL_DATABASE`.`labHours` (" +
+	query := "CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`labHours` (" +
 		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
 		"`labId` int DEFAULT NULL," +
 		"`hourId` INT NOT NULL , " +
 		"`tutorId` INT NOT NULL) ;"
 
-	logger.Log(2, "database", "Creating labHours table")
+	logger.Log(2, "database", "Create Table", "System", "Creating labHours table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "labHours table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "labHours table either created or already existed")
 	}
 
 }
@@ -128,15 +128,15 @@ func createUserHoursTable() {
 		"`hoursId` INT NOT NULL , " +
 		"`available` tinyint(1) NOT NULL DEFAULT '1' ) ;"
 
-	logger.Log(2, "database", "Creating userHours table")
+	logger.Log(2, "database", "Create Table", "System", "Creating userHours table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "userHours table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "userHours table either created or already existed")
 	}
 
 }
@@ -147,15 +147,15 @@ func createSessionCookieTable() {
 		"`cookie` VARCHAR(255) NOT NULL UNIQUE KEY," +
 		"`username` VARCHAR(255) NOT NULL );"
 
-	logger.Log(2, "database", "Creating sessionCookie table")
+	logger.Log(2, "database", "Create Table", "System", "Creating sessionCookie table")
 
-	logger.Log(1, "database", query)
+	logger.Log(1, "database", "Create Table", "System", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", err.Error())
+		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
-		logger.Log(2, "database", "sessionCookie table either created or already existed")
+		logger.Log(2, "database", "Create Table", "System", "sessionCookie table either created or already existed")
 	}
 
 }
