@@ -159,3 +159,25 @@ func createSessionCookieTable() {
 	}
 
 }
+
+func createLogsTable() {
+	query := "CREATE TABLE IF NOT EXISTS `logs`(" +
+		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
+		"`level` VARCHAR(10) NOT NULL," +
+		"`category` VARCHAR(25) NOT NULL," +
+		"`subCategory` VARCHAR(25) NOT NULL," +
+		"`user` VARCHAR(50) NOT NULL," +
+		"`message` VARCHAR(255) NOT NULL );"
+
+	logger.Log(2, "database", "Create Table", "System", "Creating logs table")
+
+	logger.Log(1, "database", "Create Table", "System", query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", "System", err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", "System", "logs table either created or already existed")
+	}
+
+}
