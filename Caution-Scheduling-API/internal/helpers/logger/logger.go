@@ -40,7 +40,7 @@ func LogSetUpCon(miLogLevel int) error {
 	return nil
 }
 
-func Log(level int, category string ,message string) error {
+func Log(level int, category string, subCategory string, user string ,message string) error {
 	var err error
 	var levelStr string
 	if level > 5 || level < 1 {
@@ -64,14 +64,14 @@ func Log(level int, category string ,message string) error {
 	}
 
 	if level >= minLogLevelConsole {
-		err = printMessageToConsole(time, levelStr, category, message)
+		err = printMessageToConsole(time, levelStr, category, subCategory, user, message)
 		if err != nil {
 			return err
 		}
 	}
 
 	if level >= minLogLevelDb {
-		err = logMessageInDatabase(time, levelStr, category, message)
+		err = logMessageInDatabase(time, levelStr, category, subCategory, user, message)
 
 		if err != nil {
 			return err
@@ -81,15 +81,15 @@ func Log(level int, category string ,message string) error {
 	return nil
 }
 
-func printMessageToConsole(time string, level string, category string, message string) error {
+func printMessageToConsole(time string, level string, category string, subCategory string, user string ,  message string) error {
 
-	fmt.Println("\n " + level + " " + time + " Category: " + category)
+	fmt.Println("\n " + level + " || " + time + " || Category: " + category +" - " + subCategory + " || "+ user)
 	fmt.Println("\t" + message + "\n")
 
 	return nil
 }
 
-func logMessageInDatabase(time string, level string, category string, message string) error {
+func logMessageInDatabase(time string, level string, category string, subCategory string, user string,  message string) error {
 
 	return nil
 }
