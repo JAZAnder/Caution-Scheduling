@@ -2,8 +2,8 @@ package seeding
 
 import (
 	"database/sql"
-	"fmt"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 )
 
 var database *sql.DB
@@ -24,13 +24,16 @@ func createLocalUserTables() {
 		"`email` varchar(225) NOT NULL," +
 		"`password` varchar(225) NOT NULL," +
 		"`isAdmin` boolean NOT NULL);"
-	fmt.Println("\nCreating localUsers table :")
-	fmt.Println(query)
+
+	logger.Log(2, "database", "Creating localUsers table")
+
+	logger.Log(1, "database", query)
+
 	_, err := database.Exec(query)
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.Log(4, "database", err.Error())
 	} else {
-		fmt.Println("localUsers table either created or already existed")
+		logger.Log(2, "database", "localUsers table either created or already existed")
 	}
 }
 
@@ -41,15 +44,17 @@ func createHoursTable() {
 		"`endTime` varchar(225) NOT NULL," +
 		"`dayOfWeek` int DEFAULT NULL);"
 
-	fmt.Println("\nCreating hours table :")
-	fmt.Println(query)
+	logger.Log(2, "database", "Creating hours table")
+
+	logger.Log(1, "database", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.Log(4, "database", err.Error())
 	} else {
-		fmt.Println("hours table either created or already existed")
+		logger.Log(2, "database", "hours table either created or already existed")
 	}
+
 }
 
 func createLabsTable() {
@@ -58,13 +63,15 @@ func createLabsTable() {
 		"`name` varchar(255) NOT NULL," +
 		"`location` varchar(225) DEFAULT NULL);"
 
-	fmt.Println("\nCreating labs table :")
-	fmt.Println(query)
+	logger.Log(2, "database", "Creating labs table")
+
+	logger.Log(1, "database", query)
 
 	_, err := database.Exec(query)
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.Log(4, "database", err.Error())
 	} else {
-		fmt.Println("labs table either created or already existed")
+		logger.Log(2, "database", "labs table either created or already existed")
 	}
+
 }
