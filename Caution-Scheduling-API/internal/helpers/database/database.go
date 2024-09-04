@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database/seeding"
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 
 )
 
@@ -57,6 +58,8 @@ func createDatabase() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	logger.LogSetUpDb(1, db.DB)
 
 	seeding.CreateTables(db.DB)
 

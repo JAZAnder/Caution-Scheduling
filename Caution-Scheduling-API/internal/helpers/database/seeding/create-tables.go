@@ -18,6 +18,7 @@ func CreateTables(db *sql.DB) {
 	createLabHoursTable()
 	createUserHoursTable()
 	createSessionCookieTable()
+	createLogsTable()
 }
 
 func createLocalUserTables() {

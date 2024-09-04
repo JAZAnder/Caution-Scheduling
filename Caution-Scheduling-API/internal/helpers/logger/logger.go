@@ -104,7 +104,7 @@ func printMessageToConsole(time string, level string, category string, subCatego
 
 func logMessageInDatabase(time string, level string, category string, subCategory string, user string, message string) error {
 
-	query := "Insert Into logs (`level`, `category`, `subCategory`, `user`, `message`) VALUES (`"+level+"`,`"+category+"`,`"+subCategory+"`,`"+user+"`,`"+message+"`)"
+	query := "Insert Into `logs` (`level`, `category`, `subCategory`, `user`, `message`) VALUES ('"+level+"','"+category+"','"+subCategory+"','"+user+"','"+message+"');"
 	_, err := database.Exec(query)
 	if err != nil {
 		return err
