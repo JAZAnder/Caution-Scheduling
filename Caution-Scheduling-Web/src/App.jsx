@@ -10,7 +10,7 @@ function App() {
         <a href="/" className="header-logo-link">
           <img
             src={schedulingLogo}
-            alt="Southeastern Louisiana University Logo"
+            alt="Caution Scheduling Logo"
             className="header-logo"
           />
         </a>
@@ -52,7 +52,6 @@ function App() {
       <main id="root">
         <video autoPlay loop muted>
           <source src={labVideo} type="video/mp4" />
-          Your browser does not support the video tag.
         </video>
       </main>
 
