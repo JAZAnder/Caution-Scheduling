@@ -4,6 +4,6 @@
 
 ## API Endpoints & Controllers
 
-[User Endpoints](./internal/controllers/hours/README.md)
+[User Endpoints](./internal/controllers/users/README.md)
 
 [Timeslot Endpoints](./internal/controllers/hours/README.md)
