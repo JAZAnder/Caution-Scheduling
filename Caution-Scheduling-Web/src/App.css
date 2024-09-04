@@ -31,6 +31,36 @@ body, html {
   justify-content: center; /* Center nav items horizontally */
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 20px 40px; 
+  background-color: white; 
+  color: #1a5632; 
+  font-size: 24px; 
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+  width: 200px; 
+  text-transform: uppercase;
+  border: 2px solid #1a5632;
+}
+
+.cta-button:hover {
+  background-color: transparent; 
+  color: #1a5632; 
+  border: 2px solid #1a5632; 
+}
+
 .header-logo {
   height: 50px;
   margin-left: 20px;

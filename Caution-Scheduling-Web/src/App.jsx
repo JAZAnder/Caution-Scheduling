@@ -46,6 +46,14 @@ function App() {
             <img src={reactLogo} className="logo react" alt="React logo" />
           </a>
         </div>
+        <div className="button-container">
+          <a href="#register" className="cta-button">
+            Register
+          </a>
+          <a href="#login" className="cta-button">
+            Login
+          </a>
+        </div>
         <h1>Vite + React</h1>
         <div className="card">
           <button onClick={() => setCount((count) => count + 1)}>
@@ -59,7 +67,7 @@ function App() {
           Click on the Vite and React logos to learn more
         </p>
       </main>
-            <footer className="footer">
+      <footer className="footer">
         <p>This Project is available for download on <a href="https://github.com/JAZAnder/Caution-Scheduling">Github</a></p>
       </footer>
     </>
