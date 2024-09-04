@@ -118,13 +118,13 @@ body, html {
   transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
   width: 200px;
   text-transform: uppercase;
-  border: 2px solid #1a5632;
+  border: 2px solid #ffffff;
 }
 
 .cta-button:hover {
   background-color: transparent;
-  color: #1a5632;
-  border: 2px solid #1a5632;
+  color: #ffffff;
+  border: 2px solid #ffffff;
 }
 
 .footer {
