@@ -53,6 +53,14 @@ function App() {
         <video autoPlay loop muted>
           <source src={labVideo} type="video/mp4" />
         </video>
+        <div className="button-container">
+          <a href="#register" className="cta-button">
+            Register
+          </a>
+          <a href="#login" className="cta-button">
+            Login
+          </a>
+        </div>
       </main>
 
       <footer className="footer">
