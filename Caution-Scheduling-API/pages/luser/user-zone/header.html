@@ -1,0 +1,35 @@
+<nav class="navbar navbar-inverse">
+    
+    <div class="container-fluid">
+        
+        <div class="navbar-header">
+        
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+            </button>
+            
+            <a class="navbar-brand" href="../../../../../">Caution Scheduling - User</a>
+            
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                
+
+                <li><a onclick='importElements("body", "./user-zone/meetings.html")'>My Meetings</a></li>
+                <li><a>Lab Activity</a></li>
+                <li><a onclick='importElements("body", "./user-zone/availability.html")'>My Availability</a></li>
+                <li><a onclick='importElements("body", "../join-virtual")'>Join Virtually</a></li>
+                
+
+
+            </ul>
+            
+            <ul class="nav navbar-nav navbar-right">
+                <li><a onclick='importElements("body", "./myaccount.html")'>My Account</a></li>
+                <li><a onclick="user_logout()" href="../../../../../"><span class="glyphicon glyphicon-log-in"></span>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

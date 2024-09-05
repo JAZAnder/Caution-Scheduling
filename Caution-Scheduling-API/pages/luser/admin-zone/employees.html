@@ -1,0 +1,182 @@
+<div>
+
+    <div>
+
+
+    </div>
+</div>
+
+<div>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-2">
+            <div>
+                <div>
+                    <h2>Create New User</h2>
+                    <div><label for="userName">Username</label><input type="text" id="userName"></div>
+                    <div><label for="firstName">First Name</label><input type="text" id="firstName"></div>
+                    <div><label for="lastName">Last Name</label><input type="text" id="lastName"></div>
+                    <div><label for="email">Email</label><input type="text" id="email"></div>
+                    <div><label for="password">Password</label><input type="password" id="password"></div>
+                    <div>
+                        <p>Is Admin : 
+                        <label for="isAdminTrue">True</label>
+                        <input type="radio" name="isAdmin" id="isAdminTrue" value="True">
+                        <label for="isAdminFalse">False</label>
+                        <input type="radio" name="isAdmin" id="isAdminFalse" value="False"></p>
+                    </div>
+                    <button class="btn btn-success" onclick="createUser()">Create New User</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div>
+                <div style="height: 25%;">&nbsp;</div>
+                <div class="error"></div>
+                <hr>
+                <center>
+                    <div>
+                        <h2>Create New Employee Availability</h2>
+                        &nbsp;
+                        <div>
+                            <select name="hourId-Select" id="hourId-Select" class="form-select form-select-lg">
+                                <option value="">Select a Timeslot</option>
+                            </select>
+                            <img src="../assets/images/caution.jpg" alt="" onload="hourOptions()"
+                                style="display: none;">
+
+                        </div>
+                        &nbsp;
+                        <div>
+                            <select name="tutorId-Select" id="tutorId-Select" class="form-select form-select-lg">
+                                <option value="">Select a Tutor</option>
+                            </select>
+                            <img src="../assets/images/caution.jpg" alt="" onload="userOptions()"
+                                style="display: none;">
+                        </div>
+                        &nbsp;
+                        <div><button type="button" onclick="createUserHour()" class="btn btn-success">Create Time
+                                Slot</button>
+                        </div>
+                        &nbsp;
+                        <div class="form-group">
+                            <label for="usr">Remove Timeslot:</label>
+                            <input type="text" name="emp_avaiblity_to_remove" class="form-control"
+                                id="emp_avaiblity_to_remove" placeholder="Id" style="width: 10%;">
+
+                            <button type="button" onclick="removeUserHour()" class="btn btn-danger">Remove Time
+                                Slot</button>
+                        </div>
+                    </div>
+                </center>
+
+                <hr>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div>
+                <center>
+                    <h2>Employee Availability</h2>
+                </center>
+                <table id="userhour-table" class="table table-bordered">
+                    <img src="../assets/images/caution.jpg" alt="" onload="loadUserhours()" style="display: none;">
+                    <tr>
+                        <th>Id</th>
+                        <th>Employee</th>
+                        <th>Day of Week</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <center>
+                <div>
+                    <Button style="width: 15%;" class="btn btn-primary" disabled>Modify User</Button>
+                    <Button style="width: 15%;" disabled class="btn btn-warning">Disable User</Button>
+                    <Button style="width: 15%;" disabled class="btn btn-danger">Delete User</Button>
+                    <Button style="width: 15%;" class="btn btn-warning" onclick="resetPasswordModel()">Reset
+                        Password</Button>
+                    <Button style="width: 15%;" class="btn" disabled>Master Access</Button>
+                    <h3>All Employees</h3>
+                    <table id="users-Table" class="table table-bordered">
+                        <script>populateUsers()</script>
+                        <tr>
+                            <th> User Id </th>
+                            <th> Username </th>
+                            <th> First Name </th>
+                            <th> Last Name </th>
+                            <th> Email </th>
+                            <th> isAdmin </th>
+
+                        </tr>
+                    </table>
+                    <img src="../../../assets/images/caution.jpg" alt="" onload="populateUsers()"
+                        style="display: none;">
+
+                </div>
+            </center>
+
+        </div>
+        <div class="col-lg-1"></div>
+
+    </div>
+    <hr>
+    &nbsp;
+</div>
+
+<!-- The Modal -->
+<div id="Password_Reset_Modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+
+        <span class="close"><button onclick="{
+            document.getElementById('Password_Reset_Modal').style.display = 'none'
+        }">&times;</button></span>
+        <center>
+            <h2>Reset a Password</h2>
+            <hr>
+            <div>
+                <label for="userName">User Name</label>
+                <select name="userNameForReset-select" id="userNameForReset-select" class="form-select form-select-lg">
+                    <option value="">Select a User</option>
+                </select>
+            </div>
+            <div style="height: 25px;">
+
+            </div>
+            <div>
+                <label for="NewPassword">New Password</label>
+                <input type="password" placeholder="* * * * * * * * * * * * * * * * * * * *" id="NewPassword">
+            </div>
+            <div style="height: 25px;">
+                <button type="button" class="btn" onclick="{
+            var user = document.getElementById('userNameForReset-select').value
+            var password = document.getElementById('NewPassword').value
+
+            user_changeUserPassword(user, password);
+
+            
+            var password = document.getElementById('NewPassword').value = ''
+
+            document.getElementById('Password_Reset_Modal').style.display = 'none'
+        }">Change Password</button>
+        </center>
+
+        <img src="../assets/images/caution.jpg" alt="" onload="userOptionsForReset()" style="display: none;">
+
+
+
+
+
+    </div>
+
+</div>

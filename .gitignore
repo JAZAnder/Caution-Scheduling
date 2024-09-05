@@ -32,3 +32,4 @@ go.work.sum
 ./src/go.sum
 /config/go/pkg/*
 logs
+.vscode/*

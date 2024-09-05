@@ -1,2 +1,0 @@
-
-ALTER TABLE `labHours` ADD CONSTRAINT `HourId2 -> hour.Id` FOREIGN KEY (`HoursId`) REFERENCES `hours`(`Id`) ON DELETE RESTRICT; 
