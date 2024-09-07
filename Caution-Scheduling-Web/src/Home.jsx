@@ -1,10 +1,11 @@
 import { useState } from "react";
 import schedulingLogo from "./assets/CautionSchedulingLogoUpdate.png";
+import { Link } from 'react-router-dom';
 import labVideo from "./assets/LabVideo.mp4";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
-function App() {
+function Home() {
   return (
     <>
       <header className="topheader">
@@ -19,7 +20,7 @@ function App() {
         <nav>
           <ul className="nav-list">
             <li>
-              <a href="/">Home</a>
+              <a href to="/">Home</a>
             </li>
             <li>
               <a href="#employee">Employee Login</a>
@@ -74,4 +75,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
