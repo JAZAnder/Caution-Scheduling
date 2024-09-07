@@ -1,7 +1,6 @@
 import { useState } from "react";
 import schedulingLogo from "./assets/CautionSchedulingLogoUpdate.png";
 import labVideo from "./assets/LabVideo.mp4";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {

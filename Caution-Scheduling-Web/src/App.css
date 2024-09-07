@@ -28,7 +28,9 @@ body, html {
   top: 80px; /* Adjust to fit below the topheader */
   z-index: 999; /* Ensure it is just below the topheader */
   display: flex;
-  justify-content: center;
+  justify-content: center; 
+  margin-right: 0; 
+  padding-right: 150px; 
 }
 
 .header-logo {
@@ -74,7 +76,7 @@ body, html {
   z-index: 1;
   width: 100%;
   height: calc(100vh - 160px); /* Full screen height minus headers and footer */
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
   display: flex;
@@ -100,6 +102,7 @@ body, html {
   gap: 20px;
   position: relative; /* Position relative to #root */
   z-index: 2; /* Ensure buttons are above the video */
+  margin-top: 30px;
 }
 
 .cta-button {
@@ -131,11 +134,10 @@ body, html {
   padding: 20px 0;
   position: fixed;
   width: 100%;
+  height: 5%;
   bottom: 0;
   left: 0;
   z-index: 1000; /* Ensure the footer is above the video */
-  box-sizing: border-box;
-  margin: 0;
 }
 
 .footer p {
