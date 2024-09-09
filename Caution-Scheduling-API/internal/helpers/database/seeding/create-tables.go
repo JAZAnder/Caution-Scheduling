@@ -6,8 +6,6 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 )
 
-var database *sql.DB
-
 func CreateTables(db *sql.DB) {
 	database = db
 
@@ -126,7 +124,7 @@ func createUserHoursTable() {
 	query := "CREATE TABLE IF NOT EXISTS userHours(" +
 		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
 		"`username` VARCHAR(255) NOT NULL," +
-		"`hoursId` INT NOT NULL , " +
+		"`hourId` INT NOT NULL , " +
 		"`available` tinyint(1) NOT NULL DEFAULT '1' ) ;"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating userHours table")
