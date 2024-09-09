@@ -103,7 +103,7 @@ func createMeetingsTable() {
 }
 
 func createLabHoursTable() {
-	query := "CREATE TABLE IF NOT EXISTS `MYSQL_DATABASE`.`labHours` (" +
+	query := "CREATE TABLE IF NOT EXISTS `labHours` (" +
 		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
 		"`labId` int DEFAULT NULL," +
 		"`hourId` INT NOT NULL , " +
