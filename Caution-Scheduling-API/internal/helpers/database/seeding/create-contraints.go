@@ -4,7 +4,6 @@ import (
 	"database/sql"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-
 )
 
 func SetupConstraints(db *sql.DB) {
@@ -20,6 +19,7 @@ func createConstraints(db *sql.DB) {
 	createSessionCookieConstraints()
 	createLabHourConstraints()
 	createMeetingsConstraints()
+	createUserHourConstraints()
 }
 
 func removeConstraints(db *sql.DB) {
@@ -27,6 +27,7 @@ func removeConstraints(db *sql.DB) {
 	removeSessionCookieConstraints()
 	removeLabHourConstraints()
 	removeMeetingsConstraints()
+	removeUserHourConstraints()
 }
 
 func createSessionCookieConstraints() {
@@ -57,7 +58,7 @@ func removeSessionCookieConstraints() {
 
 	_, err := database.Exec(query)
 	if err != nil {
-		logger.Log(4, "database", "Remove Constraint", "System", err.Error())
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
 	} else {
 		logger.Log(2, "database", "Remove Constraint", "System", "sessionCookie Constraints Removed")
 	}
@@ -125,7 +126,7 @@ func removeLabHourConstraints() {
 
 	if err != nil {
 		masterErr = err
-		logger.Log(4, "database", "Remove Constraint", "System", err.Error())
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
 	}
 
 	query = "ALTER TABLE labHours DROP FOREIGN KEY `labHours.HourId -> hour.Id`;"
@@ -134,7 +135,7 @@ func removeLabHourConstraints() {
 
 	if err != nil {
 		masterErr = err
-		logger.Log(4, "database", "Remove Constraint", "System", err.Error())
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
 	}
 
 	query = "ALTER TABLE labHours DROP FOREIGN KEY `TutorId -> UserHours.Id`;"
@@ -143,7 +144,7 @@ func removeLabHourConstraints() {
 
 	if err != nil {
 		masterErr = err
-		logger.Log(4, "database", "Remove Constraint", "System", err.Error())
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
 	}
 
 	if masterErr != nil {
@@ -187,12 +188,79 @@ func removeMeetingsConstraints() {
 
 	if err != nil {
 		masterErr = err
-		logger.Log(4, "database", "Remove Constraint", "System", err.Error())
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
 	}
 
 	if masterErr != nil {
 		logger.Log(2, "database", "Remove Constraint", "System", "Meeting Constraints Removed with Errors")
 	} else {
 		logger.Log(2, "database", "Remove Constraint", "System", "Meeting Constraints Removed")
+	}
+}
+
+func createUserHourConstraints() {
+	logger.Log(2, "database", "Create Constraint", "System", "Creating userHour Constraints")
+	var masterErr error = nil
+	query := "ALTER TABLE `userHours`  " +
+		" ADD CONSTRAINT `username-hour -> localuser.userName`" +
+		" FOREIGN KEY (`username`)" +
+		" REFERENCES `localusers`(`userName`) " +
+		" ON DELETE RESTRICT; "
+
+	logger.Log(1, "database", "Create Constraint", "System", query)
+	_, err := database.Exec(query)
+
+	if err != nil {
+		masterErr = err
+		logger.Log(4, "database", "Create Constraint", "System", err.Error())
+	}
+
+	query = " ALTER TABLE `userHours`  " +
+		"  ADD CONSTRAINT `userHours.HourId -> hour.Id` " +
+		"  FOREIGN KEY (`hourId`)" +
+		" REFERENCES `hours`(`Id`) " +
+		" ON DELETE RESTRICT; "
+
+	logger.Log(1, "database", "Create Constraint", "System", query)
+	_, err = database.Exec(query)
+
+	if err != nil {
+		masterErr = err
+		logger.Log(4, "database", "Create Constraint", "System", err.Error())
+	}
+
+	if masterErr != nil {
+		logger.Log(2, "database", "Create Constraint", "System", "userHour Constraints created with Errors")
+	} else {
+		logger.Log(2, "database", "Create Constraint", "System", "userHour Constraints created")
+	}
+}
+
+func removeUserHourConstraints() {
+	logger.Log(2, "database", "Remove Constraint", "System", "Removing userHour Constraints")
+	var masterErr error = nil
+
+	query := "ALTER TABLE userHours DROP FOREIGN KEY `username-hour -> localuser.userName`;"
+	logger.Log(1, "database", "Remove Constraint", "System", query)
+	_, err := database.Exec(query)
+
+	if err != nil {
+		masterErr = err
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
+	}
+
+	query = "ALTER TABLE userHours DROP FOREIGN KEY `userHours.HourId -> hour.Id`;"
+	logger.Log(1, "database", "Remove Old Constraint", "System", query)
+	_, err = database.Exec(query)
+
+	if err != nil {
+		masterErr = err
+		logger.Log(3, "database", "Remove Constraint", "System", err.Error())
+	}
+
+	if masterErr != nil {
+		logger.Log(2, "database", "Remove Constraint", "System", "userHour Constraints Removed with Errors")
+	} else {
+		logger.Log(2, "database", "Remove Constraint", "System", "userHour Constraints Removed")
 	}
 }
