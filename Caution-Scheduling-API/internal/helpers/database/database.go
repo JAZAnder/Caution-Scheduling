@@ -63,5 +63,6 @@ func createDatabase() {
 
 	seeding.CreateTables(db.DB)
 	seeding.SetupConstraints(db.DB)
+	seeding.SeedData(db.DB)
 
 }
