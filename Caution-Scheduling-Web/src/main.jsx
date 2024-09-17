@@ -10,18 +10,44 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
+import Otherlink from "./routes/otherlink/otherlink.jsx"
+import LabSchedule from "./routes/labschedule/labschedule.jsx"
+import ScheduleMeeting from './routes/schedulemeeting/schedulemeeting.jsx';
+import SigninLab from './routes/signinlab/signinlab.jsx'
+import JoinVirtually from './routes/joinvirtually/joinvirtually.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavigationBar/>,
-    children:[
+    element: <NavigationBar />,
+    children: [
       {
         path: "",
-        element: <Home/>
-      },{
-        path:"login",
-        element:<Login/>
+        element: <Home />
+      },
+      {
+        path: "login",
+        element: <Login />
+      },
+      {
+        path: "otherlink",
+        element: <Otherlink /> 
+      },
+      {
+        path: "labschedule",
+        element: <LabSchedule /> 
+      },
+      {
+        path: "schedulemeeting",
+        element: <ScheduleMeeting /> 
+      },
+      {
+        path: "signinlab",
+        element: <SigninLab /> 
+      },
+      {
+        path: "joinvirtually",
+        element: <JoinVirtually /> 
       }
     ]
   }

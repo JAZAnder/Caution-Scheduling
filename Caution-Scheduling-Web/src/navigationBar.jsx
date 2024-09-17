@@ -23,7 +23,7 @@ export default function NavigationBar() {
                             <Link to={"/login"}>Employee Login</Link>
                         </li>
                         <li>
-                            <Link to={"/otherLink"}>Other Link</Link>
+                            <Link to={"/otherlink"}>Other Link</Link>
                         </li>
                     </ul>
                 </nav>
@@ -33,16 +33,16 @@ export default function NavigationBar() {
                 <nav>
                     <ul className="nav-list">
                         <li>
-                            <Link to={"/schedule"}>Lab Schedule</Link>
+                            <Link to={"/labSchedule"}>Lab Schedule</Link>
                         </li>
                         <li>
-                            <a href="#meeting">Schedule a Meeting</a>
+                            <Link to={"/scheduleMeeting"}>Schedule a Meeting</Link>
                         </li>
                         <li>
-                            <a href="#intolab">Sign into Lab</a>
+                            <Link to={"/signinLab"}>Sign into Lab</Link>
                         </li>
                         <li>
-                            <a href="#virtual">Join Virtually</a>
+                            <Link to={"/joinVirtually"}>Join Virtually</Link>
                         </li>
                     </ul>
                 </nav>

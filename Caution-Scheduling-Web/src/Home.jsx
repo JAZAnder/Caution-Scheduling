@@ -13,12 +13,9 @@ function Home() {
           <source src={labVideo} type="video/mp4" />
         </video>
         <div className="button-container">
-          <a href="#register" className="cta-button">
-            Register
-          </a>
-          <a href="#login" className="cta-button">
+          <Link to="/login" className="cta-button">
             Login
-          </a>
+          </Link>
         </div>
       </main>
 
