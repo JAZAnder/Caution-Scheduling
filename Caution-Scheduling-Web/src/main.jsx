@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import LoginTestButtons from "./routes/testing/login.jsx"
 import Login from "./routes/login/login.jsx"
 
 const router = createBrowserRouter([
@@ -23,14 +22,6 @@ const router = createBrowserRouter([
       },{
         path:"login",
         element:<Login/>
-      }
-    ]
-  },{
-    path: "testing",
-    children:[
-      {
-        path:"login",
-        element: <LoginTestButtons/>
       }
     ]
   }
