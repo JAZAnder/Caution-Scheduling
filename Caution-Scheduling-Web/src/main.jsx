@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import LoginTestButtons from "./routes/testing/login.jsx"
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,15 @@ const router = createBrowserRouter([
         element: <Home/>
       }
     ]
-  },
+  },{
+    path: "testing",
+    children:[
+      {
+        path:"login",
+        element: <LoginTestButtons/>
+      }
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
