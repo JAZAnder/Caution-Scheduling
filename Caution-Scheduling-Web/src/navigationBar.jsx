@@ -20,7 +20,7 @@ export default function NavigationBar() {
                             <Link to={"/"}>Home</Link>
                         </li>
                         <li>
-                            <Link to={"/employee"}>Employee Login</Link>
+                            <Link to={"/login"}>Employee Login</Link>
                         </li>
                         <li>
                             <Link to={"/otherLink"}>Other Link</Link>
