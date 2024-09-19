@@ -62,5 +62,7 @@ func createDatabase() {
 	logger.LogSetUpDb(1, db.DB)
 
 	seeding.CreateTables(db.DB)
+	seeding.SetupConstraints(db.DB)
+	seeding.SeedData(db.DB)
 
 }
