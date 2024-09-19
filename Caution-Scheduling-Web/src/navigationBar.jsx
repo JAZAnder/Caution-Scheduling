@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import schedulingLogo from "./assets/CautionSchedulingLogoUpdate.png";
 import { Link } from 'react-router-dom';
+import FooterBar from './footerBar'
 
 export default function NavigationBar() {
     return (
@@ -47,7 +48,6 @@ export default function NavigationBar() {
                     </ul>
                 </nav>
             </header>
-<Outlet/>
         </>
     )
 }

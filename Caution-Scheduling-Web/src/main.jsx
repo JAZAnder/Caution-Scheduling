@@ -1,8 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Outlet } from "react-router-dom";
 import Home from './Home.jsx'; 
 import ReactDOM from 'react-dom/client'
 import NavigationBar from './navigationBar.jsx';
+import FooterBar from './footerBar.jsx'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -19,7 +21,13 @@ import JoinVirtually from './routes/joinvirtually/joinvirtually.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavigationBar />,
+    element: (
+      <>
+        <NavigationBar />
+        <Outlet/>
+        <FooterBar/>
+      </>
+    ),
     children: [
       {
         path: "",
