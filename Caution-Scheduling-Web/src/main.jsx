@@ -13,10 +13,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
 import Otherlink from "./routes/otherlink/otherlink.jsx"
-import LabSchedule from "./routes/labschedule/labschedule.jsx"
-import ScheduleMeeting from './routes/schedulemeeting/schedulemeeting.jsx';
-import SigninLab from './routes/signinlab/signinlab.jsx'
-import JoinVirtually from './routes/joinvirtually/joinvirtually.jsx';
+import Labschedule from "./routes/labschedule/labschedule.jsx"
+import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
+import Signinlab from './routes/signinlab/signinlab.jsx'
+import Joinvirtually from './routes/joinvirtually/joinvirtually.jsx';
+import Aboutus from './routes/aboutus/aboutus.jsx'
 
 const router = createBrowserRouter([
   {
@@ -43,19 +44,23 @@ const router = createBrowserRouter([
       },
       {
         path: "labschedule",
-        element: <LabSchedule /> 
+        element: <Labschedule /> 
       },
       {
         path: "schedulemeeting",
-        element: <ScheduleMeeting /> 
+        element: <Schedulemeeting /> 
       },
       {
         path: "signinlab",
-        element: <SigninLab /> 
+        element: <Signinlab /> 
       },
       {
         path: "joinvirtually",
-        element: <JoinVirtually /> 
+        element: <Joinvirtually /> 
+      },
+      {
+        path: "aboutus",
+        element: <Aboutus /> 
       }
     ]
   }

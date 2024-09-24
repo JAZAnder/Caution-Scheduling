@@ -1,0 +1,36 @@
+.lab-schedule-page {
+  display: flex;
+  justify-content: center; /* Center containers horizontally */
+  align-items: center; /* Center containers vertically */
+  height: 100vh; /* Full height of the viewport */
+}
+
+.lab-schedule-container1 {
+  width: 400px; /* Container width */
+  /*height: 600px; Container height */
+  display: flex;
+  justify-content: center; /* Center image horizontally */
+  align-items: center; /* Center image vertically */
+  margin: 20px; /* Spacing between containers */
+  border: 2px solid #b5b5b5;
+  border-radius: 4px; /* Optional: Rounded corners */
+  background-color: white; /* Optional: Background color */
+}
+
+.lab-schedule-container2 {
+  width: 400px; /* Container width */
+  /*height: 600px;  Container height */
+  display: flex;
+  justify-content: center; /* Center image horizontally */
+  align-items: center; /* Center image vertically */
+  margin: 20px; /* Spacing between containers */
+  border: 2px solid #b5b5b5;
+  border-radius: 4px; /* Optional: Rounded corners */
+  background-color: white; /* Optional: Background color */
+}
+
+.lab-schedule-image {
+  max-width: 100%; /* Responsive image */
+  max-height: 100%; /* Responsive image */
+  object-fit: cover; /* Cover the container */
+}

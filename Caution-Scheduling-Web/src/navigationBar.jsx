@@ -34,16 +34,19 @@ export default function NavigationBar() {
                 <nav>
                     <ul className="nav-list">
                         <li>
-                            <Link to={"/labSchedule"}>Lab Schedule</Link>
+                            <Link to={"/labschedule"}>Lab Schedule</Link>
                         </li>
                         <li>
-                            <Link to={"/scheduleMeeting"}>Schedule a Meeting</Link>
+                            <Link to={"/schedulemeeting"}>Schedule a Meeting</Link>
                         </li>
                         <li>
-                            <Link to={"/signinLab"}>Sign into Lab</Link>
+                            <Link to={"/signinlab"}>Sign into Lab</Link>
                         </li>
                         <li>
-                            <Link to={"/joinVirtually"}>Join Virtually</Link>
+                            <Link to={"/joinvirtually"}>Join Virtually</Link>
+                        </li>
+                        <li>
+                            <Link to={"/aboutus"}>About Us</Link>
                         </li>
                     </ul>
                 </nav>

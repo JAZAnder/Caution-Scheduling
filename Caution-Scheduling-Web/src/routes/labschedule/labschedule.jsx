@@ -1,9 +1,19 @@
-import { Outlet, Link } from "react-router-dom";
+import React from "react";
+import "./labschedule.css";
+import EnvocLab from "../../assets/EnvocLab.png";
+import FayLab from "../../assets/Fay125Lab.png";
 
-const labSchedule = () => {
+const LabSchedule = () => {
   return (
-    <h1> Hello this is a lab schedule page</h1>
-  )
+    <div className="lab-schedule-page">
+      <div className="lab-schedule-container1">
+        <img src={EnvocLab} alt="Envoc Lab" className="lab-schedule-image" />
+      </div>
+      <div className="lab-schedule-container2">
+        <img src={FayLab} alt="Fay 125 Lab" className="lab-schedule-image" />
+      </div>
+    </div>
+  );
 };
 
-export default labSchedule;
+export default LabSchedule;
