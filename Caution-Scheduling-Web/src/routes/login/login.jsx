@@ -1,30 +1,60 @@
 import { useState } from "react";
-import useFetch from "use-http";
 import { useNavigate } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import SignInWithGoogleButton from "../../components/SignInWithGoogleButton";
 import './login.css';
+
+const user_login = async (username, password) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  var urlencoded = new URLSearchParams();
+  urlencoded.append("userName", username);
+  urlencoded.append("password", password);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow'
+  };
+
+  try {
+    const result = await fetch("/api/luser/login", requestOptions);
+    const data = await result.json();
+    return data;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw new Error("Login failed. Please try again.");
+  }
+};
 
 export default function Login() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { post, loading } = useFetch("/api/luser/login", {
-    method: "post",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
 
-    onNewData: (_, x) => {
-      if ("userName" in x) {
-        console.log("Logged in as: ");
-        console.log(x);
+    try {
+      const data = await user_login(userName, password);
+      if (data.userName) {
+        console.log("Logged in as: ", data);
         navigate("/");
       } else {
-        // setError(x);
+        setError("Invalid login credentials. Please try again.");
       }
-    },
-  });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container">
@@ -78,14 +108,4 @@ export default function Login() {
       </div>
     </div>
   );
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    if (loading) return;
-
-    post({
-      userName: userName,
-      password: password,
-    });
-  }
 }
