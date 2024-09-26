@@ -3,7 +3,9 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
 import SignInWithGoogleButton from '../../components/SignInWithGoogleButton';
+import useFetch from "use-http";
 import './login.css';
+import Background from "../../background";
 
 const authenticateUser = async (username, password) => {
   const myHeaders = new Headers();
@@ -68,9 +70,13 @@ export default function Login() {
   };
 
   return (
+    <>
+    <Background />
     <div className="container">
       <div className="forms-container">
         <div className="form-control signin-form">
+
+    
           {user ? (
             <div className="logged-in-message">
               <h2>You are logged in</h2>
@@ -86,6 +92,7 @@ export default function Login() {
                   onChange={(e) => setUserName(e.target.value)}
                   type="text"
                   autoComplete="username"
+
                   placeholder="Username"
                   required
                 />
@@ -105,25 +112,28 @@ export default function Login() {
                 {loading ? 'Checking Login...' : 'Sign In'}
               </Button>
               {error && <div className="error-message">{error}</div>}
+
               <span>or sign in with</span>
               <div className="socials">
                 <SignInWithGoogleButton />
               </div>
             </form>
           )}
+          </div>
+
         </div>
-      </div>
-      <div className="intros-container">
-        <div className="intro-control signin-intro">
-          <div className="intro-control__inner">
-            <h2>Welcome back!</h2>
-            <p>
-              Welcome to Caution Scheduling Tutoring! Where all your tutoring
-              needs can be found here!
-            </p>
+        <div className="intros-container">
+          <div className="intro-control signin-intro">
+            <div className="intro-control__inner">
+              <h2>Welcome back!</h2>
+              <p>
+                Welcome to Caution Scheduling Tutoring! Where all your tutoring
+                needs can be found here!
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
