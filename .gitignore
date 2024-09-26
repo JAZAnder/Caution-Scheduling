@@ -33,3 +33,4 @@ go.work.sum
 /config/go/pkg/*
 logs
 .vscode/*
+Caution-Scheduling-API/.env
