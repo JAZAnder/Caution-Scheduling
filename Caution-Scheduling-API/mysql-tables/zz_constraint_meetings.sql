@@ -1,1 +1,0 @@
-ALTER TABLE `meetings` ADD CONSTRAINT `LabId 2-> Lab.Id` FOREIGN KEY (`labId`) REFERENCES `labs`(`Id`) ON DELETE RESTRICT; 

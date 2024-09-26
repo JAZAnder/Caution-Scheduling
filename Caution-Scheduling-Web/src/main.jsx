@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Outlet } from "react-router-dom";
+import { AuthProvider } from './context/AuthContext'; 
 import Home from './Home.jsx'; 
-import ReactDOM from 'react-dom/client'
+import ReactDOM from 'react-dom/client';
 import NavigationBar from './navigationBar.jsx';
 import FooterBar from './footerBar.jsx'
 import {
@@ -18,6 +19,8 @@ import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
 import Signinlab from './routes/signinlab/signinlab.jsx'
 import Joinvirtually from './routes/joinvirtually/joinvirtually.jsx';
 import Aboutus from './routes/aboutus/aboutus.jsx'
+
+
 
 const router = createBrowserRouter([
   {
@@ -66,6 +69,8 @@ const router = createBrowserRouter([
   }
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <AuthProvider>
     <RouterProvider router={router} />
-)
+  </AuthProvider>
+);
