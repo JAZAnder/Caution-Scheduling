@@ -34,3 +34,13 @@
   max-height: 100%; /* Responsive image */
   object-fit: cover; /* Cover the container */
 }
+
+.lab-schedule-image2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
