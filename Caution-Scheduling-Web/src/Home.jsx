@@ -1,11 +1,13 @@
-import { useState } from "react";
-import schedulingLogo from "./assets/CautionSchedulingLogoUpdate.png";
+// src/Home.jsx
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import labVideo from "./assets/LabVideo.mp4";
+import labVideo from './assets/LabVideo.mp4';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "./App.css";
-
+import './App.css';
+import { AuthContext } from './context/AuthContext'; 
 function Home() {
+  const { user } = useContext(AuthContext); // Access user from context
+
   return (
     <>
       <main id="root">
@@ -13,9 +15,15 @@ function Home() {
           <source src={labVideo} type="video/mp4" />
         </video>
         <div className="button-container">
-          <Link to="/login" className="cta-button">
-            Login
-          </Link>
+          {user ? (
+            <Link to="" className="cta-button">
+              You are logged in
+            </Link>
+          ) : (
+            <Link to="/login" className="cta-button">
+              Login
+            </Link>
+          )}
         </div>
       </main>
 
