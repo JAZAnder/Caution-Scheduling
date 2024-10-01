@@ -17,7 +17,6 @@ import Otherlink from "./routes/otherlink/otherlink.jsx"
 import Labschedule from "./routes/labschedule/labschedule.jsx"
 import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
 import Signinlab from './routes/signinlab/signinlab.jsx'
-import Joinvirtually from './routes/joinvirtually/joinvirtually.jsx';
 import Aboutus from './routes/aboutus/aboutus.jsx'
 
 
@@ -56,10 +55,6 @@ const router = createBrowserRouter([
       {
         path: "signinlab",
         element: <Signinlab /> 
-      },
-      {
-        path: "joinvirtually",
-        element: <Joinvirtually /> 
       },
       {
         path: "aboutus",

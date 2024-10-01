@@ -57,9 +57,6 @@ export default function NavigationBar() {
                             <Link to={"/signinlab"}>Sign into Lab</Link>
                         </li>
                         <li>
-                            <Link to={"/joinvirtually"}>Join Virtually</Link>
-                        </li>
-                        <li>
                             <Link to={"/aboutus"}>About Us</Link>
                         </li>
                     </ul>

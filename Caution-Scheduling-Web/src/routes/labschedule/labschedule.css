@@ -44,3 +44,24 @@
   object-fit: cover;
   z-index: -1;
 }
+
+
+.lab-schedule-content {
+  display: flex;
+  flex-direction: column; /* Stack image and button vertically */
+  align-items: center; /* Center both image and button horizontally */
+}
+
+.labschedulebutton {
+    display: inline-block;
+    background-color: #1a5632;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    width: 200px;
+    text-transform: uppercase;
+    border: 2px solid #ffffff;
+  }
