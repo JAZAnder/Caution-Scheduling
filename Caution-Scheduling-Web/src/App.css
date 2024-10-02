@@ -1,4 +1,3 @@
-/* Base styles for all devices */
 body, html {
   margin: 0;
   padding: 0;
@@ -70,25 +69,25 @@ body, html {
 
 /* Styles for the Bootstrap mobile navbar */
 .navbar {
-  background-color: #1a5632; /* Custom background color */
+  background-color: #1a5632;
 }
 
 .navbar .nav-link {
-  color: white !important; /* Set text color to white */
+  color: white !important; /* Sets the text color to white */
 }
 
 .navbar .navbar-brand {
   color: white !important;
 }
 
-/* White hamburger icon */
+/* Color of hamburger icon */
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
 /* White border for the hamburger button */
 .navbar-toggler {
-  border-color: white !important; /* Change outline from grey to white */
+  border-color: white !important;
 }
 
 #root {
@@ -170,8 +169,6 @@ body, html {
 .footer a:hover {
   text-decoration: underline;
 }
-
-/* Media Queries for responsiveness */
 
 /* Small screens (phones, up to 600px) */
 @media (max-width: 600px) {

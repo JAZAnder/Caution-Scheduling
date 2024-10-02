@@ -15,7 +15,7 @@ export default function NavigationBar() {
 
   return (
     <>
-      {!isMobile ? ( // Render custom CSS for desktop
+      {!isMobile ? ( // Render CSS for Desktop
         <>
           <header className="topheader">
             <a href="/" className="header-logo-link">
@@ -77,7 +77,7 @@ export default function NavigationBar() {
                   src={schedulingLogo}
                   alt="Caution Scheduling Logo"
                   className="header-logo"
-                  style={{ height: '50px' }} // You can adjust this style if needed
+                  style={{ height: '50px' }}
                 />
               </Navbar.Brand>
             </LinkContainer>
