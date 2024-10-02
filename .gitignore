@@ -34,3 +34,4 @@ go.work.sum
 logs
 .vscode/*
 Caution-Scheduling-API/.env
+sendgrid.env
