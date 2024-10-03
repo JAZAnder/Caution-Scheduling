@@ -35,11 +35,13 @@ export default function NavigationBar() {
                   <Link to={'/otherlink'}>Other Link</Link>
                 </li>
                 {user ? (
-                  <li>
-                    <Link to={'/login'} onClick={logout}>
-                      Log Out
-                    </Link>
-                  </li>
+                  <>
+                    <li>
+                      <Link to={'/login'} onClick={logout}>
+                        Log Out
+                      </Link>
+                    </li>
+                  </>
                 ) : (
                   <li>
                     <Link to={'/login'}>Employee Login</Link>
@@ -64,6 +66,45 @@ export default function NavigationBar() {
                 <li>
                   <Link to={"/aboutus"}>About Us</Link>
                 </li>
+                {user && user.role === 'Administrator' && (
+                  <>
+                    <li>
+                      <Link to={'/meetings'}>Meetings</Link>
+                    </li>
+                    <li>
+                      <Link to={'/users'}>Users</Link>
+                    </li>
+                    <li>
+                      <Link to={'/labs'}>Labs</Link>
+                    </li>
+                    <li>
+                      <Link to={'/timeslots'}>Timeslots</Link>
+                    </li>
+                  </>
+                )}
+                {user && user.role === 'Supervisor' && (
+                  <li>
+                    <Link to={'/meetings'}>Meetings</Link>
+                  </li>
+                )}
+                {user && user.role === 'Tutor' && (
+                  <>
+                    <li>
+                      <Link to={'/my-meetings'}>My Meetings</Link>
+                    </li>
+                    <li>
+                      <Link to={'/my-availability'}>My Availability</Link>
+                    </li>
+                    <li>
+                      <Link to={'/users'}>Users</Link>
+                    </li>
+                  </>
+                )}
+                {user && user.role === 'Student' && (
+                  <li>
+                    <Link to={'/my-meetings'}>My Meetings</Link>
+                  </li>
+                )}
               </ul>
             </nav> 
           </header>
@@ -111,6 +152,45 @@ export default function NavigationBar() {
                 <LinkContainer to="/aboutus">
                   <Nav.Link style={{ color: 'white' }}>About Us</Nav.Link>
                 </LinkContainer>
+                {user && user.role === 'Administrator' && (
+                  <>
+                    <LinkContainer to="/meetings">
+                      <Nav.Link style={{ color: 'white' }}>Meetings</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/users">
+                      <Nav.Link style={{ color: 'white' }}>Users</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/labs">
+                      <Nav.Link style={{ color: 'white' }}>Labs</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/timeslots">
+                      <Nav.Link style={{ color: 'white' }}>Timeslots</Nav.Link>
+                    </LinkContainer>
+                  </>
+                )}
+                {user && user.role === 'Supervisor' && (
+                  <LinkContainer to="/meetings">
+                    <Nav.Link style={{ color: 'white' }}>Meetings</Nav.Link>
+                  </LinkContainer>
+                )}
+                {user && user.role === 'Tutor' && (
+                  <>
+                    <LinkContainer to="/my-meetings">
+                      <Nav.Link style={{ color: 'white' }}>My Meetings</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/my-availability">
+                      <Nav.Link style={{ color: 'white' }}>My Availability</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/users">
+                      <Nav.Link style={{ color: 'white' }}>Users</Nav.Link>
+                    </LinkContainer>
+                  </>
+                )}
+                {user && user.role === 'Student' && (
+                  <LinkContainer to="/my-meetings">
+                    <Nav.Link style={{ color: 'white' }}>My Meetings</Nav.Link>
+                  </LinkContainer>
+                )}
               </Nav>
             </Navbar.Collapse>
           </Container>
