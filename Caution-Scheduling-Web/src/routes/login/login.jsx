@@ -1,8 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
+import { GoogleLogin } from '@react-oauth/google';
 import { AuthContext } from '../../context/AuthContext';
-import SignInWithGoogleButton from '../../components/SignInWithGoogleButton';
 import useFetch from "use-http";
 import './login.css';
 import Background from "../../background";
@@ -45,11 +45,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,9 +54,7 @@ export default function Login() {
 
     try {
       const userData = await authenticateUser(userName, password);
-
       login(userData);
-
       navigate('/');
     } catch (err) {
       setError(err.message);
@@ -69,58 +63,68 @@ export default function Login() {
     }
   };
 
+  const handleGoogleSuccess = (credentialResponse) => {
+    const token = credentialResponse.credential;
+    console.log("Google login successful. Token:", token);
+    login({ userName: 'Google User', token });
+    navigate('/');
+  };
+
+  const handleGoogleFailure = () => {
+    setError('Google login failed. Please try again.');
+  };
+
   return (
     <>
-    <Background />
-    <div className="container">
-      <div className="forms-container">
-        <div className="form-control signin-form">
-
-    
-          {user ? (
-            <div className="logged-in-message">
-              <h2>You are logged in</h2>
-              <p>Hi {user.userName}</p>
-            </div>
-          ) : (
-            <form className="text-center" onSubmit={handleSubmit}>
-              <h2>Sign In</h2>
-              <Form.Group>
-                <Form.Control
-                  id="username"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  type="text"
-                  autoComplete="username"
-
-                  placeholder="Username"
-                  required
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Control
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder="Password"
-                  required
-                />
-              </Form.Group>
-              <Button variant="secondary" type="submit" disabled={loading}>
-                {loading ? 'Checking Login...' : 'Sign In'}
-              </Button>
-              {error && <div className="error-message">{error}</div>}
-
-              <span>or sign in with</span>
-              <div className="socials">
-                <SignInWithGoogleButton />
+      <Background />
+      <div className="container">
+        <div className="forms-container">
+          <div className="form-control signin-form">
+            {user ? (
+              <div className="logged-in-message">
+                <h2>You are logged in</h2>
+                <p>Hi {user.userName}</p>
               </div>
-            </form>
-          )}
-          </div>
+            ) : (
+              <form className="text-center" onSubmit={handleSubmit}>
+                <h2>Sign In</h2>
+                <Form.Group>
+                  <Form.Control
+                    id="username"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    type="text"
+                    autoComplete="username"
+                    placeholder="Username"
+                    required
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Control
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Password"
+                    required
+                  />
+                </Form.Group>
+                <Button variant="secondary" type="submit" disabled={loading}>
+                  {loading ? 'Checking Login...' : 'Sign In'}
+                </Button>
+                {error && <div className="error-message">{error}</div>}
 
+                <span>or sign in with</span>
+                <div className="socials">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleFailure}
+                  />
+                </div>
+              </form>
+            )}
+          </div>
         </div>
         <div className="intros-container">
           <div className="intro-control signin-intro">
