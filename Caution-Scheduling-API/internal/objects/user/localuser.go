@@ -5,19 +5,25 @@ import (
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
+
 )
 
-type LocalUser struct{
-	UserName string `json:"userName"`
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
-	Email string `json:"email"`
-	Password string `json:"password"`
-	IsAdmin bool `json:"isAdmin"`
+type LocalUser struct {
+	GoogleId   string `json:"googleId"`
+	UserName   string `json:"userName"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	FullName string `json:"fullName"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Role       string `json:"role"`
+	IsAdmin    bool   `json:"isAdmin"`
+	SettingsId int    `json:"settingsId"`
+	Settings   userSettings
 }
 
-func (u *LocalUser) Login(db *sql.DB) (error) {
-	query := "SELECT `password` FROM `localusers` WHERE `userName` = '"+u.UserName+"';"
+func (u *LocalUser) Login(db *sql.DB) error {
+	query := "SELECT `password` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
 	result := db.QueryRow(query)
 
 	var storedCreds LocalUser
@@ -26,12 +32,11 @@ func (u *LocalUser) Login(db *sql.DB) (error) {
 	if err == sql.ErrNoRows {
 		return err
 	}
-	if err = bcrypt.CompareHashAndPassword([]byte(storedCreds.Password), []byte(u.Password)); 
-	err != nil {
+	if err = bcrypt.CompareHashAndPassword([]byte(storedCreds.Password), []byte(u.Password)); err != nil {
 		return err
 	}
 
-	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin` FROM `localusers` WHERE `userName` = '"+u.UserName+"';"
+	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
 	result = db.QueryRow(query)
 
 	var isAdmin string
@@ -39,7 +44,7 @@ func (u *LocalUser) Login(db *sql.DB) (error) {
 	if err != nil {
 		return err
 	}
-	u.IsAdmin, _ = strconv.ParseBool(isAdmin) 
+	u.IsAdmin, _ = strconv.ParseBool(isAdmin)
 
 	return nil
 }
@@ -47,16 +52,16 @@ func (u *LocalUser) Login(db *sql.DB) (error) {
 func (u *LocalUser) SignUp(db *sql.DB) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
-		return err; 
+		return err
 	}
 
 	isAdmin := "0"
-	if(u.IsAdmin){
+	if u.IsAdmin {
 		isAdmin = "1"
 	}
 
-	query := "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES ('"+u.UserName+"', '"+u.FirstName+"', '"+u.LastName+"', '"+u.Email+"', '"+string(hashedPassword)+"', '"+isAdmin+"');"
-	sqlerr := db.QueryRow(query) 
+	query := "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "');"
+	sqlerr := db.QueryRow(query)
 
 	if sqlerr != nil {
 		return sqlerr.Err()
@@ -84,7 +89,7 @@ func GetLusers(db *sql.DB, isAdmin bool) ([]LocalUser, error) {
 		}
 		u.Password = "REDACTED"
 		u.IsAdmin, _ = strconv.ParseBool(uAdmin)
-		if (!isAdmin) {
+		if !isAdmin {
 			u.IsAdmin = false
 		}
 		lusers = append(lusers, u)
@@ -92,13 +97,13 @@ func GetLusers(db *sql.DB, isAdmin bool) ([]LocalUser, error) {
 	return lusers, nil
 }
 
-func (u *LocalUser) ChangePassword(db *sql.DB)error{
+func (u *LocalUser) ChangePassword(db *sql.DB) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
-		return err; 
+		return err
 	}
-	query := "UPDATE `localusers` SET `password` = '"+string(hashedPassword)+"'WHERE `userName` = '"+u.UserName+"';"
-	sqlerr := db.QueryRow(query) 
+	query := "UPDATE `localusers` SET `password` = '" + string(hashedPassword) + "'WHERE `userName` = '" + u.UserName + "';"
+	sqlerr := db.QueryRow(query)
 
 	if sqlerr != nil {
 		return sqlerr.Err()
@@ -107,7 +112,17 @@ func (u *LocalUser) ChangePassword(db *sql.DB)error{
 	return nil
 }
 
-func (u *LocalUser) GetUser(db *sql.DB) error{
+func (u *LocalUser) GetUser(db *sql.DB) error {
+	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
+	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
+	u.Email = "REDACTED"
+	u.UserName = "REDACTED"
+	u.Password = "REDACTED"
+	u.IsAdmin = false
+	return err
+}
+
+func (u *LocalUser) GetFullName(db *sql.DB) error {
 	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
 	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
 	u.Email = "REDACTED"
