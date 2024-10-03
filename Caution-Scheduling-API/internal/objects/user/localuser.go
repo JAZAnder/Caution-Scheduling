@@ -9,6 +9,7 @@ import (
 )
 
 type LocalUser struct {
+	UserId int `json:"userId"`
 	GoogleId   string `json:"googleId"`
 	UserName   string `json:"userName"`
 	FirstName  string `json:"firstName"`
@@ -18,7 +19,6 @@ type LocalUser struct {
 	Password   string `json:"password"`
 	Role       string `json:"role"`
 	IsAdmin    bool   `json:"isAdmin"`
-	SettingsId int    `json:"settingsId"`
 	Settings   userSettings
 }
 
@@ -60,7 +60,10 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 		isAdmin = "1"
 	}
 
-	query := "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "');"
+	query := "INSERT INTO `userSettings` (`userName`, `ReceiveMeetingEmails`) VALUES ('" + u.UserName + "', '" + "1" + "');"
+	db.QueryRow(query)
+
+	query = "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`, `role`, `fullName`, `googleId`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "', '" + u.Role + "', '" + u.FullName + "', '" + u.GoogleId + "');"
 	sqlerr := db.QueryRow(query)
 
 	if sqlerr != nil {

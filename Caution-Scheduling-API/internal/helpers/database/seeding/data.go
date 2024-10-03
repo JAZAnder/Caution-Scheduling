@@ -18,22 +18,23 @@ func SeedData(db *sql.DB) {
 
 func seedUsers() {
 	var Admin user.LocalUser = user.LocalUser{
-			UserName: "Admin",
-			FirstName: "System",
-			LastName: "Administrator",
-			Email: "admin@localhost.com",
-			Password: "P@33word123!",
-			IsAdmin: true,
-		}
+		UserName:  "Admin",
+		FirstName: "System",
+		LastName:  "Administrator",
+		FullName: "System Administrator",
+		Email:     "admin@localhost.com",
+		Password:  "P@33word123!",
+		IsAdmin:   true,
+		Role: "Administrator",
+
+	}
 
 	err := Admin.SignUp(database)
 
 	if err != nil {
-		logger.Log(2, "database", "Seeding Data", "System", Admin.UserName + " user is Created")
-	}else{
+		logger.Log(2, "database", "Seeding Data", "System", Admin.UserName+" user is Created")
+	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
 
-
-	
 }
