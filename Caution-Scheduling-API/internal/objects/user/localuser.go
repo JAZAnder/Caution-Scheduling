@@ -36,11 +36,11 @@ func (u *LocalUser) Login(db *sql.DB) error {
 		return err
 	}
 
-	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
+	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin`, `role`, `fullName`, `googleId` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
 	result = db.QueryRow(query)
 
 	var isAdmin string
-	err = result.Scan(&u.FirstName, &u.LastName, &u.Email, &isAdmin)
+	err = result.Scan(&u.FirstName, &u.LastName, &u.Email, &isAdmin, &u.Role, &u.FullName, &u.GoogleId)
 	if err != nil {
 		return err
 	}
@@ -116,16 +116,6 @@ func (u *LocalUser) ChangePassword(db *sql.DB) error {
 }
 
 func (u *LocalUser) GetUser(db *sql.DB) error {
-	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
-	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
-	u.Email = "REDACTED"
-	u.UserName = "REDACTED"
-	u.Password = "REDACTED"
-	u.IsAdmin = false
-	return err
-}
-
-func (u *LocalUser) GetFullName(db *sql.DB) error {
 	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
 	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
 	u.Email = "REDACTED"
