@@ -94,3 +94,4 @@ const LabSchedule = () => {
 };
 
 export default LabSchedule;
+
