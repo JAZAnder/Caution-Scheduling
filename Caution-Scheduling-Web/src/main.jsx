@@ -17,9 +17,13 @@ import Otherlink from "./routes/otherlink/otherlink.jsx"
 import Labschedule from "./routes/labschedule/labschedule.jsx"
 import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
 import Signinlab from './routes/signinlab/signinlab.jsx'
-import Joinvirtually from './routes/joinvirtually/joinvirtually.jsx';
 import Aboutus from './routes/aboutus/aboutus.jsx'
-
+import Meeetings from './routes/meetings/meetings.jsx'
+import Users from './routes/users/users.jsx'
+import Labs from './routes/labs/labs.jsx'
+import Timeslots from './routes/timeslots/timeslots.jsx'
+import MyMeetings from './routes/my-meetings/my-meetings.jsx'
+import MyAvailability from './routes/my-availability/my-availability.jsx'
 
 
 const router = createBrowserRouter([
@@ -58,12 +62,32 @@ const router = createBrowserRouter([
         element: <Signinlab /> 
       },
       {
-        path: "joinvirtually",
-        element: <Joinvirtually /> 
-      },
-      {
         path: "aboutus",
         element: <Aboutus /> 
+      },
+      {
+        path: "meetings",
+        element: <Meeetings />
+      },
+      {
+        path: "users",
+        element: <Users />
+      },
+      {
+        path: "labs",
+        element: <Labs />
+      },
+      {
+        path: "timeslots",
+        element: <Timeslots />
+      },
+      {
+        path: "my-meetings",
+        element: <MyMeetings />
+      },
+      {
+        path: "my-availability",
+        element: <MyAvailability />
       }
     ]
   }

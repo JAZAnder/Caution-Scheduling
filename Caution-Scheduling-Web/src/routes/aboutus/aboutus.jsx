@@ -1,10 +1,11 @@
 import React from "react";
-import "./aboutus.css"; // Ensure this path is correct
-import Placeholder from "../../assets/placeholder.jpg"; // Adjust the path if necessary
-import EnvocLab from "../../assets/EnvocLab.png"; // Adjust the path if necessary
+import "./aboutus.css";
+import Placeholder from "../../assets/placeholder.jpg";
 import Background from "../../background";
+import useMediaQuery from '../../context/useMediaQuery.jsx';
 
 const AboutUs = () => {
+  const isMobile = useMediaQuery('(max-width: 900px)'); // Checks if the device is mobile
   const cards = [
     {
       name: "Joshua Cantu",
@@ -37,7 +38,7 @@ const AboutUs = () => {
       <Background />
       <div className="slide-container">
         <div className="slide-content">
-          <div className="card-wrapper">
+          <div className={`card-wrapper ${isMobile ? "mobile" : ""}`}>
             {cards.map((card, index) => (
               <div className="card" key={index}>
                 <div className="image-content">
