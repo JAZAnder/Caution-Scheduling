@@ -59,12 +59,18 @@
 .mobile-lab-schedule {
   max-height: 100vh;
   overflow-y: auto;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;  
   padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 30%;
   padding-bottom: 25%;
+}
+
+.mobile-lab-schedule::-webkit-scrollbar {
+  display: none;
 }
 
 .mobile-lab-entry {

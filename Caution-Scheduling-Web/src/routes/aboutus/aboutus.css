@@ -42,7 +42,7 @@
 }
 
 .button {
-  background: #007BFF;
+  background: #007bff;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -57,16 +57,22 @@
 /* Mobile styles */
 @media (max-width: 900px) {
   .slide-container {
-    padding-top: 20%; 
+    padding-top: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: 80vh; 
-    overflow-y: auto; 
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
+  }
+
+  .slide-container::-webkit-scrollbar {
+    display: none;
   }
 
   .slide-content {
-    padding-top: 25%; 
+    padding-top: 25%;
   }
 
   .card {
