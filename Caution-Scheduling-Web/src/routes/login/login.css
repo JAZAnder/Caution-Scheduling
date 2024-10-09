@@ -12,7 +12,7 @@ body {
   min-height: 100vh;
   font-size: 14px;
   margin: 0;
-  background-color: #f0f0f0; /* Optional: Set a background color for the page */
+  background-color: #f0f0f0;
 }
 
 .container {
@@ -33,9 +33,9 @@ body {
   justify-content: center;
   padding: 20px;
   border-radius: 10px;
-  background-color: white; /* Ensure full white background */
+  background-color: white; 
   border: 2px solid #1a5632;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-control {

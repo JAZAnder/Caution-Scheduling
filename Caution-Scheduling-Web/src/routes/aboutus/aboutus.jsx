@@ -1,6 +1,6 @@
 import React from "react";
-import "./aboutus.css"; // Ensure this path is correct
-import Placeholder from "../../assets/placeholder.jpg"; // Adjust the path if necessary
+import "./aboutus.css";
+import Placeholder from "../../assets/placeholder.jpg";
 import Background from "../../background";
 import useMediaQuery from '../../context/useMediaQuery.jsx';
 
