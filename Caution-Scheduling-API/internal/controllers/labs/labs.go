@@ -16,6 +16,7 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/lab"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 func AddLabRoutes(a *mux.Router) {
@@ -135,7 +136,7 @@ func deleteLab(w http.ResponseWriter, r *http.Request) {
 
 func openLabTimeSlot(w http.ResponseWriter, r *http.Request) {
 	var lh lab.LabHour
-	var uh user.UserHour
+	var uh userHour.UserHour
 	var c user.SessionCookie
 	var err error
 	vars := mux.Vars(r)

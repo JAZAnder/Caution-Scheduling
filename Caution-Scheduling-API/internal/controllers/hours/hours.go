@@ -14,7 +14,7 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 type HourController struct {
@@ -200,7 +200,7 @@ func getUsersByHour(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	users, err := user.GetUsersByHour(database, id)
+	users, err := userHour.GetUsersByHour(database, id)
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return

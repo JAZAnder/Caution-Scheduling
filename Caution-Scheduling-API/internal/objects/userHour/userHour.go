@@ -1,4 +1,4 @@
-package user
+package userHour
 
 import (
 	"database/sql"
@@ -6,12 +6,6 @@ import (
 	"strconv"
 )
 
-type UserHour struct {
-	Id        int    `json:"id"`
-	HourId    int    `json:"hourId"`
-	Tutor     string `json:"tutor"`
-	Available bool   `json:"available"`
-}
 
 func (uh *UserHour) GetUserHour(db *sql.DB) error {
 	var tempHourId string
