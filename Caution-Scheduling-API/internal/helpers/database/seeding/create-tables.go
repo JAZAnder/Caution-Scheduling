@@ -29,7 +29,7 @@ func createLocalUserTables() {
 		"`lastName` varchar(225) NOT NULL," +
 		"`email` varchar(225) NOT NULL," +
 		"`password` varchar(225) NOT NULL," +
-		"`role` varchar(225) NOT NULL," +
+		"`role` int NOT NULL," +
 		"`fullName` varchar(225) NOT NULL," +
 		"`googleId` varchar(225)," +
 		"`isAdmin` boolean NOT NULL" +

@@ -38,6 +38,36 @@ func (u *LocalUser) ToStandardUserInformation() (StandardUserInformation, error)
 	}, nil
 }
 
+func (u *LocalUser) ToSelfViewInformation() (SelfViewInformation, error){
+	
+	if (u.checkValidUser()) {
+		return SelfViewInformation{}, errors.New("user missing information")
+	}
+	
+	var userRole string;
+
+	if u.Role == 1 {
+		userRole = "Student"
+	}else if u.Role == 2 {
+		userRole = "Tutor"
+	}else if u.Role == 3 {
+		userRole = "Supervisor"
+	}else if u.Role == 4 {
+		userRole = "Administrator"
+	}else{
+		userRole = "Deactivated"
+	}
+	return SelfViewInformation{
+		UserName: u.UserName,
+		FirstName: u.FirstName,
+		LastName: u.LastName,
+		FullName: u.FullName,
+		Email: u.Email,
+		Role: userRole,
+		Settings: u.Settings,
+	}, nil
+}
+
 func (u *LocalUser) checkValidUser() (bool){
 	if (u.UserId == 0 || u.UserName == ""|| u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0) {
 		return false
@@ -86,7 +116,7 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 	query := "INSERT INTO `userSettings` (`userName`, `ReceiveMeetingEmails`) VALUES ('" + u.UserName + "', '" + "1" + "');"
 	db.QueryRow(query)
 
-	query = "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`, `role`, `fullName`, `googleId`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "', '" + u.Role + "', '" + u.FullName + "', '" + u.GoogleId + "');"
+	query = "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`, `role`, `fullName`, `googleId`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "', '" + strconv.Itoa(u.Role)  + "', '" + u.FullName + "', '" + u.GoogleId + "');"
 	sqlerr := db.QueryRow(query)
 
 	if sqlerr != nil {
@@ -148,47 +178,47 @@ func (u *LocalUser) GetUser(db *sql.DB) error {
 	return err
 }
 
-func (u *LocalUser) hasStudentRights() (bool, error) {
+func (u *LocalUser) HasStudentRights() (bool, error) {
 	if (!u.checkValidUser()){
-		return false, errors.New("Not Valid User")
+		return false, errors.New("not Valid User")
 	}
 	if(u.Role >= 1){
 		return true, nil
 	}else{
-		return false, errors.New("Insufficient permissions")
+		return false, errors.New("insufficient permissions")
 	}
 }
 
-func (u *LocalUser) hasTutorRights() (bool, error) {
+func (u *LocalUser) HasTutorRights() (bool, error) {
 	if (!u.checkValidUser()){
-		return false, errors.New("Not Valid User")
+		return false, errors.New("not Valid User")
 	}
 	if(u.Role >= 2){
 		return true, nil
 	}else{
-		return false, errors.New("Insufficient permissions")
+		return false, errors.New("insufficient permissions")
 	}
 }
 
-func (u *LocalUser) hasSupervisorRights() (bool, error) {
+func (u *LocalUser) HasSupervisorRights() (bool, error) {
 	if (!u.checkValidUser()){
-		return false, errors.New("Not Valid User")
+		return false, errors.New("not Valid User")
 	}
 	if(u.Role >= 3){
 		return true, nil
 	}else{
-		return false, errors.New("Insufficient permissions")
+		return false, errors.New("insufficient permissions")
 	}
 }
 
-func (u *LocalUser) hasAdministratorRights() (bool, error) {
+func (u *LocalUser) HasAdministratorRights() (bool, error) {
 	if (!u.checkValidUser()){
-		return false, errors.New("Not Valid User")
+		return false, errors.New("not valid user")
 	}
 	if(u.Role >= 4){
 		return true, nil
 	}else{
-		return false, errors.New("Insufficient permissions")
+		return false, errors.New("insufficient permissions")
 	}
 }
 

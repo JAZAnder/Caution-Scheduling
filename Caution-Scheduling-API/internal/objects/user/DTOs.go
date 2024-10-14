@@ -15,6 +15,8 @@ type LocalUser struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	Role       int `json:"role"`
+	Attempts       int `json:"attempts"`
+	Disabled    bool   `json:"disabled"`
 	IsAdmin    bool   `json:"isAdmin"`
 	Settings   userSettings
 }

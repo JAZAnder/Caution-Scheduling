@@ -10,34 +10,15 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
-	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
-func AddUserRoutes(a *mux.Router) {
-	a.HandleFunc("/api/luser", createLocalUser).Methods("POST")
-	a.HandleFunc("/api/luser/login", loginLocalUser).Methods("POST")
-	a.HandleFunc("/api/luser/whoami", whoami).Methods("GET")
-	a.HandleFunc("/api/luser/logout", logoutLocalUser).Methods("DELETE")
-	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
-	a.HandleFunc("/api/luser/resetmypasswd", changePassword).Methods("PUT")
-	a.HandleFunc("/api/luser/admin/resetpasswd", resetPassword).Methods("PUT")
-	a.HandleFunc("/api/luser/timeslot", addTime).Methods("POST")
-	a.HandleFunc("/api/luser/admin/timeslot", addTimeAdmin).Methods("POST")
-	a.HandleFunc("/api/luser/admin/timeslot/{id:[0-9]+}", removeTimeAdmin).Methods("DELETE")
-	a.HandleFunc("/api/tutor/availability/{username}", getluserAvalibleTime).Methods("GET")
-	a.HandleFunc("/api/tutor/hours/{username}", getluserTime).Methods("GET")
-	a.HandleFunc("/api/tutor/timeslot/whois/{id:[0-9]+}", getUserHourById).Methods("GET")
-	a.HandleFunc("/api/tutor/timeslots", getAllUserHours).Methods("GET")
-	a.HandleFunc("/api/tutor/whois/{id}", getUserInfo).Methods("GET")
 
-}
 
-var (
-	database = db.GetDatabase()
-)
+
 
 func isLoggedIn(w http.ResponseWriter, r *http.Request) {
 	if true {
