@@ -3,19 +3,22 @@ package labs
 import (
 	"database/sql"
 	"errors"
-
-	//"fmt"
 	"net/http"
 	"strconv"
 
-	//"github.com/bytedance/sonic/decoder"
 	"github.com/gorilla/mux"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/dto"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
 	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/lab"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+)
+
+var (
+	database   = db.GetDatabase()
+	labService = lab.NewLabService(database)
 )
 
 func AddLabRoutes(a *mux.Router) {
@@ -29,10 +32,6 @@ func AddLabRoutes(a *mux.Router) {
 	a.HandleFunc("/api/lab/timeslot/{id:[0-9]+}", removeLabTimeSlot).Methods("DELETE")
 }
 
-var (
-	database = db.GetDatabase()
-)
-
 func getLab(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -41,11 +40,10 @@ func getLab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	l := lab.Lab{Id: id}
-	err = l.GetLab(database)
+	l, err := labService.GetLab(id)
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
 			responses.RespondWithError(w, http.StatusNotFound, "Lab not Found")
 		default:
 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
@@ -53,11 +51,10 @@ func getLab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.RespondWithJSON(w, http.StatusOK, l)
-
 }
 
 func getLabs(w http.ResponseWriter, r *http.Request) {
-	labs, err := lab.GetLabs(database)
+	labs, err := labService.GetLabs()
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -67,7 +64,7 @@ func getLabs(w http.ResponseWriter, r *http.Request) {
 }
 
 func createLab(w http.ResponseWriter, r *http.Request) {
-	var l lab.Lab
+	var l dto.LabDTO
 
 	l.Location = r.PostFormValue("location")
 	l.Name = r.PostFormValue("name")
@@ -77,7 +74,7 @@ func createLab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := l.CreateLab(database)
+	err := labService.CreateLab(&l)
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -94,8 +91,8 @@ func updateLab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var l lab.Lab
-
+	var l dto.LabDTO
+	l.ID = id
 	l.Location = r.PostFormValue("location")
 	l.Name = r.PostFormValue("name")
 
@@ -105,15 +102,12 @@ func updateLab(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	l.Id = id
-
-	if err := l.UpdateLab(database); err != nil {
+	if err := labService.UpdateLab(&l); err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	responses.RespondWithJSON(w, http.StatusOK, l)
-
 }
 
 func deleteLab(w http.ResponseWriter, r *http.Request) {
@@ -124,8 +118,7 @@ func deleteLab(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	l := lab.Lab{Id: id}
-	if err := l.DeleteLab(database); err != nil {
+	if err := labService.DeleteLab(id); err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}

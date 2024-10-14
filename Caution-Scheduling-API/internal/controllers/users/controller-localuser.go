@@ -38,7 +38,7 @@ var (
 	database = db.GetDatabase()
 )
 
-func isLoggedIn(w http.ResponseWriter, r *http.Request) {
+func isLoggedIn(w http.ResponseWriter) {
 	if true {
 		responses.RespondWithJSON(w, http.StatusOK, map[string]string{"loggedin": "true"})
 	}

@@ -7,11 +7,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/joho/godotenv"
-
-	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database/seeding"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-
+	"github.com/joho/godotenv"
 )
 
 var once sync.Once
@@ -25,7 +22,6 @@ var (
 )
 
 func GetDatabase() *sql.DB {
-
 	once.Do(func() {
 		createDatabase()
 	})
@@ -34,7 +30,6 @@ func GetDatabase() *sql.DB {
 }
 
 func createDatabase() {
-
 	user := "APP_DB_USERNAME"
 	password := "APP_DB_PASSWORD"
 	dbServer := "APP_DB"
@@ -43,7 +38,6 @@ func createDatabase() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("Error Loading .env file in database")
-
 	} else {
 		user = os.Getenv("APP_DB_USERNAME")
 		password = os.Getenv("APP_DB_PASSWORD")
@@ -53,14 +47,24 @@ func createDatabase() {
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", user, password, dbServer, dbName)
 
-	//Creates MySQL Connection
-	db.DB, err = sql.Open("mysql", connectionString)
+	// Create MySQL Connection
+	dbConn, err := sql.Open("mysql", connectionString)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 
-	logger.LogSetUpDb(1, db.DB)
+	// Check if the connection is actually established
+	err = dbConn.Ping()
+	if err != nil {
+		log.Fatalf("Failed to ping the database: %v", err)
+	}
+	db.DB = dbConn
 
-	seeding.CreateTables(db.DB)
+	db = database{
+		DB: dbConn, // Assign the connection here
+	}
+
+	dbLogger := db.DB // Test if the reference works
+	logger.LogSetUpDb(dbLogger)
 
 }
