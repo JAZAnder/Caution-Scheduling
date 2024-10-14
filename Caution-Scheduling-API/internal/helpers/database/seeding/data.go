@@ -25,7 +25,7 @@ func seedUsers() {
 		Email:     "admin@localhost.com",
 		Password:  "P@33word123!",
 		IsAdmin:   true,
-		Role:      "Administrator",
+		Role:      4,
 	}
 
 	err := Admin.SignUp(database)
@@ -46,7 +46,7 @@ func seedUsers() {
 		Email:     "student@localhost.com",
 		Password:  "P@33word123!",
 		IsAdmin:   false,
-		Role:      "Student",
+		Role:      1,
 	}
 
 	err = student.SignUp(database)
@@ -67,7 +67,7 @@ func seedUsers() {
 		Email:     "supervisor@localhost.com",
 		Password:  "P@33word123!",
 		IsAdmin:   false,
-		Role:      "Supervisor",
+		Role:      3,
 	}
 
 	err = supervisor.SignUp(database)
@@ -88,7 +88,7 @@ func seedUsers() {
 		Email:     "tutor@localhost.com",
 		Password:  "P@33word123!",
 		IsAdmin:   false,
-		Role:      "Tutor",
+		Role:      2,
 	}
 
 	err = Tutor.SignUp(database)

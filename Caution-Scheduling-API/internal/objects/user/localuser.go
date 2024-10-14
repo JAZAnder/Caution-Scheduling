@@ -8,6 +8,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
+
 func (u *LocalUser) ToTutorInformation() (TutorInformation, error){
 	
 	if (u.checkValidUser()) {
@@ -37,7 +39,7 @@ func (u *LocalUser) ToStandardUserInformation() (StandardUserInformation, error)
 }
 
 func (u *LocalUser) checkValidUser() (bool){
-	if (u.UserId == 0 || u.UserName == ""|| u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == "") {
+	if (u.UserId == 0 || u.UserName == ""|| u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0) {
 		return false
 	}
 	return true;
@@ -145,3 +147,49 @@ func (u *LocalUser) GetUser(db *sql.DB) error {
 	u.IsAdmin = false
 	return err
 }
+
+func (u *LocalUser) hasStudentRights() (bool, error) {
+	if (!u.checkValidUser()){
+		return false, errors.New("Not Valid User")
+	}
+	if(u.Role >= 1){
+		return true, nil
+	}else{
+		return false, errors.New("Insufficient permissions")
+	}
+}
+
+func (u *LocalUser) hasTutorRights() (bool, error) {
+	if (!u.checkValidUser()){
+		return false, errors.New("Not Valid User")
+	}
+	if(u.Role >= 2){
+		return true, nil
+	}else{
+		return false, errors.New("Insufficient permissions")
+	}
+}
+
+func (u *LocalUser) hasSupervisorRights() (bool, error) {
+	if (!u.checkValidUser()){
+		return false, errors.New("Not Valid User")
+	}
+	if(u.Role >= 3){
+		return true, nil
+	}else{
+		return false, errors.New("Insufficient permissions")
+	}
+}
+
+func (u *LocalUser) hasAdministratorRights() (bool, error) {
+	if (!u.checkValidUser()){
+		return false, errors.New("Not Valid User")
+	}
+	if(u.Role >= 4){
+		return true, nil
+	}else{
+		return false, errors.New("Insufficient permissions")
+	}
+}
+
+
