@@ -2,24 +2,45 @@ package user
 
 import (
 	"database/sql"
+	"errors"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
-
 )
 
-type LocalUser struct {
-	UserId int `json:"userId"`
-	GoogleId   string `json:"googleId"`
-	UserName   string `json:"userName"`
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	FullName string `json:"fullName"`
-	Email      string `json:"email"`
-	Password   string `json:"password"`
-	Role       string `json:"role"`
-	IsAdmin    bool   `json:"isAdmin"`
-	Settings   userSettings
+func (u *LocalUser) ToTutorInformation() (TutorInformation, error){
+	
+	if (u.checkValidUser()) {
+		return TutorInformation{}, errors.New("user missing information")
+	}
+	
+	return TutorInformation{
+		UserId: u.UserId,
+		FirstName: u.FirstName,
+		LastName: u.LastName,
+		FullName: u.FullName,
+	}, nil
+}
+
+func (u *LocalUser) ToStandardUserInformation() (StandardUserInformation, error){
+	
+	if (u.checkValidUser()) {
+		return StandardUserInformation{}, errors.New("user missing information")
+	}
+	
+	return StandardUserInformation{
+		UserName: u.UserName,
+		FirstName: u.FirstName,
+		LastName: u.LastName,
+		Email: u.Email,
+	}, nil
+}
+
+func (u *LocalUser) checkValidUser() (bool){
+	if (u.UserId == 0 || u.UserName == ""|| u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == "") {
+		return false
+	}
+	return true;
 }
 
 func (u *LocalUser) Login(db *sql.DB) error {

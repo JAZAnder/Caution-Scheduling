@@ -13,6 +13,7 @@ import (
 	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 func AddUserRoutes(a *mux.Router) {
@@ -325,7 +326,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 }
 func addTime(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -369,7 +370,7 @@ func addTime(w http.ResponseWriter, r *http.Request) {
 
 func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -423,7 +424,7 @@ func removeTime() {
 }
 func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -472,7 +473,7 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 
 }
 func getluserTime(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
 
@@ -484,7 +485,7 @@ func getluserTime(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusOK, userHours)
 }
 func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
 
@@ -497,7 +498,7 @@ func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUserHourById(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	var err error
 	vars := mux.Vars(r)
 	uh.Id, err = strconv.Atoi(vars["id"])
@@ -517,7 +518,7 @@ func getUserHourById(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllUserHours(w http.ResponseWriter, r *http.Request) {
-	userHours, err := user.GetUserHours(database)
+	userHours, err := userHour.GetUserHours(database)
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
