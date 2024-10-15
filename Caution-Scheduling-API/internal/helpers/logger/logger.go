@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-
+	"log"
 	"time"
 )
 
@@ -79,7 +79,24 @@ func (l *Logger) validate(level LogLevel, category, subCategory string) error {
 }
 
 func LogSetUpDb(db *sql.DB) {
+	createLogsTable := `
+	CREATE TABLE IF NOT EXISTS logs (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		timestamp DATETIME,
+		level VARCHAR(10),
+		category VARCHAR(20),
+		subcategory VARCHAR(20),
+		user VARCHAR(50),
+		message TEXT
+	)
+	`
 
+	_, err := db.Exec(createLogsTable)
+	if err != nil {
+		log.Printf("Error creating logs table: %v", err)
+	} else {
+		log.Println("Logs table created or already exists")
+	}
 }
 
 func (l *Logger) logToConsole(timestamp string, level LogLevel, category, subCategory, user, message string) error {

@@ -66,5 +66,14 @@ func createDatabase() {
 
 	dbLogger := db.DB // Test if the reference works
 	logger.LogSetUpDb(dbLogger)
+}
 
+// New method to execute SQL statements
+func ExecuteSQL(query string, args ...interface{}) (sql.Result, error) {
+	result, err := db.DB.Exec(query, args...)
+	if err != nil {
+		log.Printf("Error executing SQL: %v", err)
+		return nil, err
+	}
+	return result, nil
 }
