@@ -20,7 +20,7 @@ import (
 
 
 
-func isLoggedIn(w http.ResponseWriter, r *http.Request) {
+func IsLoggedIn(w http.ResponseWriter, r *http.Request) {
 	if true {
 		responses.RespondWithJSON(w, http.StatusOK, map[string]string{"loggedin": "true"})
 	}
