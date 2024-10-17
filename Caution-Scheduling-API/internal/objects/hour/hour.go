@@ -4,12 +4,7 @@ import(
 	"strconv"
 )
 
-type Hour struct{
-	Id int `json:"id"`
-	StartTime string `json:"startTime"`
-	EndTime string `json:"endTime"`
-	DayOfWeek int `json:"dayOfWeek"`
-}
+
 
 func (h *Hour) GetHour(db *sql.DB) error{
 	var tempDayOfWeek string

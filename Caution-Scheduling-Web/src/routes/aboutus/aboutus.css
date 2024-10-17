@@ -1,51 +1,81 @@
 .card-wrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+.card {
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.image-content {
+  position: relative;
+}
+
+.card-image img {
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #0056b3;
+}
+
+/* Mobile styles */
+@media (max-width: 900px) {
+  .slide-container {
+    padding-top: 20%;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
   }
-  
+
+  .slide-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide-content {
+    padding-top: 25%;
+  }
+
   .card {
-    width: 200px; /* Set a fixed width for cards */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    text-align: center;
+    width: calc(50% - 20px); /* Two cards per row, accounting for margins */
   }
-  
-  .image-content {
-    position: relative;
-  }
-  
-  .card-image img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
-  .card-content {
-    padding: 15px;
-  }
-  
-  .button {
-    background: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .button:hover {
-    background: #0056b3;
-  }
-  
+}

@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { AuthContext } from './context/AuthContext'; 
 function Home() {
-  const { user } = useContext(AuthContext); // Access user from context
+  const { user } = useContext(AuthContext);
 
   return (
     <>

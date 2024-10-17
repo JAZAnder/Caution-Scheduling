@@ -1,13 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 
-const JoinVirtually = () => {
+const mymeetings = () => {
   return (
     <>
       <Background />
-      <h1 style={{ color: 'white' }}> Hello this is a join virtually page</h1>
+      <h1 style={{ color: 'white' }}> Hello this is a page</h1>
     </>
   );
 };
 
-export default JoinVirtually;
+export default mymeetings;

@@ -10,35 +10,17 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
-	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
-func AddUserRoutes(a *mux.Router) {
-	a.HandleFunc("/api/luser", createLocalUser).Methods("POST")
-	a.HandleFunc("/api/luser/login", loginLocalUser).Methods("POST")
-	a.HandleFunc("/api/luser/whoami", whoami).Methods("GET")
-	a.HandleFunc("/api/luser/logout", logoutLocalUser).Methods("DELETE")
-	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
-	a.HandleFunc("/api/luser/resetmypasswd", changePassword).Methods("PUT")
-	a.HandleFunc("/api/luser/admin/resetpasswd", resetPassword).Methods("PUT")
-	a.HandleFunc("/api/luser/timeslot", addTime).Methods("POST")
-	a.HandleFunc("/api/luser/admin/timeslot", addTimeAdmin).Methods("POST")
-	a.HandleFunc("/api/luser/admin/timeslot/{id:[0-9]+}", removeTimeAdmin).Methods("DELETE")
-	a.HandleFunc("/api/tutor/availability/{username}", getluserAvalibleTime).Methods("GET")
-	a.HandleFunc("/api/tutor/hours/{username}", getluserTime).Methods("GET")
-	a.HandleFunc("/api/tutor/timeslot/whois/{id:[0-9]+}", getUserHourById).Methods("GET")
-	a.HandleFunc("/api/tutor/timeslots", getAllUserHours).Methods("GET")
-	a.HandleFunc("/api/tutor/whois/{id}", getUserInfo).Methods("GET")
 
-}
 
-var (
-	database = db.GetDatabase()
-)
 
-func isLoggedIn(w http.ResponseWriter, r *http.Request) {
+
+func IsLoggedIn(w http.ResponseWriter, r *http.Request) {
 	if true {
 		responses.RespondWithJSON(w, http.StatusOK, map[string]string{"loggedin": "true"})
 	}
@@ -325,7 +307,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 }
 func addTime(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -369,7 +351,7 @@ func addTime(w http.ResponseWriter, r *http.Request) {
 
 func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -423,7 +405,7 @@ func removeTime() {
 }
 func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
-	var uh user.UserHour
+	var uh userHour.UserHour
 	cookie, err := r.Cookie("key")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
@@ -472,7 +454,7 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 
 }
 func getluserTime(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
 
@@ -484,7 +466,7 @@ func getluserTime(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusOK, userHours)
 }
 func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	vars := mux.Vars(r)
 	uh.Tutor = vars["username"]
 
@@ -497,7 +479,7 @@ func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUserHourById(w http.ResponseWriter, r *http.Request) {
-	var uh user.UserHour
+	var uh userHour.UserHour
 	var err error
 	vars := mux.Vars(r)
 	uh.Id, err = strconv.Atoi(vars["id"])
@@ -517,7 +499,7 @@ func getUserHourById(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllUserHours(w http.ResponseWriter, r *http.Request) {
-	userHours, err := user.GetUserHours(database)
+	userHours, err := userHour.GetUserHours(database)
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return

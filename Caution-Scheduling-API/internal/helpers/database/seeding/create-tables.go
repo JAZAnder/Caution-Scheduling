@@ -4,12 +4,14 @@ import (
 	"database/sql"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+
 )
 
 func CreateTables(db *sql.DB) {
 	database = db
 
 	createLocalUserTables()
+	createUserSettingsTable()
 	createHoursTable()
 	createLabsTable()
 	createMeetingsTable()
@@ -21,12 +23,17 @@ func CreateTables(db *sql.DB) {
 
 func createLocalUserTables() {
 	query := "CREATE TABLE IF NOT EXISTS localusers(" +
-		"`userName` varchar(255) PRIMARY KEY," +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`userName` varchar(255) unique," +
 		"`firstName` varchar(255) NOT NULL," +
 		"`lastName` varchar(225) NOT NULL," +
 		"`email` varchar(225) NOT NULL," +
 		"`password` varchar(225) NOT NULL," +
-		"`isAdmin` boolean NOT NULL);"
+		"`role` int NOT NULL," +
+		"`fullName` varchar(225) NOT NULL," +
+		"`googleId` varchar(225)," +
+		"`isAdmin` boolean NOT NULL" +
+		");"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating localUsers table")
 
@@ -37,6 +44,25 @@ func createLocalUserTables() {
 		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
 		logger.Log(2, "database", "Create Table", "System", "localUsers table either created or already existed")
+	}
+}
+
+func createUserSettingsTable() {
+	query := "CREATE TABLE IF NOT EXISTS userSettings(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`userName` varchar(255) unique," +
+		"`ReceiveMeetingEmails` boolean NOT NULL" +
+		");"
+
+	logger.Log(2, "database", "Create Table", "System", "Creating localUsers table")
+
+	logger.Log(1, "database", "Create Table", "System", query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", "System", err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", "System", "userSettings table either created or already existed")
 	}
 }
 
