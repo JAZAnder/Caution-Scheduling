@@ -30,7 +30,7 @@ func seedUsers() {
 
 	err := Admin.SignUp(database)
 
-	if err != nil {
+	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", Admin.UserName+" user is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
@@ -51,7 +51,7 @@ func seedUsers() {
 
 	err = student.SignUp(database)
 
-	if err != nil {
+	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", student.UserName+" user is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
@@ -72,7 +72,7 @@ func seedUsers() {
 
 	err = supervisor.SignUp(database)
 
-	if err != nil {
+	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", supervisor.UserName+" user is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
@@ -93,7 +93,7 @@ func seedUsers() {
 
 	err = Tutor.SignUp(database)
 
-	if err != nil {
+	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", Tutor.UserName+" user is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
