@@ -56,7 +56,9 @@ func whoami(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	responses.RespondWithJSON(w, http.StatusOK, user)
+	dto, _ := user.ToSelfViewInformation()
+
+	responses.RespondWithJSON(w, http.StatusOK, dto)
 }
 
 func createLocalUser(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +140,9 @@ func loginLocalUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
-	responses.RespondWithJSON(w, http.StatusOK, u)
+
+	userDto, _ := u.ToSelfViewInformation()
+	responses.RespondWithJSON(w, http.StatusOK, userDto)
 
 }
 
