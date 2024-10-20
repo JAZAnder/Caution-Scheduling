@@ -78,7 +78,7 @@ func seedUsers() {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
 
-	//Supervisor  User
+	//Tutor  User
 	err = nil;
 	var Tutor user.LocalUser = user.LocalUser{
 		UserName:  "Tutor",
