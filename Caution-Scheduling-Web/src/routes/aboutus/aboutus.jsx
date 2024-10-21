@@ -3,6 +3,8 @@ import "./aboutus.css";
 import Placeholder from "../../assets/placeholder.jpg";
 import ChaseImage from "../../assets/chase.webp";
 import JoshImage from "../../assets/josh.webp";
+import DimaImage from "../../assets/dima.webp";
+import EthanImage from "../../assets/ethan.webp";
 import Background from "../../background";
 import useMediaQuery from '../../context/useMediaQuery.jsx';
 
@@ -25,13 +27,13 @@ const AboutUs = () => {
       name: "Ethan Stoulig",
       description: "Senior - Scientific",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: EthanImage,
     },
     {
       name: "Dmitriy Levytskyi",
       description: "Senior - Information Technology",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: DimaImage,
     },
   ];
 
