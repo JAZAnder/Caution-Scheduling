@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 
 	hourController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
@@ -34,6 +33,5 @@ func AddStaticRoutes(a *mux.Router) {
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("test")
 	http.ServeFile(w, r, "index.html")
 }
