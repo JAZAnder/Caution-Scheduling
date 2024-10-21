@@ -113,38 +113,7 @@ func createLocalUser(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusCreated, u)
 }
 
-func loginLocalUser(w http.ResponseWriter, r *http.Request) {
-	var u user.LocalUser
-	var c user.SessionCookie
 
-	u.UserName = r.PostFormValue("userName")
-	u.Password = r.PostFormValue("password")
-	err := u.Login(database)
-	u.Password = "REDACTED"
-
-	if err != nil {
-		responses.RespondWithError(w, http.StatusUnauthorized, "Username or Password Incorrect")
-		return
-	}
-
-	c.UserName = u.UserName
-	c.CreateSession(database)
-	cookie := http.Cookie{
-		Name:     "key",
-		Value:    c.Cookie,
-		MaxAge:   3600,
-		HttpOnly: false,
-		Secure:   false,
-		SameSite: http.SameSiteStrictMode,
-		Path:     "/",
-	}
-
-	http.SetCookie(w, &cookie)
-
-	userDto, _ := u.ToSelfViewInformation()
-	responses.RespondWithJSON(w, http.StatusOK, userDto)
-
-}
 
 func logoutLocalUser(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
@@ -231,47 +200,7 @@ func isAdmin(r *http.Request) (bool, error) {
 
 }
 
-func changePassword(w http.ResponseWriter, r *http.Request) {
-	var c user.SessionCookie
-	var u user.LocalUser
-	cookie, err := r.Cookie("key")
 
-	if err != nil {
-		if errors.Is(err, http.ErrNoCookie) {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
-	c.Cookie = cookie.Value
-	user, err := c.CheckSession(database)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
-
-	u.UserName = user.UserName
-	u.Password = r.PostFormValue("oldPassword")
-	err = u.Login(database)
-
-	if err != nil {
-		responses.RespondWithError(w, http.StatusUnauthorized, "Password is Incorrect")
-		return
-	}
-
-	u.Password = r.PostFormValue("newPassword")
-	u.ChangePassword(database)
-
-	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
-
-}
 func resetPassword(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie
 	var u user.LocalUser

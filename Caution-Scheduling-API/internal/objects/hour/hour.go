@@ -5,6 +5,70 @@ import(
 )
 
 
+func (multiDay TimeslotsMultiDay) ToTimeslotArray() ([]Hour){
+	timeslots := []Hour{};
+
+	if multiDay.Monday{
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 1,
+		})
+	}
+	if multiDay.Tuesday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 2,
+		})
+		
+	}
+	if multiDay.Wednesday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 3,
+		})
+		
+	}
+	if multiDay.Thursday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 4,
+		})
+		
+	}
+	if multiDay.Friday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 5,
+		})
+		
+	}
+	if multiDay.Saturday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 6,
+		})
+		
+	}
+	if multiDay.Sunday {
+		timeslots = append(timeslots, Hour{
+			StartTime: multiDay.StartTime,
+			EndTime: multiDay.EndTime,
+			DayOfWeek: 0,
+		})
+	}
+
+	return timeslots
+
+
+
+
+}
 
 func (h *Hour) GetHour(db *sql.DB) error{
 	var tempDayOfWeek string
