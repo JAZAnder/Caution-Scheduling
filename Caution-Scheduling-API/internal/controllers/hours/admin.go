@@ -55,12 +55,19 @@ func createTimeslots(w http.ResponseWriter, r *http.Request) {
 	
 
 	monday, err := strconv.ParseBool(r.PostFormValue("Monday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	tuesday, err := strconv.ParseBool(r.PostFormValue("Tuesday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	wednesday, err := strconv.ParseBool(r.PostFormValue("Wednesday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	thursday, err := strconv.ParseBool(r.PostFormValue("Thursday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	friday, err := strconv.ParseBool(r.PostFormValue("Friday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	saturday, err := strconv.ParseBool(r.PostFormValue("Saturday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 	sunday, err := strconv.ParseBool(r.PostFormValue("Sunday"))
+	if err != nil {responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload"); return; }
 
 
 	newTimeslotMultiDay := hour.TimeslotsMultiDay{
@@ -97,6 +104,4 @@ func createTimeslots(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.RespondWithJSON(w, http.StatusCreated, timeslots)
-	return
-
 }
