@@ -1,134 +1,129 @@
 .timeslots-page {
-    font-family: "Poppins", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-size: 14px;
-    margin: 0;
-  }
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 14px;
+  margin: 0;
+}
 
 .timeslots-outer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: linear-gradient(170deg, #059669, #1a5632);
-    border: 2px solid gray;
-    border-radius: 10px;
-    margin: 20px;
-  }
-  
-  .timeslots-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-    color: linear-gradient(170deg, #059669, #1a5632);
-  }
-  
-  .timeslots-header {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-  }
-  
-  .timeslots-add-button {
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(211, 32, 19);
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .timeslots-filter {
-    display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .timeslots-filter-label {
-    margin-right: 5px;
-    color: white;
-  }
-  
-  .timeslots-filter-input {
-    padding: 8px; 
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255); 
-    color: black;
-    height: 36px; 
-  }
-  
-  .timeslots-search-button {
-    padding: 8px 20px; 
-    border: 1px solid rgb(0, 0, 0);
-    cursor: pointer;
-    background-color: rgb(19, 102, 209); 
-    color: white;
-    height: 36px; 
-    margin-top: -1px; 
-  }
-  
-  
-  .timeslots-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .timeslots-table th,
-  .timeslots-table td {
-    border: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(170deg, #059669, #1a5632);
+  border: 2px solid gray;
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.timeslots-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.timeslots-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.timeslots-add-button {
+  border: 1px solid black;
+  background-color: rgb(211, 32, 19);
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.timeslots-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.timeslots-filter-label {
+  margin-right: 5px;
+  color: white;
+}
+
+.timeslots-filter-input {
+  padding: 8px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  height: 36px;
+}
+
+.timeslots-search-button {
+  padding: 8px 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  background-color: rgb(19, 102, 209);
+  color: white;
+  height: 36px;
+}
+
+.timeslots-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timeslots-table th,
+.timeslots-table td {
+  border: 1px solid gray;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+.timeslots-details-button {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .timeslots-outer-container {
     padding: 10px;
-    text-align: center;
-    color: white;
-  }
-  
-  .timeslots-details-button {
-    padding: 5px 10px;
-    cursor: pointer;
-    background-color: black;
-    color: white;
   }
 
-  /* Mobile-Specific Styles */
-@media (max-width: 900px) {
-    .timeslots-outer-container {
-      padding: 10px;
-    }
-  
-    .timeslots-container {
-      gap: 10px;
-      align-items: center;
-    }
-  
-    .timeslots-filter {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 15px;
-    }
-  
-    .timeslots-filter-input,
-    .timeslots-search-button {
-      width: 100%;
-    }
-  
-    .timeslots-add-button,
-    .timeslots-details-button {
-      width: 100%;
-    }
-  
-    .timeslots-table {
-      font-size: 0.9em;
-      overflow-x: auto;
-    }
-  
-    .timeslots-table th,
-    .timeslots-table td {
-      padding: 8px;
-    }
+  .timeslots-container {
+    gap: 10px;
+    align-items: center;
   }
-  
+
+  .timeslots-filter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .timeslots-filter-input,
+  .timeslots-search-button {
+    width: 100%;
+  }
+
+  .timeslots-add-button,
+  .timeslots-details-button {
+    width: 100%;
+  }
+
+  .timeslots-table {
+    font-size: 0.9em;
+    overflow-x: auto;
+  }
+
+  .timeslots-table th,
+  .timeslots-table td {
+    padding: 8px;
+  }
+}

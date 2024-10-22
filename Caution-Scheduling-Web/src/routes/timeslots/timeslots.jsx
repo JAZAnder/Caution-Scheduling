@@ -8,10 +8,9 @@ const timeslots = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
 
   return (
-    <>
+    <div className="timeslots-page">
       <Background />
       {isMobile ? (
-        // React Bootstrap layout for mobile
         <Container className="mt-4">
           <Row className="justify-content-end mt-3">
             <Col xs="auto">
@@ -46,7 +45,7 @@ const timeslots = () => {
 
           <Row className="mt-4">
             <Col xs={12}>
-              <Table striped bordered hover responsive className="timeslot-table">
+              <Table striped bordered hover responsive className="timeslots-table">
                 <thead>
                   <tr>
                     <th>Id</th>
@@ -64,35 +63,18 @@ const timeslots = () => {
                     <td></td>
                     <td><Button variant="info" className="details-button">Details</Button></td>
                   </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><Button variant="info" className="details-button">Details</Button></td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><Button variant="info" className="details-button">Details</Button></td>
-                  </tr>
                 </tbody>
               </Table>
             </Col>
           </Row>
         </Container>
       ) : (
-        // Custom CSS layout for desktop
         <div className="timeslots-outer-container">
           <div className="timeslots-container">
-            {/* Header Section */}
             <div className="timeslots-header">
               <button className="timeslots-add-button">Add New Timeslot</button>
             </div>
 
-            {/* Filter Section */}
             <div className="timeslots-filter">
               <label className="timeslots-filter-label">Filter on:</label>
               <input type="text" placeholder="Id" className="timeslots-filter-input" />
@@ -102,7 +84,6 @@ const timeslots = () => {
               <button className="timeslots-search-button">Search</button>
             </div>
 
-            {/* Table Section */}
             <table className="timeslots-table">
               <thead>
                 <tr>
@@ -140,7 +121,7 @@ const timeslots = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
