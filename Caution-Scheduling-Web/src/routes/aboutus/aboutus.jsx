@@ -40,7 +40,7 @@ const AboutUs = () => {
   return (
     <>
       <Background />
-      <div className="slide-container">
+      <div className="aboutus-page slide-container">
         <div className="slide-content">
           <div className={`card-wrapper ${isMobile ? "mobile" : ""}`}>
             {cards.map((card, index) => (
