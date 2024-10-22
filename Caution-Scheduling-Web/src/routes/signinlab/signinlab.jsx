@@ -1,11 +1,13 @@
-import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
+import './signinlab.css';
 
 const signinLab = () => {
   return (
     <>
       <Background />
-      <h1 style={{ color: 'white' }}> Hello this is a signin lab page</h1>
+      <div className="signinlab-body">
+        <h1>Hello, this is a Sign-In Lab page</h1>
+      </div>
     </>
   );
 };

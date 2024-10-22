@@ -1,11 +1,14 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
+import './schedulemeeting.css';
 
 const scheduleMeeting = () => {
   return (
     <>
       <Background />
-      <h1 style={{ color: 'white' }}> Hello this is a schedule meeting page</h1>
+      <div className="schedulemeeting-body">
+        <h1>Hello, this is a Schedule Meeting page</h1>
+      </div>
     </>
   );
 };
