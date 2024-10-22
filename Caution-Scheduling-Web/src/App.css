@@ -2,11 +2,10 @@
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
-/* Top and Bottom Headers */
 .cs-topheader, .cs-bottomheader {
   background-color: #1a5632;
   padding: 10px 30px;
@@ -214,10 +213,6 @@
 
   .cs-root {
     height: calc(100vh - 140px);
-  }
-
-  .cs-root video {
-    object-fit: cover;
   }
 }
 
