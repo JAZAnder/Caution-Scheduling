@@ -8,71 +8,120 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func (su *SQLLocalUser) toLocalUser() (LocalUser, error) {
 
+	user := LocalUser{
+		GoogleId:  su.GoogleId,
+		UserName:  su.UserName,
+		FirstName: su.FirstName,
+		LastName:  su.LastName,
+		FullName:  su.FirstName + " " + su.LastName,
+		Email:     su.Email,
+		Password:  su.Password,
+	}
+	user.UserId, _ = strconv.Atoi(su.UserId)
 
-func (u *LocalUser) ToTutorInformation() (TutorInformation, error){
-	
-	if (u.checkValidUser()) {
+	user.Role, _ = strconv.Atoi(su.Role)
+
+	if !user.checkValidUser() {
+		return LocalUser{}, errors.New("user missing information 1")
+	}
+
+	return user, nil
+}
+
+func (u *LocalUser) ToTutorInformation() (TutorInformation, error) {
+
+	if !u.checkValidUser() {
 		return TutorInformation{}, errors.New("user missing information")
 	}
-	
+
 	return TutorInformation{
-		UserId: u.UserId,
+		UserId:    u.UserId,
 		FirstName: u.FirstName,
-		LastName: u.LastName,
-		FullName: u.FullName,
+		LastName:  u.LastName,
+		FullName:  u.FullName,
 	}, nil
 }
 
-func (u *LocalUser) ToStandardUserInformation() (StandardUserInformation, error){
-	
-	if (u.checkValidUser()) {
+func (u *LocalUser) ToStandardUserInformation() (StandardUserInformation, error) {
+
+	if !u.checkValidUser() {
 		return StandardUserInformation{}, errors.New("user missing information")
 	}
-	
+
 	return StandardUserInformation{
-		UserName: u.UserName,
+		UserName:  u.UserName,
 		FirstName: u.FirstName,
-		LastName: u.LastName,
-		Email: u.Email,
+		LastName:  u.LastName,
+		Email:     u.Email,
 	}, nil
 }
 
-func (u *LocalUser) ToSelfViewInformation() (SelfViewInformation, error){
-	
-	if (u.checkValidUser()) {
-		return SelfViewInformation{}, errors.New("user missing information")
+func (u *LocalUser) ToAdminViewUserInformation() (AdminViewUserInformation, error) {
+
+	if !u.checkValidUser() {
+		return AdminViewUserInformation{}, errors.New("user missing information 2")
 	}
-	
-	var userRole string;
+
+	var userRole string
 
 	if u.Role == 1 {
 		userRole = "Student"
-	}else if u.Role == 2 {
+	} else if u.Role == 2 {
 		userRole = "Tutor"
-	}else if u.Role == 3 {
+	} else if u.Role == 3 {
 		userRole = "Supervisor"
-	}else if u.Role == 4 {
+	} else if u.Role == 4 {
 		userRole = "Administrator"
-	}else{
+	} else {
+		userRole = "Deactivated"
+	}
+	return AdminViewUserInformation{
+		UserId: u.UserId,
+		UserName:  u.UserName,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		FullName:  u.FullName,
+		Email:     u.Email,
+		Role:      userRole,
+	}, nil
+}
+func (u *LocalUser) ToSelfViewInformation() (SelfViewInformation, error) {
+
+	if !u.checkValidUser() {
+		return SelfViewInformation{}, errors.New("user missing information")
+	}
+
+	var userRole string
+
+	if u.Role == 1 {
+		userRole = "Student"
+	} else if u.Role == 2 {
+		userRole = "Tutor"
+	} else if u.Role == 3 {
+		userRole = "Supervisor"
+	} else if u.Role == 4 {
+		userRole = "Administrator"
+	} else {
 		userRole = "Deactivated"
 	}
 	return SelfViewInformation{
-		UserName: u.UserName,
+		UserName:  u.UserName,
 		FirstName: u.FirstName,
-		LastName: u.LastName,
-		FullName: u.FullName,
-		Email: u.Email,
-		Role: userRole,
-		Settings: u.Settings,
+		LastName:  u.LastName,
+		FullName:  u.FullName,
+		Email:     u.Email,
+		Role:      userRole,
+		Settings:  u.Settings,
 	}, nil
 }
 
-func (u *LocalUser) checkValidUser() (bool){
-	if (u.UserId == 0 || u.UserName == ""|| u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0) {
+func (u *LocalUser) checkValidUser() bool {
+	if u.UserId == 0 || u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
 		return false
 	}
-	return true;
+	return true
 }
 
 func (u *LocalUser) Login(db *sql.DB) error {
@@ -116,7 +165,7 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 	query := "INSERT INTO `userSettings` (`userName`, `ReceiveMeetingEmails`) VALUES ('" + u.UserName + "', '" + "1" + "');"
 	db.QueryRow(query)
 
-	query = "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`, `role`, `fullName`, `googleId`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "', '" + strconv.Itoa(u.Role)  + "', '" + u.FullName + "', '" + u.GoogleId + "');"
+	query = "INSERT INTO `localusers` (`userName`, `firstName`, `lastName`, `email`, `password`, `isAdmin`, `role`, `fullName`, `googleId`) VALUES ('" + u.UserName + "', '" + u.FirstName + "', '" + u.LastName + "', '" + u.Email + "', '" + string(hashedPassword) + "', '" + isAdmin + "', '" + strconv.Itoa(u.Role) + "', '" + u.FullName + "', '" + u.GoogleId + "');"
 	sqlerr := db.QueryRow(query)
 
 	if sqlerr != nil {
@@ -126,8 +175,8 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 	return nil
 }
 
-func GetLusers(db *sql.DB, isAdmin bool) ([]LocalUser, error) {
-	rows, err := db.Query("SELECT * FROM `localusers`")
+func GetLusers(db *sql.DB, isAdmin bool) ([]AdminViewUserInformation, error) {
+	rows, err := db.Query("SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers;")
 
 	if err != nil {
 		return nil, err
@@ -135,22 +184,25 @@ func GetLusers(db *sql.DB, isAdmin bool) ([]LocalUser, error) {
 
 	defer rows.Close()
 
-	lusers := []LocalUser{}
+	userToReturn := []AdminViewUserInformation{}
 
 	for rows.Next() {
-		var u LocalUser
-		var uAdmin string
-		if err := rows.Scan(&u.UserName, &u.FirstName, &u.LastName, &u.Email, &u.Password, &uAdmin); err != nil {
+		var su SQLLocalUser
+		if err := rows.Scan(&su.UserId, &su.UserName, &su.FirstName, &su.LastName, &su.Email, &su.Role); err != nil {
 			return nil, err
 		}
-		u.Password = "REDACTED"
-		u.IsAdmin, _ = strconv.ParseBool(uAdmin)
-		if !isAdmin {
-			u.IsAdmin = false
+
+		user, err := su.toLocalUser()
+		if err != nil {
+			return nil, err
 		}
-		lusers = append(lusers, u)
+
+		viewableUser, _ := user.ToAdminViewUserInformation()
+
+		
+		userToReturn = append(userToReturn, viewableUser)
 	}
-	return lusers, nil
+	return userToReturn, nil
 }
 
 func (u *LocalUser) ChangePassword(db *sql.DB) error {
@@ -179,47 +231,45 @@ func (u *LocalUser) GetUser(db *sql.DB) error {
 }
 
 func (u *LocalUser) HasStudentRights() (bool, error) {
-	if (!u.checkValidUser()){
+	if !u.checkValidUser() {
 		return false, errors.New("not Valid User")
 	}
-	if(u.Role >= 1){
+	if u.Role >= 1 {
 		return true, nil
-	}else{
+	} else {
 		return false, errors.New("insufficient permissions")
 	}
 }
 
 func (u *LocalUser) HasTutorRights() (bool, error) {
-	if (!u.checkValidUser()){
+	if !u.checkValidUser() {
 		return false, errors.New("not Valid User")
 	}
-	if(u.Role >= 2){
+	if u.Role >= 2 {
 		return true, nil
-	}else{
+	} else {
 		return false, errors.New("insufficient permissions")
 	}
 }
 
 func (u *LocalUser) HasSupervisorRights() (bool, error) {
-	if (!u.checkValidUser()){
+	if !u.checkValidUser() {
 		return false, errors.New("not Valid User")
 	}
-	if(u.Role >= 3){
+	if u.Role >= 3 {
 		return true, nil
-	}else{
+	} else {
 		return false, errors.New("insufficient permissions")
 	}
 }
 
 func (u *LocalUser) HasAdministratorRights() (bool, error) {
-	if (!u.checkValidUser()){
+	if !u.checkValidUser() {
 		return false, errors.New("not valid user")
 	}
-	if(u.Role >= 4){
+	if u.Role >= 4 {
 		return true, nil
-	}else{
+	} else {
 		return false, errors.New("insufficient permissions")
 	}
 }
-
-
