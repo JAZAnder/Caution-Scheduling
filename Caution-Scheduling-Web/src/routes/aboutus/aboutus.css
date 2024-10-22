@@ -1,3 +1,13 @@
+.aboutus-page {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 14px;
+  margin: 0;
+}
+
 .aboutus-page .card-wrapper {
   display: flex;
   justify-content: space-around;

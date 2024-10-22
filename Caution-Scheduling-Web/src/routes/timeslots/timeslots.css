@@ -1,3 +1,13 @@
+.timeslots-page {
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 14px;
+    margin: 0;
+  }
+
 .timeslots-outer-container {
     display: flex;
     justify-content: center;
