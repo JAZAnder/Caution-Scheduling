@@ -1,14 +1,14 @@
-body, html {
+.cs-body, .cs-html {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrollbars */
+  overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
-.topheader, .bottomheader {
+.cs-topheader, .cs-bottomheader {
   background-color: #1a5632;
-  padding: 10px 30px; 
+  padding: 10px 30px;
   color: white;
   position: fixed;
   width: 100%;
@@ -19,24 +19,24 @@ body, html {
   box-sizing: border-box;
 }
 
-.topheader {
+.cs-topheader {
   top: 0;
   z-index: 1000;
 }
 
-.bottomheader {
-  top: 80px; 
-  z-index: 999; 
+.cs-bottomheader {
+  top: 80px;
+  z-index: 999;
   display: flex;
   justify-content: center;
 }
 
-.header-logo {
+.cs-header-logo {
   height: 65px;
   margin-left: 20px;
 }
 
-.center-text {
+.cs-center-text {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
@@ -45,7 +45,7 @@ body, html {
   flex: 1;
 }
 
-.nav-list {
+.cs-nav-list {
   list-style: none;
   display: flex;
   margin: 0;
@@ -53,47 +53,46 @@ body, html {
   justify-content: center;
 }
 
-.nav-list li {
+.cs-nav-list li {
   margin: 0 15px;
 }
 
-.nav-list a {
+.cs-nav-list a {
   color: white;
   text-decoration: none;
   font-size: 16px;
 }
 
-.nav-list a:hover {
+.cs-nav-list a:hover {
   text-decoration: underline;
 }
 
-/* Styles for the Bootstrap mobile navbar */
-.navbar {
+/* Bootstrap Mobile Navbar */
+.cs-navbar {
   background-color: #1a5632;
 }
 
-.navbar .nav-link {
-  color: white !important; /* Sets the text color to white */
-}
-
-.navbar .navbar-brand {
+.cs-navbar .cs-nav-link {
   color: white !important;
 }
 
-/* Color of hamburger icon */
-.navbar-toggler-icon {
+.cs-navbar .cs-navbar-brand {
+  color: white !important;
+}
+
+.cs-navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* White border for the hamburger button */
-.navbar-toggler {
+.cs-navbar-toggler {
   border-color: white !important;
 }
 
-#root {
+/* Root Container */
+.cs-root {
   z-index: 1;
   width: 100%;
-  height: calc(100vh - 160px); 
+  height: calc(100vh - 160px);
   margin: 0;
   padding: 0;
   display: flex;
@@ -102,7 +101,7 @@ body, html {
   overflow: hidden;
 }
 
-#root video {
+.cs-root video {
   position: absolute;
   top: 0;
   left: 0;
@@ -112,16 +111,17 @@ body, html {
   z-index: -1;
 }
 
-.button-container {
+/* Button Container */
+.cs-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  position: relative; 
+  position: relative;
   z-index: 2;
 }
 
-.cta-button {
+.cs-cta-button {
   display: inline-block;
   padding: 20px 40px;
   background-color: white;
@@ -137,13 +137,14 @@ body, html {
   border: 2px solid #ffffff;
 }
 
-.cta-button:hover {
+.cs-cta-button:hover {
   background-color: transparent;
   color: #ffffff;
   border: 2px solid #ffffff;
 }
 
-.footer {
+/* Footer */
+.cs-footer {
   background-color: #1a5632;
   color: white;
   text-align: center;
@@ -157,99 +158,97 @@ body, html {
   margin: 0;
 }
 
-.footer p {
+.cs-footer p {
   margin: 0;
 }
 
-.footer a {
+.cs-footer a {
   color: #61dafb;
   text-decoration: none;
 }
 
-.footer a:hover {
+.cs-footer a:hover {
   text-decoration: underline;
 }
 
-/* Small screens (phones, up to 600px) */
+/* Responsive Styles */
+
+/* Small Screens (up to 600px) */
 @media (max-width: 600px) {
-  .topheader, .bottomheader {
+  .cs-topheader, .cs-bottomheader {
     flex-direction: column;
     align-items: center;
     padding: 10px 15px;
   }
 
-  .header-logo {
+  .cs-header-logo {
     height: 50px;
     margin-left: 0;
   }
 
-  .center-text {
+  .cs-center-text {
     font-size: 16px;
     padding: 10px 0;
   }
 
-  .nav-list {
+  .cs-nav-list {
     flex-direction: column;
     align-items: center;
   }
 
-  .nav-list li {
+  .cs-nav-list li {
     margin: 10px 0;
   }
 
-  .button-container {
+  .cs-button-container {
     flex-direction: column;
     gap: 10px;
   }
 
-  .cta-button {
+  .cs-cta-button {
     width: 100%;
     font-size: 20px;
     padding: 15px 30px;
   }
 
-  #root {
+  .cs-root {
     height: calc(100vh - 140px);
-  }
-
-  #root video {
-    object-fit: cover;
   }
 }
 
-/* Medium screens (tablets, up to 900px) */
+/* Medium Screens (up to 900px) */
 @media (max-width: 900px) {
-  .center-text {
+  .cs-center-text {
     font-size: 18px;
   }
 
-  .nav-list {
+  .cs-nav-list {
     flex-direction: column;
     align-items: center;
   }
 
-  .nav-list li {
+  .cs-nav-list li {
     margin: 10px 0;
   }
 
-  .button-container {
+  .cs-button-container {
     flex-direction: column;
     gap: 15px;
   }
 
-  .cta-button {
+  .cs-cta-button {
     width: 100%;
     padding: 15px 30px;
   }
 
-  #root {
+  .cs-root {
     height: calc(100vh - 140px);
   }
 }
 
-/* Larger screens (desktops) */
+/* Large Screens (desktops) */
 @media (min-width: 900px) {
-  .cta-button {
+  .cs-cta-button {
     width: 220px;
     font-size: 22px;
   }

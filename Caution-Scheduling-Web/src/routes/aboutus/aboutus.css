@@ -1,11 +1,21 @@
-.card-wrapper {
+.aboutus-page {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 14px;
+  margin: 0;
+}
+
+.aboutus-page .card-wrapper {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   margin: 20px;
 }
 
-.card {
+.aboutus-page .card {
   width: 200px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -16,20 +26,22 @@
   transition: transform 0.2s;
 }
 
-.card:hover {
+.aboutus-page .card:hover {
   transform: scale(1.05);
 }
 
-.image-content {
+.aboutus-page .image-content {
   position: relative;
 }
 
-.card-image img {
+.aboutus-page .card-image img {
   width: 100%;
-  height: auto;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 2%;
 }
 
-.overlay {
+.aboutus-page .overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -37,11 +49,11 @@
   bottom: 0;
 }
 
-.card-content {
+.aboutus-page .card-content {
   padding: 15px;
 }
 
-.button {
+.aboutus-page .button {
   background: #007bff;
   color: white;
   border: none;
@@ -50,13 +62,13 @@
   cursor: pointer;
 }
 
-.button:hover {
+.aboutus-page .button:hover {
   background: #0056b3;
 }
 
 /* Mobile styles */
 @media (max-width: 900px) {
-  .slide-container {
+  .aboutus-page .slide-container {
     padding-top: 20%;
     display: flex;
     justify-content: center;
@@ -67,15 +79,15 @@
     -ms-overflow-style: none; 
   }
 
-  .slide-container::-webkit-scrollbar {
+  .aboutus-page .slide-container::-webkit-scrollbar {
     display: none;
   }
 
-  .slide-content {
+  .aboutus-page .slide-content {
     padding-top: 25%;
   }
 
-  .card {
+  .aboutus-page .card {
     width: calc(50% - 20px); /* Two cards per row, accounting for margins */
   }
 }
