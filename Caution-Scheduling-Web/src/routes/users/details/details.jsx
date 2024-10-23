@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import "../users.css"
 
 function UserDetailsButton(user) {
     const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ function UserDetailsButton(user) {
     return (
         <>
             <button
-
+                className="details-details-button"
                 onClick={handleShow}
             >
                 Details
