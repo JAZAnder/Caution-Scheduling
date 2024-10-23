@@ -95,6 +95,10 @@
   border-radius: 5px;
 }
 
+.timeslots-tablerow{
+  background-color: #4f7d4f;
+}
+
 @media (max-width: 900px) {
   .timeslots-outer-container {
     padding: 10px;
