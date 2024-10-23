@@ -23,7 +23,6 @@ function manageUsers() {
 
   return (
     <>
-      <Background />
       <button >Add New User</button>
       <div id="filterOnBar">
         <form onSubmit={handleSubmit}>
