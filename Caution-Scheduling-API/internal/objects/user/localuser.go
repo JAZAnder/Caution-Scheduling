@@ -24,7 +24,7 @@ func (su *SQLLocalUser) toLocalUser() (LocalUser, error) {
 	user.Role, _ = strconv.Atoi(su.Role)
 
 	if !user.checkValidUser() {
-		return LocalUser{}, errors.New("user missing information 1")
+		return LocalUser{}, errors.New("user missing information")
 	}
 
 	return user, nil
@@ -77,8 +77,10 @@ func (u *LocalUser) ToAdminViewUserInformation() (AdminViewUserInformation, erro
 	} else {
 		userRole = "Deactivated"
 	}
+
+	Id := strconv.Itoa(u.UserId)
 	return AdminViewUserInformation{
-		UserId: u.UserId,
+		UserId: Id,
 		UserName:  u.UserName,
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
@@ -138,11 +140,11 @@ func (u *LocalUser) Login(db *sql.DB) error {
 		return err
 	}
 
-	query = "SELECT `firstName`, `lastName`, `email`, `isAdmin`, `role`, `fullName`, `googleId` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
+	query = "SELECT `Id`, `firstName`, `lastName`, `email`, `isAdmin`, `role`, `fullName`, `googleId` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
 	result = db.QueryRow(query)
 
 	var isAdmin string
-	err = result.Scan(&u.FirstName, &u.LastName, &u.Email, &isAdmin, &u.Role, &u.FullName, &u.GoogleId)
+	err = result.Scan(&u.UserId,&u.FirstName, &u.LastName, &u.Email, &isAdmin, &u.Role, &u.FullName, &u.GoogleId)
 	if err != nil {
 		return err
 	}
@@ -175,8 +177,39 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 	return nil
 }
 
-func GetLusers(db *sql.DB, isAdmin bool) ([]AdminViewUserInformation, error) {
+func GetLusers(db *sql.DB) ([]AdminViewUserInformation, error) {
 	rows, err := db.Query("SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers;")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	userToReturn := []AdminViewUserInformation{}
+
+	for rows.Next() {
+		var su SQLLocalUser
+		if err := rows.Scan(&su.UserId, &su.UserName, &su.FirstName, &su.LastName, &su.Email, &su.Role); err != nil {
+			return nil, err
+		}
+
+		user, err := su.toLocalUser()
+		if err != nil {
+			return nil, err
+		}
+
+		viewableUser, _ := user.ToAdminViewUserInformation()
+
+		
+		userToReturn = append(userToReturn, viewableUser)
+	}
+	return userToReturn, nil
+}
+
+func GetUsersByFilter(db *sql.DB, filter AdminViewUserInformation) ([]AdminViewUserInformation, error) {
+	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers WHERE `Id` lIKE'%"+ filter.UserId +"%' AND `Username` like '%"+filter.UserName+"%' AND `firstName` Like '%"+filter.FirstName+"%' AND `lastName` Like '%"+filter.LastName+"%' AND `email` like '%"+filter.Email+"%' AND `role` Like '%"+filter.Role+"%';"
+	rows, err := db.Query(query)
 
 	if err != nil {
 		return nil, err

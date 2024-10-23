@@ -25,6 +25,7 @@ func AddUserRoutes(a *mux.Router) {
 	//Administrator Routes
 	a.HandleFunc("/api/luser/admin/timeslot/{id:[0-9]+}", removeTimeAdmin).Methods("DELETE")
 	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
+	a.HandleFunc("/api/lusers/filter", getUsersByFilter).Methods("GET")
 
 
 	a.HandleFunc("/api/luser", createLocalUser).Methods("POST")

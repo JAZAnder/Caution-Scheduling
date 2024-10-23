@@ -2,6 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 import './users.css'
 import useFetch from "use-http";
+import React from "react";
 import { useState } from "react";
 
 function manageUsers() {
@@ -13,16 +14,33 @@ function manageUsers() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('')
+  const [debounce, SetDebounce] = useState(true)
 
+  React.useEffect(() => {
+    const getData = setTimeout(() => {
+      SetDebounce(!debounce)
+    }, 1000)
+    return () => clearTimeout(getData)
+  }, [userName, firstName, lastName, email, role])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setFiltering(true)
   };
 
+  const resetSearch = async (event) => {
+    setFiltering(false)
+    setUserName('')
+    setFirstName('')
+    setLastName('')
+    setEmail('')
+    setRole('')
+  }
+
 
   return (
     <>
+    <div style={{minHeight:"150px"}}> Black Space?</div>
       <button >Add New User</button>
       <div id="filterOnBar">
         <form onSubmit={handleSubmit}>
@@ -66,12 +84,16 @@ function manageUsers() {
           <button type="submit" disabled={loading}>
             {loading ? 'Finding Users . . .' : 'Search Users'}
           </button>
+          <button type="button" disabled={loading} onClick={resetSearch}>
+            {loading ? 'Waiting' : 'View All'}
+          </button>
         </form>
+        
       </div>
       {
         filtering ? 
         
-        <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} />
+        <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} debounce={debounce}/>
         :
         <ListUsers/>
 
@@ -148,18 +170,18 @@ function ListUsers() {
   );
 }
 
-function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole}){
+function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole, debounce}){
   
   const {
     data: usersInfo,
     loading,
     error,
   } = useFetch(
-    "/api/lusers/getbyany?userName="+FLuserName+"&firstName="+FLfirstName+"&lastName"+FLlastName+"&email="+FLemail+"&role="+FLrole,
+    "/api/lusers/filter?userName="+FLuserName+"&firstName="+FLfirstName+"&lastName"+FLlastName+"&email="+FLemail+"&role="+FLrole,
     {
       method: "get",
     },
-    []
+    [debounce]
   );
 
   if (loading) {
