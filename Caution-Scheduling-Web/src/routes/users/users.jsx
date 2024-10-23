@@ -71,7 +71,8 @@ function manageUsers() {
       </div>
       {
         filtering ? 
-        <ListFilteredUser userName={userName} firstName={firstName} lastName={lastName} email={email} role={role} />
+        
+        <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} />
         :
         <ListUsers/>
 
@@ -108,7 +109,8 @@ function ListUsers() {
     <>
       <div id="userNameTable">
         <table className="table-with-bordered">
-          <tr>
+          <thead>
+            <tr>
             <th> User Id </th>
             <th> Username </th>
             <th> First Name </th>
@@ -117,12 +119,14 @@ function ListUsers() {
             <th> Role </th>
             <th> Details </th>
           </tr>
-
+          </thead>
+          <tbody>
+            
           {
 
 
-            Object.keys(usersInfo).map(user => (
-              <tr>
+            Object.keys(usersInfo).map((user, i) => (
+              <tr key={i}>
                 <td> {usersInfo[user].userId} </td>
                 <td> {usersInfo[user].userName} </td>
                 <td> {usersInfo[user].firstName} </td>
@@ -135,6 +139,9 @@ function ListUsers() {
 
             )
           }
+          </tbody>
+          
+
 
         </table>
       </div>
@@ -142,13 +149,14 @@ function ListUsers() {
   );
 }
 
-function ListFilteredUser(userName, firstName, lastName, email, role){
+function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole}){
+  
   const {
     data: usersInfo,
     loading,
     error,
   } = useFetch(
-    "/api/lusers",
+    "/api/lusers/getbyany?userName="+FLuserName+"&firstName="+FLfirstName+"&lastName"+FLlastName+"&email="+FLemail+"&role="+FLrole,
     {
       method: "get",
     },
@@ -181,19 +189,20 @@ function ListFilteredUser(userName, firstName, lastName, email, role){
           {
 
 
-            Object.keys(usersInfo).map(user => (
-              <tr>
-                <td> {usersInfo[user].userId} </td>
-                <td> {usersInfo[user].userName} </td>
-                <td> {usersInfo[user].firstName} </td>
-                <td> {usersInfo[user].lastName} </td>
-                <td> {usersInfo[user].email} </td>
-                <td> {usersInfo[user].role} </td>
-                <td><button>user details</button></td>
-              </tr>
-            )
+Object.keys(usersInfo).map((user, i) => (
+  <tr key={i}>
+    <td> {usersInfo[user].userId} </td>
+    <td> {usersInfo[user].userName} </td>
+    <td> {usersInfo[user].firstName} </td>
+    <td> {usersInfo[user].lastName} </td>
+    <td> {usersInfo[user].email} </td>
+    <td> {usersInfo[user].role} </td>
+    <td><button>user details</button></td>
+  </tr>
+)
 
-            )
+)
+
           }
 
         </table>
