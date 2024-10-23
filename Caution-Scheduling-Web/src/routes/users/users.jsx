@@ -99,7 +99,7 @@ function ListUsers() {
   if (loading) {
     return (
       <>
-        <div>Loading . . . </div>
+        <center> <div className="loader"></div></center>
       </>
     )
   }
@@ -166,7 +166,7 @@ function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole}
   if (loading) {
     return (
       <>
-        <div>Loading . . . </div>
+        <center> <div className="loader"></div></center>
       </>
     )
   }
