@@ -89,6 +89,9 @@ function UserDetailsButton(user) {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Availability
+                    </Button>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>

@@ -30,6 +30,26 @@ func (su *SQLLocalUser) toLocalUser() (LocalUser, error) {
 	return user, nil
 }
 
+func (dto *CreateLocalUserDto) ToLocalUser() (LocalUser, error) {
+
+	user := LocalUser{
+		UserName: dto.UserName,
+		FirstName: dto.FirstName,
+		LastName: dto.LastName,
+		FullName:  dto.FirstName + " " + dto.LastName,
+		Email:     dto.Email,
+		Password:  dto.Password,
+	}
+
+	user.Role, _ = strconv.Atoi(dto.Role)
+
+	if !user.checkValidUserWithoutId() {
+		return LocalUser{}, errors.New("user missing information")
+	}
+
+	return user, nil
+}
+
 func (u *LocalUser) ToTutorInformation() (TutorInformation, error) {
 
 	if !u.checkValidUser() {
@@ -121,6 +141,13 @@ func (u *LocalUser) ToSelfViewInformation() (SelfViewInformation, error) {
 
 func (u *LocalUser) checkValidUser() bool {
 	if u.UserId == 0 || u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
+		return false
+	}
+	return true
+}
+
+func (u *LocalUser) checkValidUserWithoutId() bool {
+	if  u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
 		return false
 	}
 	return true

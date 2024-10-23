@@ -2,9 +2,12 @@ package seeding
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 var database *sql.DB
@@ -95,6 +98,42 @@ func seedUsers() {
 
 	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", Tutor.UserName+" user is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	//Timeslot1  User
+	err = nil;
+	timeSlot1 := hour.Hour{
+		StartTime: "7:00 AM",
+		EndTime: "8:00 AM",
+		DayOfWeek: 1,
+	}
+
+	err = timeSlot1.CreateHour(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", timeSlot1.StartTime+ " - " + timeSlot1.EndTime+" Timeslot is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	//Assign Tutor to Timeslot1
+	err = nil;
+
+	userHour1 := userHour.UserHour{}
+
+
+
+	hours, _ :=hour.GetHours(database)
+	users, _ :=user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor",})
+	userHour1.HourId = hours[0].Id
+	userHour1.TutorId, _ = strconv.Atoi(users[0].UserId) 
+
+	userHour1.CreateUserHour(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", "Tutor: "+ users[0].UserName  +" User Hour is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}

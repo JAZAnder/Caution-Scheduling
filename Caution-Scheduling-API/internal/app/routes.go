@@ -6,6 +6,7 @@ import (
 	hourController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/hours"
 	labController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/labs"
 	meetingController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/meetings"
+	userTimeslots "github.com/JAZAnder/Caution-Scheduling/internal/controllers/user-timeslots"
 	userController "github.com/JAZAnder/Caution-Scheduling/internal/controllers/users"
 	"github.com/gorilla/mux"
 )
@@ -17,6 +18,7 @@ func (a *App) initializeRoutes() {
 	userController.AddUserRoutes(a.Router)
 	hourController.AddHourRoutes(a.Router)
 	meetingController.AddMeetingRoutes(a.Router)
+	userTimeslots.AddUseTimeslotRoutes(a.Router)
 	AddStaticRoutes(a.Router)
 }
 
