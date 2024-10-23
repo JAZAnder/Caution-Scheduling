@@ -238,6 +238,37 @@ func GetUsersByFilter(db *sql.DB, filter AdminViewUserInformation) ([]AdminViewU
 	return userToReturn, nil
 }
 
+func GetTutors(db *sql.DB) ([]TutorInformation, error) {
+	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers WHERE `role` = 2;"
+	rows, err := db.Query(query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	userToReturn := []TutorInformation{}
+
+	for rows.Next() {
+		var su SQLLocalUser
+		if err := rows.Scan(&su.UserId, &su.UserName, &su.FirstName, &su.LastName, &su.Email, &su.Role); err != nil {
+			return nil, err
+		}
+
+		user, err := su.toLocalUser()
+		if err != nil {
+			return nil, err
+		}
+
+		viewableUser, _ := user.ToTutorInformation()
+
+		
+		userToReturn = append(userToReturn, viewableUser)
+	}
+	return userToReturn, nil
+}
+
 func (u *LocalUser) ChangePassword(db *sql.DB) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {

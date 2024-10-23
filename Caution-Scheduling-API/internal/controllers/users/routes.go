@@ -14,6 +14,8 @@ func AddUserRoutes(a *mux.Router) {
 	a.HandleFunc("/api/luser/whoami", whoami).Methods("GET")
 	a.HandleFunc("/api/luser/logout", logoutLocalUser).Methods("DELETE")
 	a.HandleFunc("/api/luser/resetmypasswd", changePassword).Methods("PUT")
+	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
+	a.HandleFunc("/api/lusers/tutors", getAllTutors).Methods("GET")
 
 	//Tutor Routes
 	a.HandleFunc("/api/luser/timeslot", addTime).Methods("POST")
@@ -24,7 +26,7 @@ func AddUserRoutes(a *mux.Router) {
 
 	//Administrator Routes
 	a.HandleFunc("/api/luser/admin/timeslot/{id:[0-9]+}", removeTimeAdmin).Methods("DELETE")
-	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
+	
 	a.HandleFunc("/api/lusers/filter", getUsersByFilter).Methods("GET")
 
 
