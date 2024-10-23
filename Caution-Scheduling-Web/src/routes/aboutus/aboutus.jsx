@@ -1,6 +1,10 @@
 import React from "react";
 import "./aboutus.css";
 import Placeholder from "../../assets/placeholder.jpg";
+import ChaseImage from "../../assets/chase.webp";
+import JoshImage from "../../assets/josh.webp";
+import DimaImage from "../../assets/dima.webp";
+import EthanImage from "../../assets/ethan.webp";
 import Background from "../../background";
 import useMediaQuery from '../../context/useMediaQuery.jsx';
 
@@ -11,32 +15,32 @@ const AboutUs = () => {
       name: "Joshua Cantu",
       description: "Team Leader - Senior - Information Technology",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: JoshImage,
     },
     {
       name: "Chase Leimbach",
       description: "Senior - Information Technology",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: ChaseImage,
     },
     {
       name: "Ethan Stoulig",
       description: "Senior - Scientific",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: EthanImage,
     },
     {
       name: "Dmitriy Levytskyi",
       description: "Senior - Information Technology",
       descriptionextended: "Things about you! Placeholders to fill",
-      imgSrc: Placeholder,
+      imgSrc: DimaImage,
     },
   ];
 
   return (
     <>
       <Background />
-      <div className="slide-container">
+      <div className="aboutus-page slide-container">
         <div className="slide-content">
           <div className={`card-wrapper ${isMobile ? "mobile" : ""}`}>
             {cards.map((card, index) => (

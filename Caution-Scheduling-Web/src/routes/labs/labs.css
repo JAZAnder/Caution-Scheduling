@@ -1,4 +1,4 @@
-.users-body {
+.labs-body {
     font-family: "Poppins", sans-serif;
     display: flex;
     justify-content: center;
@@ -8,6 +8,3 @@
     color: white;
   }
   
-  table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
