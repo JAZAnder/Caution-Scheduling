@@ -177,7 +177,7 @@ func (u *LocalUser) SignUp(db *sql.DB) error {
 	return nil
 }
 
-func GetLusers(db *sql.DB) ([]AdminViewUserInformation, error) {
+func GetLusers(db *sql.DB) ([]TutorInformation, error) {
 	rows, err := db.Query("SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers;")
 
 	if err != nil {
@@ -186,7 +186,7 @@ func GetLusers(db *sql.DB) ([]AdminViewUserInformation, error) {
 
 	defer rows.Close()
 
-	userToReturn := []AdminViewUserInformation{}
+	userToReturn := []TutorInformation{}
 
 	for rows.Next() {
 		var su SQLLocalUser
@@ -199,7 +199,7 @@ func GetLusers(db *sql.DB) ([]AdminViewUserInformation, error) {
 			return nil, err
 		}
 
-		viewableUser, _ := user.ToAdminViewUserInformation()
+		viewableUser, _ := user.ToTutorInformation()
 
 		
 		userToReturn = append(userToReturn, viewableUser)

@@ -2,8 +2,10 @@ import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 import './users.css'
 import useFetch from "use-http";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import UserDetailsButton from "./details/details";
+import NewUserButton from "./create/create"
 
 function manageUsers() {
   const [loading, setLoading] = useState(false)
@@ -16,34 +18,39 @@ function manageUsers() {
   const [role, setRole] = useState('')
   const [debounce, SetDebounce] = useState(true)
 
+  useEffect(() => {
+    SetDebounce(!debounce)
+  },[])
+
+
+
+
+
   React.useEffect(() => {
     const getData = setTimeout(() => {
       SetDebounce(!debounce)
-    }, 1000)
+    }, 100)
     return () => clearTimeout(getData)
   }, [userName, firstName, lastName, email, role])
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setFiltering(true)
-  };
+
 
   const resetSearch = async (event) => {
-    setFiltering(false)
     setUserName('')
     setFirstName('')
     setLastName('')
     setEmail('')
     setRole('')
+    SetDebounce(!debounce)
   }
 
 
   return (
     <>
     <div style={{minHeight:"150px"}}> Black Space?</div>
-      <button >Add New User</button>
+      <NewUserButton/>
       <div id="filterOnBar">
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             id="username"
             value={userName}
@@ -81,94 +88,24 @@ function manageUsers() {
             <option value="4" > Administrators</option>
           </select>
           
-          <button type="submit" disabled={loading}>
-            {loading ? 'Finding Users . . .' : 'Search Users'}
-          </button>
+         
           <button type="button" disabled={loading} onClick={resetSearch}>
-            {loading ? 'Waiting' : 'View All'}
+            {loading ? 'Waiting' : 'Reset Search'}
           </button>
         </form>
         
       </div>
-      {
-        filtering ? 
+
         
         <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} debounce={debounce}/>
-        :
-        <ListUsers/>
 
-      }
       
 
     </>
   )
 };
 
-function ListUsers() {
-  const {
-    data: usersInfo,
-    loading,
-    error,
-  } = useFetch(
-    "/api/lusers",
-    {
-      method: "get",
-    },
-    []
-  );
 
-  if (loading) {
-    return (
-      <>
-        <center> <div className="loader"></div></center>
-      </>
-    )
-  }
-
-
-  return (
-    <>
-      <div id="userNameTable">
-        <table className="table-with-bordered">
-          <thead>
-            <tr>
-            <th> User Id </th>
-            <th> Username </th>
-            <th> First Name </th>
-            <th> Last Name </th>
-            <th> Email </th>
-            <th> Role </th>
-            <th> Details </th>
-          </tr>
-          </thead>
-          <tbody>
-            
-          {
-
-
-            Object.keys(usersInfo).map((user, i) => (
-              <tr key={i}>
-                <td> {usersInfo[user].userId} </td>
-                <td> {usersInfo[user].userName} </td>
-                <td> {usersInfo[user].firstName} </td>
-                <td> {usersInfo[user].lastName} </td>
-                <td> {usersInfo[user].email} </td>
-                <td> {usersInfo[user].role} </td>
-                <td><button>user details</button></td>
-              </tr>
-            )
-
-            )
-          }
-          </tbody>
-          
-
-
-        </table>
-      </div>
-    </>
-  );
-}
 
 function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole, debounce}){
   
@@ -218,7 +155,7 @@ Object.keys(usersInfo).map((user, i) => (
     <td> {usersInfo[user].lastName} </td>
     <td> {usersInfo[user].email} </td>
     <td> {usersInfo[user].role} </td>
-    <td><button>user details</button></td>
+    <td><UserDetailsButton user={usersInfo[user]}/></td>
   </tr>
 )
 
@@ -233,4 +170,10 @@ Object.keys(usersInfo).map((user, i) => (
 
 
 }
+
+
+
+
+
+
 export default manageUsers;
