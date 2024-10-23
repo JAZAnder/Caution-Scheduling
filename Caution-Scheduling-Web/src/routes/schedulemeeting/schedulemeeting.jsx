@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
 import "./ScheduleMeeting.css";
+import axios from 'axios';
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTimeOptions, setEndTimeOptions] = useState([]);
   const [endTime, setEndTime] = useState("");
+  const [tutors, setTutors] = useState([]);
+  const [selectedTutor, setSelectedTutor] = useState("");
+
+  useEffect(() => {
+    const fetchTutors = async () => {
+      try {
+        const response = await axios.get('/api/lusers');
+        const users = response.data;
+
+        const tutorList = users.filter(user => user.role === 'Tutor');
+        setTutors(tutorList);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchTutors();
+  }, []);
 
   const isWeekday = (date) => {
     const day = date.getDay();
@@ -19,10 +38,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const generateTimeSlots = () => {
     const times = [];
     let start = new Date();
-    start.setHours(9, 30, 0, 0);
+    start.setHours(9, 30, 0, 0); 
 
     let end = new Date();
-    end.setHours(21, 0, 0, 0);
+    end.setHours(21, 0, 0, 0); 
 
     while (start <= end) {
       times.push(new Date(start));
@@ -62,7 +81,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
     }
 
     setEndTimeOptions(newEndOptions);
-    setEndTime(newEndOptions[0] || "");
+    setEndTime(newEndOptions[0] || ""); 
   };
 
   return (
@@ -113,7 +132,20 @@ const ScheduleMeeting = ({ isAdmin }) => {
             ))}
           </select>
         </div>
-        <input type="text" placeholder="Tutor" className="input-field" />
+        <select
+          value={selectedTutor}
+          onChange={(e) => setSelectedTutor(e.target.value)}
+          className="input-field"
+        >
+          <option value="" disabled>
+            Select a Tutor
+          </option>
+          {tutors.map((tutor, index) => (
+            <option key={tutor.id || index} value={tutor.name}>
+              {tutor.name}
+            </option>
+          ))}
+        </select>
         <button className="button schedule-button">Schedule Meeting</button>
       </div>
     </>
