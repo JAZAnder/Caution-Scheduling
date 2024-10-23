@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import "../users.css"
 
 function NewUserButton() {
     const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ function NewUserButton() {
     return (
         <>
             <button
-
+                className="add-new-user-button"
                 onClick={handleShow}
             >
                 Add new user
