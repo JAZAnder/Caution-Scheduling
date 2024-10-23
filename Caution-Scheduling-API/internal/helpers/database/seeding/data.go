@@ -37,7 +37,7 @@ func seedUsers() {
 	}
 
 	//Seeding Student User
-	err = nil;
+	err = nil
 	var student user.LocalUser = user.LocalUser{
 		UserName:  "Student",
 		FirstName: "Normal",
@@ -58,7 +58,7 @@ func seedUsers() {
 	}
 
 	//Supervisor  User
-	err = nil;
+	err = nil
 	var supervisor user.LocalUser = user.LocalUser{
 		UserName:  "Supervisor",
 		FirstName: "Tutor",
@@ -79,7 +79,7 @@ func seedUsers() {
 	}
 
 	//Tutor  User
-	err = nil;
+	err = nil
 	var Tutor user.LocalUser = user.LocalUser{
 		UserName:  "Tutor",
 		FirstName: "School",
@@ -95,6 +95,26 @@ func seedUsers() {
 
 	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", Tutor.UserName+" user is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	err = nil
+	var anotherTutor user.LocalUser = user.LocalUser{
+		UserName:  "Tutor2",
+		FirstName: "Jane",
+		LastName:  "Doe",
+		FullName:  "Jane Doe",
+		Email:     "jane.doe@localhost.com",
+		Password:  "P@33word123!",
+		IsAdmin:   false,
+		Role:      2,
+	}
+
+	err = anotherTutor.SignUp(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", anotherTutor.UserName+" user is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}

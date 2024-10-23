@@ -17,16 +17,15 @@ const ScheduleMeeting = ({ isAdmin }) => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get('/api/lusers');
-        const users = response.data;
-
-        const tutorList = users.filter(user => user.role === 'Tutor');
-        setTutors(tutorList);
+        const response = await axios.get('/api/lusers/tutors');
+        const tutors = response.data;
+  
+        setTutors(tutors);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching tutors:', error);
       }
     };
-
+  
     fetchTutors();
   }, []);
 
@@ -133,19 +132,19 @@ const ScheduleMeeting = ({ isAdmin }) => {
           </select>
         </div>
         <select
-          value={selectedTutor}
-          onChange={(e) => setSelectedTutor(e.target.value)}
-          className="input-field"
-        >
-          <option value="" disabled>
-            Select a Tutor
-          </option>
-          {tutors.map((tutor, index) => (
-            <option key={tutor.id || index} value={tutor.name}>
-              {tutor.name}
-            </option>
-          ))}
-        </select>
+  value={selectedTutor}
+  onChange={(e) => setSelectedTutor(e.target.value)}
+  className="input-field"
+>
+  <option value="" disabled>
+    Select a Tutor
+  </option>
+  {tutors.map((tutor, index) => (
+    <option key={tutor.userId || index} value={tutor.fullName}>
+      {tutor.fullName}
+    </option>
+  ))}
+</select>
         <button className="button schedule-button">Schedule Meeting</button>
       </div>
     </>
