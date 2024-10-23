@@ -20,7 +20,7 @@ function manageUsers() {
 
   useEffect(() => {
     SetDebounce(!debounce)
-  },[])
+  }, [])
 
 
 
@@ -47,8 +47,8 @@ function manageUsers() {
 
   return (
     <>
-    <div style={{minHeight:"150px"}}> Black Space?</div>
-      <NewUserButton/>
+      <div style={{ minHeight: "150px" }}> Black Space?</div>
+      <NewUserButton />
       <div id="filterOnBar">
         <form>
           <input
@@ -87,19 +87,19 @@ function manageUsers() {
             <option value="3" > Supervisors</option>
             <option value="4" > Administrators</option>
           </select>
-          
-         
+
+
           <button type="button" disabled={loading} onClick={resetSearch}>
             {loading ? 'Waiting' : 'Reset Search'}
           </button>
         </form>
-        
+
       </div>
 
-        
-        <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} debounce={debounce}/>
 
-      
+      <ListFilteredUser FLuserName={userName} FLfirstName={firstName} FLlastName={lastName} FLemail={email} FLrole={role} debounce={debounce} />
+
+
 
     </>
   )
@@ -107,14 +107,14 @@ function manageUsers() {
 
 
 
-function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole, debounce}){
-  
+function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole, debounce }) {
+
   const {
     data: usersInfo,
     loading,
     error,
   } = useFetch(
-    "/api/lusers/filter?userName="+FLuserName+"&firstName="+FLfirstName+"&lastName"+FLlastName+"&email="+FLemail+"&role="+FLrole,
+    "/api/lusers/filter?userName=" + FLuserName + "&firstName=" + FLfirstName + "&lastName" + FLlastName + "&email=" + FLemail + "&role=" + FLrole,
     {
       method: "get",
     },
@@ -134,39 +134,45 @@ function ListFilteredUser({FLuserName, FLfirstName, FLlastName, FLemail, FLrole,
     <>
       <div id="userNameTable">
         <table className="table-with-bordered">
-          <tr>
-            <th> User Id </th>
-            <th> Username </th>
-            <th> First Name </th>
-            <th> Last Name </th>
-            <th> Email </th>
-            <th> Role </th>
-            <th> Details </th>
-          </tr>
+          <thead>
+            <tr>
+              <th> User Id </th>
+              <th> Username </th>
+              <th> First Name </th>
+              <th> Last Name </th>
+              <th> Email </th>
+              <th> Role </th>
+              <th> Details </th>
+            </tr>
+          </thead>
 
-          {
+          <tbody>
+            {
 
 
-Object.keys(usersInfo).map((user, i) => (
-  <tr key={i}>
-    <td> {usersInfo[user].userId} </td>
-    <td> {usersInfo[user].userName} </td>
-    <td> {usersInfo[user].firstName} </td>
-    <td> {usersInfo[user].lastName} </td>
-    <td> {usersInfo[user].email} </td>
-    <td> {usersInfo[user].role} </td>
-    <td><UserDetailsButton user={usersInfo[user]}/></td>
-  </tr>
-)
 
-)
+              Object.keys(usersInfo).map((user, i) => (
+                <tr key={i}>
+                  <td> {usersInfo[user].userId} </td>
+                  <td> {usersInfo[user].userName} </td>
+                  <td> {usersInfo[user].firstName} </td>
+                  <td> {usersInfo[user].lastName} </td>
+                  <td> {usersInfo[user].email} </td>
+                  <td> {usersInfo[user].role} </td>
+                  <td><UserDetailsButton user={usersInfo[user]} /></td>
+                </tr>
+              )
 
-          }
+              )
+
+            }
+          </tbody>
+
 
         </table>
       </div>
     </>
-    )
+  )
 
 
 }
