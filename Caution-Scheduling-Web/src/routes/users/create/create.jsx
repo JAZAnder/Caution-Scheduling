@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import "../users.css"
 
 function NewUserButton() {
     const [show, setShow] = useState(false);
@@ -11,15 +12,51 @@ function NewUserButton() {
     const [userName, setUserName] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
+    const [Password, setPassword] = useState('')
+    const [Password2, setPassword2] = useState('')
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('')
 
+    
 
+    const createNewUser = async (userName, firstName, lastName, Password, email, role) => {
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+      
+        const urlencoded = new URLSearchParams();
+        urlencoded.append('userName', username);
+        urlencoded.append('firstName', firstName);
+        urlencoded.append('lastName', lastName);
+        urlencoded.append('password', Password);
+        urlencoded.append('email', email);
+        urlencoded.append('role', role);
+      
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow',
+        };
+      
+        try {
+          const response = await fetch('/api/luser/login', requestOptions);
+      
+          if (!response.ok) {
+            throw new Error('Invalid login credentials.');
+          }
+      
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Login failed:', error);
+          throw new Error('Login failed. Please try again.');
+        }
+      };
 
     return (
         <>
             <button
-
+                className="add-new-user-button"
                 onClick={handleShow}
             >
                 Add new user
@@ -39,6 +76,28 @@ function NewUserButton() {
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                             placeholder="UserName"
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>
+                            <strong>Password</strong>
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>
+                            <strong>Confirm Password</strong>
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password2}
+                            onChange={(e) => setPassword2(e.target.value)}
+                            placeholder="Password"
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">

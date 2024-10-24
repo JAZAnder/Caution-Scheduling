@@ -1,14 +1,150 @@
-.users-body {
-    font-family: "Poppins", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-size: 14px;
-    color: white;
-  }
-  
-  table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
+.manage-users-page .manage-users-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.manage-users-page #filterOnBar {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  background: linear-gradient(170deg, #059669, #1a5632);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.manage-users-page #filterOnBar input,
+.manage-users-page #filterOnBar select,
+.manage-users-page #filterOnBar button {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+}
+
+.manage-users-page #filterOnBar input[type="text"],
+.manage-users-page #filterOnBar select {
+  min-width: 120px;
+  background-color: #e6ffe6;
+  color: #333;
+}
+
+.manage-users-page #filterOnBar button {
+  padding: 0.5rem 1rem;
+  background-color: #0064df;
+  color: white;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.manage-users-page #filterOnBar button:disabled {
+  background-color: #808080;
+}
+
+.manage-users-page .new-user-button {
+  background-color: #FF0000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 2rem;
+  align-self: center;
+}
+
+.manage-users-page #userNameTable {
+  width: 85%;
+  margin: 2rem auto;
+  background: linear-gradient(170deg, #059669, #1a5632);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.manage-users-page .add-new-user-container {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.manage-users-page .table-with-bordered {
+  width: 100%;
+  color: white;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.manage-users-page .table-with-bordered th,
+.manage-users-page .table-with-bordered td {
+  padding: 0.5rem;
+  border: 1px solid #fff;
+}
+
+.manage-users-page .table-with-bordered th {
+  background-color:  #4f7d4f;
+}
+
+.manage-users-page .table-with-bordered tr:nth-child(even) {
+  background-color: #004d00;
+}
+
+.manage-users-page .loader {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Specific styles for buttons */
+.manage-users-page .details-button,
+.manage-users-page .reset-search-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.manage-users-page .reset-search-button {
+  background-color: #FF4500;
+}
+
+.manage-users-page .add-new-user-button {
+  background: linear-gradient(to right, #d5414f 0%, #d5414f 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.manage-users-page .details-details-button {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+}

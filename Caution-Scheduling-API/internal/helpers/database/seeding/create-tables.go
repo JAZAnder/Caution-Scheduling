@@ -149,7 +149,7 @@ func createLabHoursTable() {
 func createUserHoursTable() {
 	query := "CREATE TABLE IF NOT EXISTS userHours(" +
 		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
-		"`username` VARCHAR(255) NOT NULL," +
+		"`userId` INT NOT NULL ," +
 		"`hourId` INT NOT NULL , " +
 		"`available` tinyint(1) NOT NULL DEFAULT '1' ) ;"
 

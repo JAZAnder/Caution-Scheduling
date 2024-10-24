@@ -202,9 +202,9 @@ func createUserHourConstraints() {
 	logger.Log(2, "database", "Create Constraint", "System", "Creating userHour Constraints")
 	var masterErr error = nil
 	query := "ALTER TABLE `userHours`  " +
-		" ADD CONSTRAINT `username-hour -> localuser.userName`" +
+		" ADD CONSTRAINT `username-hour -> localuser.Id`" +
 		" FOREIGN KEY (`username`)" +
-		" REFERENCES `localusers`(`userName`) " +
+		" REFERENCES `localusers`(`Id`) " +
 		" ON DELETE RESTRICT; "
 
 	logger.Log(1, "database", "Create Constraint", "System", query)

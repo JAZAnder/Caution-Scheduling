@@ -13,7 +13,6 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 type HourController struct {
@@ -121,18 +120,18 @@ func deleteHour(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getUsersByHour(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
-		return
-	}
+// func getUsersByHour(w http.ResponseWriter, r *http.Request) {
+// 	vars := mux.Vars(r)
+// 	id, err := strconv.Atoi(vars["id"])
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid hour Id")
+// 		return
+// 	}
 
-	users, err := userHour.GetUsersByHour(database, id)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	responses.RespondWithJSON(w, http.StatusOK, users)
-}
+// 	users, err := userHour.GetUsersByHour(database, id)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	responses.RespondWithJSON(w, http.StatusOK, users)
+// }
