@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
 import "./ScheduleMeeting.css";
-import axios from 'axios';
+import axios from "axios";
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -13,19 +13,18 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const [endTime, setEndTime] = useState("");
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState("");
+  const [tutorTimeSlots, setTutorTimeSlots] = useState([]);
 
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get('/api/lusers/tutors');
+        const response = await axios.get("/api/lusers/tutors");
         const tutors = response.data;
-  
         setTutors(tutors);
       } catch (error) {
-        console.error('Error fetching tutors:', error);
+        console.error("Error fetching tutors:", error);
       }
     };
-  
     fetchTutors();
   }, []);
 
@@ -37,10 +36,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const generateTimeSlots = () => {
     const times = [];
     let start = new Date();
-    start.setHours(9, 30, 0, 0); 
+    start.setHours(9, 30, 0, 0);
 
     let end = new Date();
-    end.setHours(21, 0, 0, 0); 
+    end.setHours(21, 0, 0, 0);
 
     while (start <= end) {
       times.push(new Date(start));
@@ -50,8 +49,35 @@ const ScheduleMeeting = ({ isAdmin }) => {
   };
 
   const availableStartTimes = generateTimeSlots().map((time) =>
-    time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
+
+  const getAvailableStartTimesForTutor = () => {
+    if (!selectedTutor) {
+      return availableStartTimes;
+    }
+    return availableStartTimes.filter((time) => {
+      const timeSlot = tutorTimeSlots.find(
+        (slot) => slot.startTime === time && slot.available
+      );
+      return timeSlot !== undefined;
+    });
+  };
+
+  const filteredStartTimes = getAvailableStartTimesForTutor();
+
+  const handleTutorChange = async (e) => {
+    const selectedTutor = e.target.value;
+    setSelectedTutor(selectedTutor);
+
+    try {
+      const response = await axios.get(`/api/tutor/hours/${selectedTutor}`);
+      const timeSlots = response.data;
+      setTutorTimeSlots(timeSlots);
+    } catch (error) {
+      console.error("Error fetching time slots:", error);
+    }
+  };
 
   const handleTimeSlotChange = (event) => {
     const selectedStartTime = event.target.value;
@@ -73,25 +99,27 @@ const ScheduleMeeting = ({ isAdmin }) => {
     for (let i = 15; i <= 60; i += 15) {
       nextSlot = new Date(start);
       nextSlot.setMinutes(start.getMinutes() + i);
-      if (nextSlot.getHours() > 21 || (nextSlot.getHours() === 21 && nextSlot.getMinutes() > 0)) break;
+      if (
+        nextSlot.getHours() > 21 ||
+        (nextSlot.getHours() === 21 && nextSlot.getMinutes() > 0)
+      )
+        break;
       newEndOptions.push(
-        nextSlot.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        nextSlot.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       );
     }
 
     setEndTimeOptions(newEndOptions);
-    setEndTime(newEndOptions[0] || ""); 
+    setEndTime(newEndOptions[0] || "");
   };
 
   return (
     <>
       <Background />
-      <h1 style={{ color: 'white' }}>Schedule a Meeting</h1>
+      <h1 style={{ color: "white" }}>Schedule a Meeting</h1>
       <div className="container">
         {isAdmin && (
-          <button className="button admin-button">
-            Make a Meeting
-          </button>
+          <button className="button admin-button">Make a Meeting</button>
         )}
         <DatePicker
           selected={selectedDate}
@@ -105,11 +133,12 @@ const ScheduleMeeting = ({ isAdmin }) => {
             value={startTime}
             onChange={handleTimeSlotChange}
             className="input-field time-select"
+            disabled={!selectedTutor} // Disable until a tutor is selected
           >
             <option value="" disabled>
               Select start time
             </option>
-            {availableStartTimes.map((time, index) => (
+            {filteredStartTimes.map((time, index) => (
               <option key={index} value={time}>
                 {time}
               </option>
@@ -132,19 +161,19 @@ const ScheduleMeeting = ({ isAdmin }) => {
           </select>
         </div>
         <select
-  value={selectedTutor}
-  onChange={(e) => setSelectedTutor(e.target.value)}
-  className="input-field"
->
-  <option value="" disabled>
-    Select a Tutor
-  </option>
-  {tutors.map((tutor, index) => (
-    <option key={tutor.userId || index} value={tutor.fullName}>
-      {tutor.fullName}
-    </option>
-  ))}
-</select>
+          value={selectedTutor}
+          onChange={handleTutorChange}
+          className="input-field"
+        >
+          <option value="" disabled>
+            Select a Tutor
+          </option>
+          {tutors.map((tutor, index) => (
+            <option key={tutor.userId || index} value={tutor.userName}>
+              {tutor.fullName}
+            </option>
+          ))}
+        </select>
         <button className="button schedule-button">Schedule Meeting</button>
       </div>
     </>

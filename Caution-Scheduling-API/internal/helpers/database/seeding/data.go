@@ -4,7 +4,9 @@ import (
 	"database/sql"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 var database *sql.DB
@@ -115,6 +117,39 @@ func seedUsers() {
 
 	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", anotherTutor.UserName+" user is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	//Timeslot1
+	err = nil
+	timeSlot1 := hour.Hour{
+		StartTime: "9:00 AM",
+		EndTime:   "10:15 AM",
+		DayOfWeek: 1,
+	}
+
+	err = timeSlot1.CreateHour(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", timeSlot1.StartTime+" - "+timeSlot1.EndTime+" Timeslot is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	//Assign Tutor to Timeslot1
+	err = nil
+
+	userHour1 := userHour.UserHour{}
+
+	userHour1.Tutor = "School Tutor"
+	hours, _ := hour.GetHours(database)
+	userHour1.HourId = hours[0].Id
+
+	userHour1.CreateUserHour(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", "Tutor: "+userHour1.Tutor+" User Hour is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
