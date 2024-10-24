@@ -10,7 +10,7 @@ func AddUseTimeslotRoutes(a *mux.Router) {
 	//Admin Routes
 
 	//Supervisor Routes
-
+	a.HandleFunc("/api/availability", getEverythingByFilter).Methods("GET")
 	//Tutor Routes
 
 	//Student Routes
