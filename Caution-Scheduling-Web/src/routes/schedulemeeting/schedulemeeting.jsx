@@ -7,8 +7,7 @@ import axios from "axios";
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTimeOptions, setEndTimeOptions] = useState([]);
+  const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [tutors, setTutors] = useState([]);
   const [availableTutors, setAvailableTutors] = useState([]);
@@ -16,6 +15,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const [tutorAvailability, setTutorAvailability] = useState([]);
   const [tutorsAvailabilityMap, setTutorsAvailabilityMap] = useState({});
   const [hours, setHours] = useState([]);
+  const [scheduledMeetings, setScheduledMeetings] = useState([]);
 
   useEffect(() => {
     const fetchTutorsAndAvailability = async () => {
@@ -91,11 +91,12 @@ const ScheduleMeeting = ({ isAdmin }) => {
           .filter((slot) => slot.available)
           .map((slot) => slot.hourId);
 
-        const availableHours = hours.filter(
-          (hour) => availableHourIds.includes(hour.id) && hour.dayOfWeek === dayOfWeek
+        const hoursForDay = hours.filter(
+          (hour) =>
+            hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
         );
 
-        return availableHours.length > 0;
+        return hoursForDay.length > 0;
       });
 
       setAvailableTutors(tutorsAvailableOnDate);
@@ -107,80 +108,6 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const isWeekday = (date) => {
     const day = date.getDay();
     return day >= 1 && day <= 4; // Monday to Thursday
-  };
-
-  const getAvailableHoursForTutor = () => {
-    if (!selectedTutor || !selectedDate) {
-      return [];
-    }
-
-    const jsDayOfWeek = selectedDate.getDay();
-    const dayOfWeekMap = {
-      1: 1, // Monday
-      2: 2, // Tuesday
-      3: 3, // Wednesday
-      4: 4, // Thursday
-    };
-
-    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
-
-    if (!dayOfWeek) {
-      return [];
-    }
-
-    const hoursForDay = hours.filter((hour) => hour.dayOfWeek === dayOfWeek);
-
-    const availableHourIds = tutorAvailability
-      .filter((slot) => slot.available)
-      .map((slot) => slot.hourId);
-
-    console.log("Available Hour IDs:", availableHourIds);
-
-    const availableHours = hoursForDay.filter((hour) =>
-      availableHourIds.includes(hour.id)
-    );
-
-    console.log("Available Hours:", availableHours);
-
-    return availableHours;
-  };
-
-  const filteredHours = getAvailableHoursForTutor();
-
-  const handleTutorChange = (e) => {
-    const selectedTutorId = e.target.value;
-    setSelectedTutor(selectedTutorId);
-
-    const availability = tutorsAvailabilityMap[selectedTutorId] || [];
-    setTutorAvailability(availability);
-  };
-
-  const handleTimeSlotChange = (event) => {
-    const selectedHourId = parseInt(event.target.value, 10);
-    setStartTime(selectedHourId);
-
-    const selectedHour = filteredHours.find((hour) => hour.id === selectedHourId);
-
-    if (selectedHour) {
-      const startMinutes = parseTime(selectedHour.startTime);
-      const endMinutes = parseTime(selectedHour.endTime);
-      const increment = 15;
-
-      const newEndOptions = [];
-      for (
-        let time = startMinutes + increment;
-        time <= endMinutes;
-        time += increment
-      ) {
-        newEndOptions.push(formatTime(time));
-      }
-
-      setEndTimeOptions(newEndOptions);
-      setEndTime(newEndOptions[0] || "");
-    } else {
-      setEndTimeOptions([]);
-      setEndTime("");
-    }
   };
 
   const parseTime = (timeStr) => {
@@ -208,6 +135,175 @@ const ScheduleMeeting = ({ isAdmin }) => {
     }${minutes} ${ampm}`;
   };
 
+  const getAvailableStartTimes = () => {
+    if (!selectedTutor || !selectedDate) {
+      return [];
+    }
+
+    const jsDayOfWeek = selectedDate.getDay(); 
+
+    const dayOfWeekMap = {
+      1: 1, // Monday
+      2: 2, // Tuesday
+      3: 3, // Wednesday
+      4: 4, // Thursday
+    };
+
+    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
+
+    if (!dayOfWeek) {
+      return [];
+    }
+
+    const availableHourIds = tutorAvailability
+      .filter((slot) => slot.available)
+      .map((slot) => slot.hourId);
+
+    const hoursForDay = hours.filter(
+      (hour) => hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
+    );
+
+    let allStartTimes = [];
+
+    hoursForDay.forEach((hour) => {
+      const startMinutes = parseTime(hour.startTime);
+      const endMinutes = parseTime(hour.endTime) - 15;
+      for (let time = startMinutes; time <= endMinutes; time += 15) {
+        allStartTimes.push(formatTime(time));
+      }
+    });
+
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+    const bookedTimes = scheduledMeetings
+      .filter(
+        (meeting) =>
+          meeting.tutorId === selectedTutor && meeting.date === formattedDate
+      )
+      .map((meeting) => ({
+        start: parseTime(meeting.startTime),
+        end: parseTime(meeting.endTime),
+      }));
+
+    const availableStartTimes = allStartTimes.filter((timeStr) => {
+      const time = parseTime(timeStr);
+      const isBooked = bookedTimes.some(
+        (booking) => time >= booking.start && time < booking.end
+      );
+      return !isBooked;
+    });
+
+    return availableStartTimes;
+  };
+
+  const getAvailableEndTimes = () => {
+    if (!startTime || !selectedTutor || !selectedDate) {
+      return [];
+    }
+
+    const jsDayOfWeek = selectedDate.getDay();
+
+    const dayOfWeekMap = {
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+    };
+
+    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
+
+    const availableHourIds = tutorAvailability
+      .filter((slot) => slot.available)
+      .map((slot) => slot.hourId);
+
+    const hoursForDay = hours.filter(
+      (hour) => hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
+    );
+
+    const startMinutes = parseTime(startTime);
+
+    const currentHourBlock = hoursForDay.find((hour) => {
+      const hourStart = parseTime(hour.startTime);
+      const hourEnd = parseTime(hour.endTime);
+      return startMinutes >= hourStart && startMinutes < hourEnd;
+    });
+
+    if (!currentHourBlock) {
+      return [];
+    }
+
+    const hourEndMinutes = parseTime(currentHourBlock.endTime);
+
+    let endTimes = [];
+    for (
+      let time = startMinutes + 15;
+      time <= hourEndMinutes;
+      time += 15
+    ) {
+      endTimes.push(formatTime(time));
+    }
+
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+    const bookedTimes = scheduledMeetings
+      .filter(
+        (meeting) =>
+          meeting.tutorId === selectedTutor && meeting.date === formattedDate
+      )
+      .map((meeting) => ({
+        start: parseTime(meeting.startTime),
+        end: parseTime(meeting.endTime),
+      }));
+
+    const availableEndTimes = endTimes.filter((timeStr) => {
+      const endTimeMinutes = parseTime(timeStr);
+      const isBooked = bookedTimes.some(
+        (booking) =>
+          startMinutes < booking.end &&
+          endTimeMinutes > booking.start &&
+          startMinutes < endTimeMinutes
+      );
+      return !isBooked;
+    });
+
+    return availableEndTimes;
+  };
+
+  const handleTutorChange = (e) => {
+    const selectedTutorId = e.target.value;
+    setSelectedTutor(selectedTutorId);
+
+    const availability = tutorsAvailabilityMap[selectedTutorId] || [];
+    setTutorAvailability(availability);
+
+    setStartTime("");
+    setEndTime("");
+  };
+
+  const handleScheduleMeeting = () => {
+    if (!selectedTutor || !selectedDate || !startTime || !endTime) {
+      alert("Please select a tutor, date, start time, and end time.");
+      return;
+    }
+
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+
+    const newMeeting = {
+      tutorId: selectedTutor,
+      date: formattedDate,
+      startTime: startTime,
+      endTime: endTime,
+    };
+
+    setScheduledMeetings([...scheduledMeetings, newMeeting]);
+
+    alert("Meeting scheduled successfully!");
+
+    setStartTime("");
+    setEndTime("");
+  };
+
+  const availableStartTimes = getAvailableStartTimes();
+  const availableEndTimes = getAvailableEndTimes();
+
   return (
     <>
       <div style={{ minHeight: "230px" }}> Black Space?</div>
@@ -221,9 +317,8 @@ const ScheduleMeeting = ({ isAdmin }) => {
           onChange={(date) => {
             setSelectedDate(date);
             setSelectedTutor("");
-            setStartTime(null);
+            setStartTime("");
             setEndTime("");
-            setEndTimeOptions([]);
             setTutorAvailability([]);
           }}
           filterDate={isWeekday}
@@ -247,40 +342,46 @@ const ScheduleMeeting = ({ isAdmin }) => {
         </select>
         <div className="time-selection">
           <select
-            value={startTime || ""}
-            onChange={handleTimeSlotChange}
+            value={startTime}
+            onChange={(e) => {
+              setStartTime(e.target.value);
+              setEndTime("");
+            }}
             className="input-field time-select"
-            disabled={!selectedTutor || !tutorAvailability.length || !selectedDate}
+            disabled={!availableStartTimes.length}
           >
             <option value="" disabled>
               Select start time
             </option>
-            {filteredHours.map((hour) => {
-              console.log("Rendering Hour:", hour);
-              return (
-                <option key={hour.id} value={hour.id}>
-                  {hour.startTime}
-                </option>
-              );
-            })}
+            {availableStartTimes.map((time, index) => (
+              <option key={index} value={time}>
+                {time}
+              </option>
+            ))}
           </select>
           <select
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
             className="input-field time-select"
-            disabled={!endTimeOptions.length}
+            disabled={!availableEndTimes.length}
           >
             <option value="" disabled>
               Select end time
             </option>
-            {endTimeOptions.map((time, index) => (
+            {availableEndTimes.map((time, index) => (
               <option key={index} value={time}>
                 {time}
               </option>
             ))}
           </select>
         </div>
-        <button className="button schedule-button">Schedule Meeting</button>
+        <button
+          className="button schedule-button"
+          onClick={handleScheduleMeeting}
+          disabled={!selectedTutor || !selectedDate || !startTime || !endTime}
+        >
+          Schedule Meeting
+        </button>
       </div>
     </>
   );
