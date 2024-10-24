@@ -1,11 +1,15 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
+import './otherlink.css';
+
 
 const otherLink = () => {
   return (
     <>
       <Background />
-      <h1 style={{ color: 'white' }}> Hello this is a other link page</h1>
+      <div className="otherlink-body">
+        <h1>Hello, this is a page</h1>
+      </div>
     </>
   );
 };

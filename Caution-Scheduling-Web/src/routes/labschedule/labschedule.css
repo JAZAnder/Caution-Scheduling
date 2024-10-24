@@ -1,8 +1,11 @@
 .lab-schedule-page {
+  font-family: "Poppins", sans-serif;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  height: auto;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 14px;
+  margin: 0;
   overflow: hidden;
 }
 

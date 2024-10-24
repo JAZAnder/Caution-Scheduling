@@ -1,5 +1,3 @@
-// src/navigationBar.jsx
-
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext'; 
@@ -7,27 +5,28 @@ import schedulingLogo from './assets/CautionSchedulingLogoUpdate.png';
 import useMediaQuery from './context/useMediaQuery';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import "./App.css";
+import "./App.css"; // Ensure it includes the updated, scoped CSS
 
 export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
-  const isMobile = useMediaQuery('(max-width: 900px)'); // Check if the screen is mobile
+  const isMobile = useMediaQuery('(max-width: 900px)'); 
 
   return (
-    <>
-      {!isMobile ? ( // Render CSS for Desktop
+    <div className="cs-navigation-bar">
+      {!isMobile ? ( 
         <>
-          <header className="topheader">
-            <a href="/" className="header-logo-link">
+          {/* Desktop Header */}
+          <header className="cs-topheader">
+            <a href="/" className="cs-header-logo-link">
               <img
                 src={schedulingLogo}
                 alt="Caution Scheduling Logo"
-                className="header-logo"
+                className="cs-header-logo"
               />
             </a>
-            <span className="center-text">Caution Scheduling</span>
+            <span className="cs-center-text">Caution Scheduling</span>
             <nav>
-              <ul className="nav-list">
+              <ul className="cs-nav-list">
                 <li>
                   <Link to={'/'}>Home</Link>
                 </li>
@@ -35,13 +34,9 @@ export default function NavigationBar() {
                   <Link to={'/otherlink'}>Other Link</Link>
                 </li>
                 {user ? (
-                  <>
-                    <li>
-                      <Link to={'/login'} onClick={logout}>
-                        Log Out
-                      </Link>
-                    </li>
-                  </>
+                  <li>
+                    <Link to={'/login'} onClick={logout}>Log Out</Link>
+                  </li>
                 ) : (
                   <li>
                     <Link to={'/login'}>Employee Login</Link>
@@ -51,9 +46,10 @@ export default function NavigationBar() {
             </nav>
           </header>
 
-          <header className="bottomheader">
+          {/* Desktop Bottom Header */}
+          <header className="cs-bottomheader">
             <nav>
-              <ul className="nav-list">
+              <ul className="cs-nav-list">
                 <li>
                   <Link to={"/labschedule"}>Lab Schedule</Link>
                 </li>
@@ -109,15 +105,16 @@ export default function NavigationBar() {
             </nav> 
           </header>
         </>
-      ) : ( // Render Bootstrap elements for mobile
-        <Navbar className="topheader" expand="lg" style={{ backgroundColor: '#1a5632' }}>
+      ) : ( 
+        // Mobile Navbar using React Bootstrap
+        <Navbar className="cs-navbar" expand="lg" style={{ backgroundColor: '#1a5632' }}>
           <Container fluid>
             <LinkContainer to="/">
               <Navbar.Brand>
                 <img
                   src={schedulingLogo}
                   alt="Caution Scheduling Logo"
-                  className="header-logo"
+                  className="cs-header-logo"
                   style={{ height: '50px' }}
                 />
               </Navbar.Brand>
@@ -126,69 +123,69 @@ export default function NavigationBar() {
             <Navbar.Collapse id="navbarNav">
               <Nav className="me-auto">
                 <LinkContainer to="/">
-                  <Nav.Link style={{ color: 'white' }}>Home</Nav.Link>
+                  <Nav.Link className="cs-nav-link">Home</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/otherlink">
-                  <Nav.Link style={{ color: 'white' }}>Other Link</Nav.Link>
+                  <Nav.Link className="cs-nav-link">Other Link</Nav.Link>
                 </LinkContainer>
                 {user ? (
                   <LinkContainer to="/login">
-                    <Nav.Link style={{ color: 'white' }} onClick={logout}>Log Out</Nav.Link>
+                    <Nav.Link className="cs-nav-link" onClick={logout}>Log Out</Nav.Link>
                   </LinkContainer>
                 ) : (
                   <LinkContainer to="/login">
-                    <Nav.Link style={{ color: 'white' }}>Employee Login</Nav.Link>
+                    <Nav.Link className="cs-nav-link">Employee Login</Nav.Link>
                   </LinkContainer>
                 )}
                 <LinkContainer to="/labschedule">
-                  <Nav.Link style={{ color: 'white' }}>Lab Schedule</Nav.Link>
+                  <Nav.Link className="cs-nav-link">Lab Schedule</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/schedulemeeting">
-                  <Nav.Link style={{ color: 'white' }}>Schedule a Meeting</Nav.Link>
+                  <Nav.Link className="cs-nav-link">Schedule a Meeting</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/signinlab">
-                  <Nav.Link style={{ color: 'white' }}>Sign into Lab</Nav.Link>
+                  <Nav.Link className="cs-nav-link">Sign into Lab</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/aboutus">
-                  <Nav.Link style={{ color: 'white' }}>About Us</Nav.Link>
+                  <Nav.Link className="cs-nav-link">About Us</Nav.Link>
                 </LinkContainer>
                 {user && user.role === 'Administrator' && (
                   <>
                     <LinkContainer to="/meetings">
-                      <Nav.Link style={{ color: 'white' }}>Meetings</Nav.Link>
+                      <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/users">
-                      <Nav.Link style={{ color: 'white' }}>Users</Nav.Link>
+                      <Nav.Link className="cs-nav-link">Users</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/labs">
-                      <Nav.Link style={{ color: 'white' }}>Labs</Nav.Link>
+                      <Nav.Link className="cs-nav-link">Labs</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/timeslots">
-                      <Nav.Link style={{ color: 'white' }}>Timeslots</Nav.Link>
+                      <Nav.Link className="cs-nav-link">Timeslots</Nav.Link>
                     </LinkContainer>
                   </>
                 )}
                 {user && user.role === 'Supervisor' && (
                   <LinkContainer to="/meetings">
-                    <Nav.Link style={{ color: 'white' }}>Meetings</Nav.Link>
+                    <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
                   </LinkContainer>
                 )}
                 {user && user.role === 'Tutor' && (
                   <>
                     <LinkContainer to="/my-meetings">
-                      <Nav.Link style={{ color: 'white' }}>My Meetings</Nav.Link>
+                      <Nav.Link className="cs-nav-link">My Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/my-availability">
-                      <Nav.Link style={{ color: 'white' }}>My Availability</Nav.Link>
+                      <Nav.Link className="cs-nav-link">My Availability</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/users">
-                      <Nav.Link style={{ color: 'white' }}>Users</Nav.Link>
+                      <Nav.Link className="cs-nav-link">Users</Nav.Link>
                     </LinkContainer>
                   </>
                 )}
                 {user && user.role === 'Student' && (
                   <LinkContainer to="/my-meetings">
-                    <Nav.Link style={{ color: 'white' }}>My Meetings</Nav.Link>
+                    <Nav.Link className="cs-nav-link">My Meetings</Nav.Link>
                   </LinkContainer>
                 )}
               </Nav>
@@ -196,6 +193,6 @@ export default function NavigationBar() {
           </Container>
         </Navbar>
       )}
-    </>
+    </div>
   );
 }

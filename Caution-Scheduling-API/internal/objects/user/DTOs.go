@@ -21,6 +21,30 @@ type LocalUser struct {
 	Settings   userSettings
 }
 
+type CreateLocalUserDto struct {
+	UserName   string `json:"userName"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Role       string `json:"role"`
+}
+
+type SQLLocalUser struct {
+	UserId string `json:"userId"`
+	GoogleId   string `json:"googleId"`
+	UserName   string `json:"userName"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	FullName string `json:"fullName"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Role       string `json:"role"`
+	//Attempts       string `json:"attempts"`
+	//Disabled    string   `json:"disabled"`
+	IsAdmin    string   `json:"isAdmin"`
+}
+
 
 type SelfViewInformation struct{
 	UserName   string `json:"userName"`
@@ -47,7 +71,7 @@ type StandardUserInformation struct{
 }
 
 type AdminViewUserInformation struct{
-	UserId int `json:"userId"`
+	UserId string `json:"userId"`
 	UserName   string `json:"userName"`
 	FirstName  string `json:"firstName"`
 	LastName   string `json:"lastName"`

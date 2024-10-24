@@ -14,16 +14,21 @@ type SessionCookie struct {
 }
 
 func (c *SessionCookie) CheckSession(db *sql.DB) (LocalUser, error) {
-	var user LocalUser
-	query :="SELECT `localusers`.`userName`, `localusers`.`firstName`, `localusers`.`lastName`, `localusers`.`email`, `localusers`.`isAdmin`"+
+	var suUser SQLLocalUser
+	query :="SELECT `localusers`.`userName`, `localusers`.`firstName`, `localusers`.`lastName`, `localusers`.`email`, `localusers`.`isAdmin`, `localusers`.`role`, `localusers`.`Id`"+
 			"FROM `localusers`"+ 
 				"LEFT JOIN `sessionCookie` ON `sessionCookie`.`username` = `localusers`.`userName`" +
 			"WHERE `sessionCookie`.`cookie` = '"+c.Cookie+"';"
 	result := db.QueryRow(query)
 
 	var isAdmin string
-	err := result.Scan(&user.UserName, &user.FirstName, &user.LastName, &user.Email, &isAdmin)
+	err := result.Scan(&suUser.UserName, &suUser.FirstName, &suUser.LastName, &suUser.Email, &isAdmin, &suUser.Role, &suUser.UserId)
 
+	if err != nil{
+		return LocalUser{}, err
+	}
+
+	user, err := suUser.toLocalUser()
 	if err != nil{
 		return user, err
 	}
