@@ -31,6 +31,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
     const fetchHours = async () => {
       try {
         const response = await axios.get("/api/hours");
+        console.log("Hours Data:", response.data); 
         setHours(response.data);
       } catch (error) {
         console.error("Error fetching hours:", error);
@@ -53,7 +54,13 @@ const ScheduleMeeting = ({ isAdmin }) => {
       .filter((slot) => slot.available)
       .map((slot) => slot.hourId);
 
-    return hours.filter((hour) => availableHourIds.includes(hour.id));
+    console.log("Available Hour IDs:", availableHourIds);
+
+    const availableHours = hours.filter((hour) => availableHourIds.includes(hour.id));
+
+    console.log("Available Hours:", availableHours); 
+
+    return availableHours;
   };
 
   const filteredHours = getAvailableHoursForTutor();
@@ -64,9 +71,38 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
     try {
       const response = await axios.get(`/api/availability/${selectedTutorId}`);
+      console.log("Tutor Availability Data:", response.data);
       setTutorAvailability(response.data);
     } catch (error) {
       console.error("Error fetching tutor availability:", error);
+    }
+  };
+
+  const handleTimeSlotChange = (event) => {
+    const selectedHourId = parseInt(event.target.value, 10);
+    setStartTime(selectedHourId);
+
+    const selectedHour = filteredHours.find((hour) => hour.id === selectedHourId);
+
+    if (selectedHour) {
+      const startMinutes = parseTime(selectedHour.startTime);
+      const endMinutes = parseTime(selectedHour.endTime);
+      const increment = 15;
+
+      const newEndOptions = [];
+      for (
+        let time = startMinutes + increment;
+        time <= endMinutes;
+        time += increment
+      ) {
+        newEndOptions.push(formatTime(time));
+      }
+
+      setEndTimeOptions(newEndOptions);
+      setEndTime(newEndOptions[0] || "");
+    } else {
+      setEndTimeOptions([]);
+      setEndTime("");
     }
   };
 
@@ -95,49 +131,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
     }${minutes} ${ampm}`;
   };
 
-  const handleTimeSlotChange = (event) => {
-    const selectedHourId = parseInt(event.target.value, 10);
-    setStartTime(selectedHourId);
-
-    console.log("Selected Hour ID:", selectedHourId, typeof selectedHourId);
-    console.log("Hours Data:", hours);
-
-    const selectedHour = hours.find((hour) => hour.id === selectedHourId);
-
-    console.log("Selected Hour:", selectedHour);
-
-    if (selectedHour) {
-      const selectedStartTimeInMinutes = parseTime(selectedHour.startTime);
-      const tutorEndTimeInMinutes = parseTime(selectedHour.endTime);
-      const maxDurationMinutes = 120;
-      const increment = 15;
-
-      const newEndOptions = [];
-      for (
-        let time = selectedStartTimeInMinutes + increment;
-        time <= Math.min(
-          selectedStartTimeInMinutes + maxDurationMinutes,
-          tutorEndTimeInMinutes
-        );
-        time += increment
-      ) {
-        newEndOptions.push(formatTime(time));
-      }
-
-      console.log("End Time Options:", newEndOptions);
-
-      setEndTimeOptions(newEndOptions);
-      setEndTime(newEndOptions[0] || "");
-    } else {
-      setEndTimeOptions([]);
-      setEndTime("");
-    }
-  };
-
   return (
     <>
+    <div style={{ minHeight: "230px" }}> Black Space?</div>
       <Background />
-      <h1 style={{ color: "white" }}>Schedule a Meeting</h1>
       <div className="container">
         {isAdmin && (
           <button className="button admin-button">Make a Meeting</button>
@@ -149,21 +146,38 @@ const ScheduleMeeting = ({ isAdmin }) => {
           placeholderText="Select a date"
           className="input-field"
         />
+        <select
+          value={selectedTutor}
+          onChange={handleTutorChange}
+          className="input-field"
+        >
+          <option value="" disabled>
+            Select a Tutor
+          </option>
+          {tutors.map((tutor) => (
+            <option key={tutor.userId} value={tutor.userId}>
+              {tutor.fullName}
+            </option>
+          ))}
+        </select>
         <div className="time-selection">
           <select
             value={startTime || ""}
             onChange={handleTimeSlotChange}
             className="input-field time-select"
-            disabled={!selectedTutor || !hours.length}
+            disabled={!selectedTutor || !tutorAvailability.length}
           >
             <option value="" disabled>
               Select start time
             </option>
-            {filteredHours.map((hour) => (
-              <option key={hour.id} value={hour.id}>
-                {hour.startTime}
-              </option>
-            ))}
+            {filteredHours.map((hour) => {
+              console.log("Rendering Hour:", hour);
+              return (
+                <option key={hour.id} value={hour.id}>
+                  {hour.startTime}
+                </option>
+              );
+            })}
           </select>
           <select
             value={endTime}
@@ -181,20 +195,6 @@ const ScheduleMeeting = ({ isAdmin }) => {
             ))}
           </select>
         </div>
-        <select
-          value={selectedTutor}
-          onChange={handleTutorChange}
-          className="input-field"
-        >
-          <option value="" disabled>
-            Select a Tutor
-          </option>
-          {tutors.map((tutor) => (
-            <option key={tutor.userId} value={tutor.userId}>
-              {tutor.fullName}
-            </option>
-          ))}
-        </select>
         <button className="button schedule-button">Schedule Meeting</button>
       </div>
     </>
