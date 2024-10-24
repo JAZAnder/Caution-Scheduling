@@ -37,6 +37,7 @@ function TimeslotDetailsButton(timeslot) {
                             value={startTime}
                             onChange={(e) => setStartTime(e.target.value)}
                             placeholder="startTime"
+                            disabled={true}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -48,37 +49,32 @@ function TimeslotDetailsButton(timeslot) {
                             value={endTime}
                             onChange={(e) => setEndTime(e.target.value)}
                             placeholder="endTime"
+                            disabled={true}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>
                             <strong>Day Of Week</strong>
                         </Form.Label>
-                        <Form.Select aria-label="Default select example" onChange={(e) => setDayOfWeek(e.target.value)}>
-                            <option value={dayOfWeek}>{dayOfWeek}</option>
-                            <option value="1"> Monday</option>
-                            <option value="2"> Tuesday</option>
-                            <option value="3"> Wednesday</option>
-                            <option value="4"> Thursday</option>
-                            <option value="5"> Friday</option>
-                            <option value="6"> Saturday</option>
-                            <option value="0"> Sunday</option>
-                        </Form.Select>
+                        <Form.Control
+                            type="text"
+                            value={dayOfWeek}
+                            onChange={(e) => setDayOfWeek(e.target.value)}
+                            placeholder="Day of Week"
+                            disabled={true}
+                        />
                     </Form.Group>
-                    
                 </Modal.Body>
                 <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
                     <Button variant="primary" onClick={handleClose}>
                         Tutors
                     </Button>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
+                    
                     <Button variant="danger" onClick={handleClose}>
                         Delete Timeslot
-                    </Button>
-                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }}>
-                        Save Changes
                     </Button>
                 </Modal.Footer>
             </Modal>

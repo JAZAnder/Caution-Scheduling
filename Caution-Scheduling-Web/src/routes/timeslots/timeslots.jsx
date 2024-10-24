@@ -228,9 +228,9 @@ function ListFilteredTimeSlots({FLdayOfWeek, FLstartTime, FLendTime, debounce}){
                   Object.keys(timeSlots).map((timeslot, i) =>(
                     <tr key={i}>
                       <td>{timeSlots[timeslot].id}</td>
+                      <td>{timeSlots[timeslot].dayOfWeek}</td>
                       <td>{timeSlots[timeslot].startTime}</td>
                       <td>{timeSlots[timeslot].endTime}</td>
-                      <td>{timeSlots[timeslot].dayOfWeek}</td>
                       <td><TimeslotDetailsButton timeslot={timeSlots[timeslot]}/></td>
                     </tr>
                   ))

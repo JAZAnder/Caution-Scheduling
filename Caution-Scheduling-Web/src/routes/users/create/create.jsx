@@ -12,22 +12,22 @@ function NewUserButton() {
     const [userName, setUserName] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [Password, setPassword] = useState('')
-    const [Password2, setPassword2] = useState('')
+    const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('')
+    const [userCreate, setUserCreate] = useState(false)
 
     
 
-    const createNewUser = async (userName, firstName, lastName, Password, email, role) => {
+    const createNewUser = async () => {
         const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
       
         const urlencoded = new URLSearchParams();
-        urlencoded.append('userName', username);
+        urlencoded.append('userName', userName);
         urlencoded.append('firstName', firstName);
         urlencoded.append('lastName', lastName);
-        urlencoded.append('password', Password);
+        urlencoded.append('password', password);
         urlencoded.append('email', email);
         urlencoded.append('role', role);
       
@@ -39,17 +39,20 @@ function NewUserButton() {
         };
       
         try {
-          const response = await fetch('/api/luser/login', requestOptions);
+          const response = await fetch('/api/luser', requestOptions);
       
           if (!response.ok) {
-            throw new Error('Invalid login credentials.');
+            throw new Error('Something Went Wrong');
           }
       
           const data = await response.json();
-          return data;
+          setUserCreate(true)
+          //return data;
+
         } catch (error) {
-          console.error('Login failed:', error);
-          throw new Error('Login failed. Please try again.');
+            alert(error)
+          console.error('Error:', error);
+          throw new Error('Error');
         }
       };
 
@@ -91,17 +94,6 @@ function NewUserButton() {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>
-                            <strong>Confirm Password</strong>
-                        </Form.Label>
-                        <Form.Control
-                            type="password"
-                            value={password2}
-                            onChange={(e) => setPassword2(e.target.value)}
-                            placeholder="Password"
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>
                             <strong>First Name</strong>
                         </Form.Label>
                         <Form.Control
@@ -138,6 +130,7 @@ function NewUserButton() {
                             <strong>Role</strong>
                         </Form.Label>
                         <Form.Select aria-label="Default select example" onChange={(e) => setRole(e.target.value)}>
+                            <option value="0">Select a Role</option>
                             <option value="1">Student</option>
                             <option value="2">Tutor</option>
                             <option value="3">Supervisor</option>
@@ -149,7 +142,7 @@ function NewUserButton() {
                     <Button variant="danger" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }}>
+                    <Button variant="success" className="background-1" onClick={function () {createNewUser();  handleClose(); }}>
                         Create new user
                     </Button>
                 </Modal.Footer>

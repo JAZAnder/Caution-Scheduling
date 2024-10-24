@@ -95,10 +95,10 @@ function UserDetailsButton(user) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="danger" onClick={handleClose}>
+                    <Button variant="danger" onClick={handleClose} disabled={true}>
                         Delete User
                     </Button>
-                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }}>
+                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }} disabled={true}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

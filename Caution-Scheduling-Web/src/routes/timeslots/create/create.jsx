@@ -20,6 +20,45 @@ function NewTimeslotButton() {
     const [saturday, setSaturday] = useState(false)
     const [sunday, setSunday] = useState(false)
 
+    const createNewTimeslots = async () => {
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+      
+        const urlencoded = new URLSearchParams();
+        urlencoded.append('startTime', startTime);
+        urlencoded.append('endTime', endTime);
+        urlencoded.append('Monday', monday);
+        urlencoded.append('Tuesday', tuesday);
+        urlencoded.append('Wednesday', wednesday);
+        urlencoded.append('Thursday', thursday);
+        urlencoded.append('Friday', friday);
+        urlencoded.append('Saturday', saturday);
+        urlencoded.append('Sunday', sunday);
+      
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow',
+        };
+      
+        try {
+          const response = await fetch('/api/hours', requestOptions);
+      
+          if (!response.ok) {
+            throw new Error('Something Went Wrong');
+          }
+      
+          const data = await response.json();
+          //return data;
+
+        } catch (error) {
+            alert(error)
+          console.error('Error:', error);
+          throw new Error('Error');
+        }
+      };
+
 
 
     return (
@@ -43,7 +82,7 @@ function NewTimeslotButton() {
                         <Form.Control
                             type="text"
                             value={startTime}
-                            onChange={(e) => setEndTime(e.target.value)}
+                            onChange={(e) => setStartTime(e.target.value)}
                             placeholder="Start Time"
                         />
                     </Form.Group>
@@ -69,7 +108,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="monday"
                             value={monday}
-                            onChange={(e) => setMonday(e.target.value)}
+                            onChange={(e) => setMonday(!monday)}
                         />
                         <Form.Check
                             inline
@@ -78,7 +117,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="tuesday"
                             value={tuesday}
-                            onChange={(e) => setTuesday(e.target.value)}
+                            onChange={(e) => setTuesday(!tuesday)}
                         />
                         <Form.Check
                             inline
@@ -87,7 +126,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="wednesday"
                             value={wednesday}
-                            onChange={(e) => setWednesday(e.target.value)}
+                            onChange={(e) => setWednesday(!wednesday)}
                         />
                         <Form.Check
                             inline
@@ -96,7 +135,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="thursday"
                             value={thursday}
-                            onChange={(e) => setThursday(e.target.value)}
+                            onChange={(e) => setThursday(!thursday)}
                         />
                         <Form.Check
                             inline
@@ -105,7 +144,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="friday"
                             value={friday}
-                            onChange={(e) => setFriday(e.target.value)}
+                            onChange={(e) => setFriday(!friday)}
                         />
                         <Form.Check
                             inline
@@ -114,7 +153,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="saturday"
                             value={saturday}
-                            onChange={(e) => setSaturday(e.target.value)}
+                            onChange={(e) => setSaturday(!saturday)}
                         />
                         <Form.Check
                             inline
@@ -123,7 +162,7 @@ function NewTimeslotButton() {
                             type="checkbox"
                             id="sunday"
                             value={sunday}
-                            onChange={(e) => setSunday(e.target.value)}
+                            onChange={(e) => setSunday(!sunday)}
                         />
 
                     </Form.Group>
@@ -134,7 +173,7 @@ function NewTimeslotButton() {
                     <Button variant="danger" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }}>
+                    <Button variant="success" className="background-1" onClick={function () {createNewTimeslots(); handleClose();  }}>
                         Create new Timeslots
                     </Button>
                 </Modal.Footer>

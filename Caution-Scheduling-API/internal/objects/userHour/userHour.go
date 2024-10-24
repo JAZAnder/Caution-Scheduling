@@ -54,6 +54,27 @@ func (uh *UserHour) DeleteUserHourById(db *sql.DB) error {
 	return err
 }
 
+func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHours ,error){
+	rows, err := db.Query("SELECT uh.id, lu.Id As `userId`,lu.firstName, lu.lastName, h.Id As `hourId`, h.startTime, h.endTime, h.dayOfWeek  FROM userHours `uh` inner join localusers `lu` on uh.userId = lu.Id inner join hours `h` on uh.hourId = h.Id where lu.id = "+filter.TutorId+" OR h.id = "+filter.HourId+" OR h.dayOfWeek = "+filter.DayOfWeek+";")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	filteredResults := []TutorsAndHours{}
+
+	for rows.Next(){
+		var result TutorsAndHours
+		if err := rows.Scan(&result.Id, &result.TutorId,&result.FirstName,&result.LastName,&result.HourId,&result.StartTime,&result.EndTime,&result.DayOfWeek); err != nil{
+			return nil, err
+		}
+
+		filteredResults = append(filteredResults, result)
+	}
+
+	return filteredResults, nil
+}
+
 // // func (uh *UserHour) DeleteUserHour(db *sql.DB) error {
 // // 	query := "DELETE FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(uh.HourId) + "' AND `username` = '" + uh.Tutor + "'"
 // // 	_, err := db.Exec(query)
