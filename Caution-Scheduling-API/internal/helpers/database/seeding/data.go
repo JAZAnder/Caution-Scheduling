@@ -40,7 +40,7 @@ func seedUsers() {
 	}
 
 	//Seeding Student User
-	err = nil;
+	err = nil
 	var student user.LocalUser = user.LocalUser{
 		UserName:  "Student",
 		FirstName: "Normal",
@@ -61,7 +61,7 @@ func seedUsers() {
 	}
 
 	//Supervisor  User
-	err = nil;
+	err = nil
 	var supervisor user.LocalUser = user.LocalUser{
 		UserName:  "Supervisor",
 		FirstName: "Tutor",
@@ -82,7 +82,7 @@ func seedUsers() {
 	}
 
 	//Tutor  User
-	err = nil;
+	err = nil
 	var Tutor user.LocalUser = user.LocalUser{
 		UserName:  "Tutor",
 		FirstName: "School",
@@ -107,6 +107,31 @@ func seedUsers() {
 	timeSlot1 := hour.Hour{
 		StartTime: "7:00 AM",
 		EndTime: "8:00 AM",
+	err = nil
+	var anotherTutor user.LocalUser = user.LocalUser{
+		UserName:  "Tutor2",
+		FirstName: "Jane",
+		LastName:  "Doe",
+		FullName:  "Jane Doe",
+		Email:     "jane.doe@localhost.com",
+		Password:  "P@33word123!",
+		IsAdmin:   false,
+		Role:      2,
+	}
+
+	err = anotherTutor.SignUp(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", anotherTutor.UserName+" user is Created")
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	//Timeslot1
+	err = nil
+	timeSlot1 := hour.Hour{
+		StartTime: "9:00 AM",
+		EndTime:   "10:15 AM",
 		DayOfWeek: 1,
 	}
 
@@ -129,6 +154,13 @@ func seedUsers() {
 	users, _ :=user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor",})
 	userHour1.HourId = hours[0].Id
 	userHour1.TutorId, _ = strconv.Atoi(users[0].UserId) 
+	err = nil
+
+	userHour1 := userHour.UserHour{}
+
+	userHour1.Tutor = "School Tutor"
+	hours, _ := hour.GetHours(database)
+	userHour1.HourId = hours[0].Id
 
 	userHour1.CreateUserHour(database)
 
