@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
@@ -8,19 +7,19 @@ import axios from "axios";
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
-  const [startTime, setStartTime] = useState("");
+  const [startTime, setStartTime] = useState(null);
   const [endTimeOptions, setEndTimeOptions] = useState([]);
   const [endTime, setEndTime] = useState("");
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState("");
-  const [tutorTimeSlots, setTutorTimeSlots] = useState([]);
+  const [tutorAvailability, setTutorAvailability] = useState([]);
+  const [hours, setHours] = useState([]);
 
   useEffect(() => {
     const fetchTutors = async () => {
       try {
         const response = await axios.get("/api/lusers/tutors");
-        const tutors = response.data;
-        setTutors(tutors);
+        setTutors(response.data);
       } catch (error) {
         console.error("Error fetching tutors:", error);
       }
@@ -28,89 +27,111 @@ const ScheduleMeeting = ({ isAdmin }) => {
     fetchTutors();
   }, []);
 
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        const response = await axios.get("/api/hours");
+        setHours(response.data);
+      } catch (error) {
+        console.error("Error fetching hours:", error);
+      }
+    };
+    fetchHours();
+  }, []);
+
   const isWeekday = (date) => {
     const day = date.getDay();
     return day >= 1 && day <= 4;
   };
 
-  const generateTimeSlots = () => {
-    const times = [];
-    let start = new Date();
-    start.setHours(9, 30, 0, 0);
-
-    let end = new Date();
-    end.setHours(21, 0, 0, 0);
-
-    while (start <= end) {
-      times.push(new Date(start));
-      start.setMinutes(start.getMinutes() + 15);
-    }
-    return times;
-  };
-
-  const availableStartTimes = generateTimeSlots().map((time) =>
-    time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  );
-
-  const getAvailableStartTimesForTutor = () => {
+  const getAvailableHoursForTutor = () => {
     if (!selectedTutor) {
-      return availableStartTimes;
+      return [];
     }
-    return availableStartTimes.filter((time) => {
-      const timeSlot = tutorTimeSlots.find(
-        (slot) => slot.startTime === time && slot.available
-      );
-      return timeSlot !== undefined;
-    });
+
+    const availableHourIds = tutorAvailability
+      .filter((slot) => slot.available)
+      .map((slot) => slot.hourId);
+
+    return hours.filter((hour) => availableHourIds.includes(hour.id));
   };
 
-  const filteredStartTimes = getAvailableStartTimesForTutor();
+  const filteredHours = getAvailableHoursForTutor();
 
   const handleTutorChange = async (e) => {
-    const selectedTutor = e.target.value;
-    setSelectedTutor(selectedTutor);
+    const selectedTutorId = e.target.value;
+    setSelectedTutor(selectedTutorId);
 
     try {
-      const response = await axios.get(`/api/tutor/hours/${selectedTutor}`);
-      const timeSlots = response.data;
-      setTutorTimeSlots(timeSlots);
+      const response = await axios.get(`/api/availability/${selectedTutorId}`);
+      setTutorAvailability(response.data);
     } catch (error) {
-      console.error("Error fetching time slots:", error);
+      console.error("Error fetching tutor availability:", error);
     }
+  };
+
+  const parseTime = (timeStr) => {
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) {
+      hours += 12;
+    }
+    if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    return hours * 60 + minutes;
+  };
+
+  const formatTime = (totalMinutes) => {
+    let hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${hours < 10 ? "0" : ""}${hours}:${
+      minutes < 10 ? "0" : ""
+    }${minutes} ${ampm}`;
   };
 
   const handleTimeSlotChange = (event) => {
-    const selectedStartTime = event.target.value;
-    setStartTime(selectedStartTime);
+    const selectedHourId = parseInt(event.target.value, 10);
+    setStartTime(selectedHourId);
 
-    const [hours, minutes, period] = selectedStartTime.split(/[: ]/);
-    let startHour = parseInt(hours, 10);
-    if (period === "PM" && startHour !== 12) {
-      startHour += 12;
-    } else if (period === "AM" && startHour === 12) {
-      startHour = 0;
+    console.log("Selected Hour ID:", selectedHourId, typeof selectedHourId);
+    console.log("Hours Data:", hours);
+
+    const selectedHour = hours.find((hour) => hour.id === selectedHourId);
+
+    console.log("Selected Hour:", selectedHour);
+
+    if (selectedHour) {
+      const selectedStartTimeInMinutes = parseTime(selectedHour.startTime);
+      const tutorEndTimeInMinutes = parseTime(selectedHour.endTime);
+      const maxDurationMinutes = 120;
+      const increment = 15;
+
+      const newEndOptions = [];
+      for (
+        let time = selectedStartTimeInMinutes + increment;
+        time <= Math.min(
+          selectedStartTimeInMinutes + maxDurationMinutes,
+          tutorEndTimeInMinutes
+        );
+        time += increment
+      ) {
+        newEndOptions.push(formatTime(time));
+      }
+
+      console.log("End Time Options:", newEndOptions);
+
+      setEndTimeOptions(newEndOptions);
+      setEndTime(newEndOptions[0] || "");
+    } else {
+      setEndTimeOptions([]);
+      setEndTime("");
     }
-
-    const start = new Date();
-    start.setHours(startHour, parseInt(minutes, 10));
-
-    const newEndOptions = [];
-    let nextSlot = new Date(start);
-    for (let i = 15; i <= 60; i += 15) {
-      nextSlot = new Date(start);
-      nextSlot.setMinutes(start.getMinutes() + i);
-      if (
-        nextSlot.getHours() > 21 ||
-        (nextSlot.getHours() === 21 && nextSlot.getMinutes() > 0)
-      )
-        break;
-      newEndOptions.push(
-        nextSlot.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      );
-    }
-
-    setEndTimeOptions(newEndOptions);
-    setEndTime(newEndOptions[0] || "");
   };
 
   return (
@@ -130,17 +151,17 @@ const ScheduleMeeting = ({ isAdmin }) => {
         />
         <div className="time-selection">
           <select
-            value={startTime}
+            value={startTime || ""}
             onChange={handleTimeSlotChange}
             className="input-field time-select"
-            disabled={!selectedTutor} // Disable until a tutor is selected
+            disabled={!selectedTutor || !hours.length}
           >
             <option value="" disabled>
               Select start time
             </option>
-            {filteredStartTimes.map((time, index) => (
-              <option key={index} value={time}>
-                {time}
+            {filteredHours.map((hour) => (
+              <option key={hour.id} value={hour.id}>
+                {hour.startTime}
               </option>
             ))}
           </select>
@@ -168,8 +189,8 @@ const ScheduleMeeting = ({ isAdmin }) => {
           <option value="" disabled>
             Select a Tutor
           </option>
-          {tutors.map((tutor, index) => (
-            <option key={tutor.userId || index} value={tutor.userName}>
+          {tutors.map((tutor) => (
+            <option key={tutor.userId} value={tutor.userId}>
               {tutor.fullName}
             </option>
           ))}

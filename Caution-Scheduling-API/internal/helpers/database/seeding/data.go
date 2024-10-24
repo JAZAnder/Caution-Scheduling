@@ -105,8 +105,8 @@ func seedUsers() {
 	//Timeslot1  User
 	err = nil
 	timeSlot1 := hour.Hour{
-		StartTime: "9:00 AM",
-		EndTime:   "10:15 AM",
+		StartTime: "10:30 AM",
+		EndTime:   "12:15 PM",
 		DayOfWeek: 1,
 	}
 
