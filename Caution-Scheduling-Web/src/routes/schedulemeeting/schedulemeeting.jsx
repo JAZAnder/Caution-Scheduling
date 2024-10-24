@@ -11,27 +11,47 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const [endTimeOptions, setEndTimeOptions] = useState([]);
   const [endTime, setEndTime] = useState("");
   const [tutors, setTutors] = useState([]);
+  const [availableTutors, setAvailableTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState("");
   const [tutorAvailability, setTutorAvailability] = useState([]);
+  const [tutorsAvailabilityMap, setTutorsAvailabilityMap] = useState({});
   const [hours, setHours] = useState([]);
 
   useEffect(() => {
-    const fetchTutors = async () => {
+    const fetchTutorsAndAvailability = async () => {
       try {
-        const response = await axios.get("/api/lusers/tutors");
-        setTutors(response.data);
+        const tutorsResponse = await axios.get("/api/lusers/tutors");
+        const tutorsData = tutorsResponse.data;
+        setTutors(tutorsData);
+
+        const availabilityPromises = tutorsData.map((tutor) =>
+          axios.get(`/api/availability/${tutor.userId}`).then((res) => ({
+            tutorId: tutor.userId,
+            availability: res.data,
+          }))
+        );
+
+        const availabilityResults = await Promise.all(availabilityPromises);
+
+        const availabilityMap = {};
+        availabilityResults.forEach((result) => {
+          availabilityMap[result.tutorId] = result.availability;
+        });
+
+        setTutorsAvailabilityMap(availabilityMap);
       } catch (error) {
-        console.error("Error fetching tutors:", error);
+        console.error("Error fetching tutors or their availability:", error);
       }
     };
-    fetchTutors();
+
+    fetchTutorsAndAvailability();
   }, []);
 
   useEffect(() => {
     const fetchHours = async () => {
       try {
         const response = await axios.get("/api/hours");
-        console.log("Hours Data:", response.data); 
+        console.log("Hours Data:", response.data);
         setHours(response.data);
       } catch (error) {
         console.error("Error fetching hours:", error);
@@ -40,15 +60,75 @@ const ScheduleMeeting = ({ isAdmin }) => {
     fetchHours();
   }, []);
 
+  useEffect(() => {
+    if (
+      selectedDate &&
+      tutors.length > 0 &&
+      Object.keys(tutorsAvailabilityMap).length > 0 &&
+      hours.length > 0
+    ) {
+      const jsDayOfWeek = selectedDate.getDay();
+
+      const dayOfWeekMap = {
+        1: 1, // Monday
+        2: 2, // Tuesday
+        3: 3, // Wednesday
+        4: 4, // Thursday
+      };
+
+      const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
+
+      if (!dayOfWeek) {
+        setAvailableTutors([]);
+        return;
+      }
+
+      const tutorsAvailableOnDate = tutors.filter((tutor) => {
+        const availability = tutorsAvailabilityMap[tutor.userId];
+        if (!availability) return false;
+
+        const availableHourIds = availability
+          .filter((slot) => slot.available)
+          .map((slot) => slot.hourId);
+
+        const availableHours = hours.filter(
+          (hour) => availableHourIds.includes(hour.id) && hour.dayOfWeek === dayOfWeek
+        );
+
+        return availableHours.length > 0;
+      });
+
+      setAvailableTutors(tutorsAvailableOnDate);
+    } else {
+      setAvailableTutors([]);
+    }
+  }, [selectedDate, tutors, tutorsAvailabilityMap, hours]);
+
   const isWeekday = (date) => {
     const day = date.getDay();
-    return day >= 1 && day <= 4;
+    return day >= 1 && day <= 4; // Monday to Thursday
   };
 
   const getAvailableHoursForTutor = () => {
-    if (!selectedTutor) {
+    if (!selectedTutor || !selectedDate) {
       return [];
     }
+
+    const jsDayOfWeek = selectedDate.getDay();
+    const dayOfWeekMap = {
+      1: 1, // Monday
+      2: 2, // Tuesday
+      3: 3, // Wednesday
+      4: 4, // Thursday
+    };
+
+    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
+
+    if (!dayOfWeek) {
+      return [];
+    }
+
+    const hoursForDay = hours.filter((hour) => hour.dayOfWeek === dayOfWeek);
 
     const availableHourIds = tutorAvailability
       .filter((slot) => slot.available)
@@ -56,26 +136,23 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
     console.log("Available Hour IDs:", availableHourIds);
 
-    const availableHours = hours.filter((hour) => availableHourIds.includes(hour.id));
+    const availableHours = hoursForDay.filter((hour) =>
+      availableHourIds.includes(hour.id)
+    );
 
-    console.log("Available Hours:", availableHours); 
+    console.log("Available Hours:", availableHours);
 
     return availableHours;
   };
 
   const filteredHours = getAvailableHoursForTutor();
 
-  const handleTutorChange = async (e) => {
+  const handleTutorChange = (e) => {
     const selectedTutorId = e.target.value;
     setSelectedTutor(selectedTutorId);
 
-    try {
-      const response = await axios.get(`/api/availability/${selectedTutorId}`);
-      console.log("Tutor Availability Data:", response.data);
-      setTutorAvailability(response.data);
-    } catch (error) {
-      console.error("Error fetching tutor availability:", error);
-    }
+    const availability = tutorsAvailabilityMap[selectedTutorId] || [];
+    setTutorAvailability(availability);
   };
 
   const handleTimeSlotChange = (event) => {
@@ -133,7 +210,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
   return (
     <>
-    <div style={{ minHeight: "230px" }}> Black Space?</div>
+      <div style={{ minHeight: "230px" }}> Black Space?</div>
       <Background />
       <div className="container">
         {isAdmin && (
@@ -141,7 +218,14 @@ const ScheduleMeeting = ({ isAdmin }) => {
         )}
         <DatePicker
           selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
+          onChange={(date) => {
+            setSelectedDate(date);
+            setSelectedTutor("");
+            setStartTime(null);
+            setEndTime("");
+            setEndTimeOptions([]);
+            setTutorAvailability([]);
+          }}
           filterDate={isWeekday}
           placeholderText="Select a date"
           className="input-field"
@@ -150,11 +234,12 @@ const ScheduleMeeting = ({ isAdmin }) => {
           value={selectedTutor}
           onChange={handleTutorChange}
           className="input-field"
+          disabled={!availableTutors.length}
         >
           <option value="" disabled>
             Select a Tutor
           </option>
-          {tutors.map((tutor) => (
+          {availableTutors.map((tutor) => (
             <option key={tutor.userId} value={tutor.userId}>
               {tutor.fullName}
             </option>
@@ -165,7 +250,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
             value={startTime || ""}
             onChange={handleTimeSlotChange}
             className="input-field time-select"
-            disabled={!selectedTutor || !tutorAvailability.length}
+            disabled={!selectedTutor || !tutorAvailability.length || !selectedDate}
           >
             <option value="" disabled>
               Select start time
