@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(170deg, #059669, #1a5632);
+  background: #1a5632;
   border: 2px solid gray;
   border-radius: 10px;
   margin: 20px;
@@ -84,7 +84,7 @@
   border: 1px solid gray;
   padding: 10px;
   text-align: center;
-  color: white;
+  color: #5f5656;
 }
 
 .timeslots-details-button {
@@ -96,7 +96,7 @@
 }
 
 .timeslots-tablerow{
-  background-color: #4f7d4f;
+  background-color: #ffffff;
 }
 
 @media (max-width: 900px) {
