@@ -3,7 +3,6 @@ package users
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -61,57 +60,6 @@ func whoami(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusOK, dto)
 }
 
-func createLocalUser(w http.ResponseWriter, r *http.Request) {
-	var u user.LocalUser
-	var c user.SessionCookie
-	fmt.Println("CreateLocalUser - POST")
-	u.UserName = r.PostFormValue("userName")
-	u.FirstName = r.PostFormValue("firstName")
-	u.LastName = r.PostFormValue("lastName")
-	u.Email = r.PostFormValue("email")
-	u.Password = r.PostFormValue("password")
-	u.IsAdmin, _ = strconv.ParseBool(r.PostFormValue("isAdmin"))
-
-	cookie, err := r.Cookie("key")
-	if err != nil {
-		if errors.Is(err, http.ErrNoCookie) {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
-
-	c.Cookie = cookie.Value
-
-	currentUser, err := c.CheckSession(database)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
-
-	if !currentUser.IsAdmin {
-		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
-		return
-	}
-	if helpers.IllegalString(u.UserName) || len(u.Password) <= 0 || helpers.IllegalString(u.FirstName) || helpers.IllegalString(u.LastName) || helpers.IllegalString(u.Email) {
-		responses.RespondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
-		return
-	}
-	err = u.SignUp(database)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	fmt.Println("	User Created by " + currentUser.UserName)
-	responses.RespondWithJSON(w, http.StatusCreated, u)
-}
 
 
 
@@ -219,100 +167,100 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	u.ChangePassword(database)
 	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
 }
-func addTime(w http.ResponseWriter, r *http.Request) {
-	var c user.SessionCookie
-	var uh userHour.UserHour
-	cookie, err := r.Cookie("key")
-	if err != nil {
-		if errors.Is(err, http.ErrNoCookie) {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
+// func addTime(w http.ResponseWriter, r *http.Request) {
+// 	var c user.SessionCookie
+// 	var uh userHour.UserHour
+// 	cookie, err := r.Cookie("key")
+// 	if err != nil {
+// 		if errors.Is(err, http.ErrNoCookie) {
+// 			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+// 			return
+// 		} else {
+// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 			return
+// 		}
+// 	}
 
-	c.Cookie = cookie.Value
+// 	c.Cookie = cookie.Value
 
-	currentUser, err := c.CheckSession(database)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
+// 	currentUser, err := c.CheckSession(database)
+// 	if err != nil {
+// 		if err == sql.ErrNoRows {
+// 			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+// 			return
+// 		} else {
+// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 			return
+// 		}
+// 	}
 
-	uh.Tutor = currentUser.UserName
-	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId"))
-	if err != nil {
-		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
-		return
-	}
+// 	uh.Tutor = currentUser.UserName
+// 	uh.HourId, err = strconv.Atoi(r.PostFormValue("hourId"))
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+// 		return
+// 	}
 
-	err = uh.CreateUserHour(database)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	uh.Available = true
+// 	err = uh.CreateUserHour(database)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	uh.Available = true
 
-	responses.RespondWithJSON(w, http.StatusCreated, uh)
-}
+// 	responses.RespondWithJSON(w, http.StatusCreated, uh)
+// }
 
-func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
-	var c user.SessionCookie
-	var uh userHour.UserHour
-	cookie, err := r.Cookie("key")
-	if err != nil {
-		if errors.Is(err, http.ErrNoCookie) {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
+// func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
+// 	var c user.SessionCookie
+// 	var uh userHour.UserHour
+// 	cookie, err := r.Cookie("key")
+// 	if err != nil {
+// 		if errors.Is(err, http.ErrNoCookie) {
+// 			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+// 			return
+// 		} else {
+// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 			return
+// 		}
+// 	}
 
-	c.Cookie = cookie.Value
+// 	c.Cookie = cookie.Value
 
-	currentUser, err := c.CheckSession(database)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-			return
-		} else {
-			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-	}
+// 	currentUser, err := c.CheckSession(database)
+// 	if err != nil {
+// 		if err == sql.ErrNoRows {
+// 			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+// 			return
+// 		} else {
+// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 			return
+// 		}
+// 	}
 
-	if !currentUser.IsAdmin {
-		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
-		return
-	}
+// 	if !currentUser.IsAdmin {
+// 		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+// 		return
+// 	}
 
-	hourId := r.PostFormValue("hourId")
-	uh.HourId, err = strconv.Atoi(hourId)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
-		return
-	}
-	uh.Tutor = r.PostFormValue("username")
+// 	hourId := r.PostFormValue("hourId")
+// 	uh.HourId, err = strconv.Atoi(hourId)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
+// 		return
+// 	}
+// 	uh.Tutor = r.PostFormValue("username")
 
-	err = uh.CreateUserHour(database)
+// 	err = uh.CreateUserHour(database)
 
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	uh.Available = true
-	responses.RespondWithJSON(w, http.StatusCreated, uh)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	uh.Available = true
+// 	responses.RespondWithJSON(w, http.StatusCreated, uh)
 
-}
+// }
 func removeTime() {
 	//TODORemove-Time-Userhour
 
@@ -367,30 +315,30 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusOK, uh)
 
 }
-func getluserTime(w http.ResponseWriter, r *http.Request) {
-	var uh userHour.UserHour
-	vars := mux.Vars(r)
-	uh.Tutor = vars["username"]
+// func getluserTime(w http.ResponseWriter, r *http.Request) {
+// 	var uh userHour.UserHour
+// 	vars := mux.Vars(r)
+// 	uh.Tutor = vars["username"]
 
-	userHours, err := uh.GetHours(database)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	responses.RespondWithJSON(w, http.StatusOK, userHours)
-}
-func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
-	var uh userHour.UserHour
-	vars := mux.Vars(r)
-	uh.Tutor = vars["username"]
+// 	userHours, err := uh.GetHours(database)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	responses.RespondWithJSON(w, http.StatusOK, userHours)
+// }
+// func getluserAvalibleTime(w http.ResponseWriter, r *http.Request) {
+// 	var uh userHour.UserHour
+// 	vars := mux.Vars(r)
+// 	uh.Tutor = vars["username"]
 
-	userHours, err := uh.GetAvailableHours(database)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	responses.RespondWithJSON(w, http.StatusOK, userHours)
-}
+// 	userHours, err := uh.GetAvailableHours(database)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	responses.RespondWithJSON(w, http.StatusOK, userHours)
+// }
 
 func getUserHourById(w http.ResponseWriter, r *http.Request) {
 	var uh userHour.UserHour
@@ -412,14 +360,14 @@ func getUserHourById(w http.ResponseWriter, r *http.Request) {
 	responses.RespondWithJSON(w, http.StatusCreated, uh)
 }
 
-func getAllUserHours(w http.ResponseWriter, r *http.Request) {
-	userHours, err := userHour.GetUserHours(database)
-	if err != nil {
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	responses.RespondWithJSON(w, http.StatusOK, userHours)
-}
+// func getAllUserHours(w http.ResponseWriter, r *http.Request) {
+// 	userHours, err := userHour.GetUserHours(database)
+// 	if err != nil {
+// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	responses.RespondWithJSON(w, http.StatusOK, userHours)
+// }
 
 func getUserInfo(w http.ResponseWriter, r *http.Request) {
 	var u user.LocalUser

@@ -21,6 +21,15 @@ type LocalUser struct {
 	Settings   userSettings
 }
 
+type CreateLocalUserDto struct {
+	UserName   string `json:"userName"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Role       string `json:"role"`
+}
+
 type SQLLocalUser struct {
 	UserId string `json:"userId"`
 	GoogleId   string `json:"googleId"`

@@ -1,7 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 import './users.css';
-import useFetch from "use-http";
+import useFetch, { CachePolicies } from "use-http";
 import React, { useEffect, useState } from "react";
 import UserDetailsButton from "./details/details";
 import NewUserButton from "./create/create";
@@ -21,9 +21,10 @@ function ManageUsers() {
     setDebounce(!debounce);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getData = setTimeout(() => {
       setDebounce(!debounce);
+      console.log("Should Be Refresh");
     }, 100);
     return () => clearTimeout(getData);
   }, [userName, firstName, lastName, email, role]);
@@ -34,6 +35,8 @@ function ManageUsers() {
     setLastName('');
     setEmail('');
     setRole('');
+    
+    console.log("Should Be Refresh");
     setDebounce(!debounce);
   };
 
@@ -92,7 +95,7 @@ function ManageUsers() {
           </form>
           <NewUserButton />
         </div>
-
+        
         <ListFilteredUser
           FLuserName={userName}
           FLfirstName={firstName}
@@ -101,6 +104,7 @@ function ManageUsers() {
           FLrole={role}
           debounce={debounce}
         />
+
       </div>
     </>
   );

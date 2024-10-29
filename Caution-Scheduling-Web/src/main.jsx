@@ -24,6 +24,7 @@ import Labs from './routes/labs/labs.jsx'
 import Timeslots from './routes/timeslots/timeslots.jsx'
 import MyMeetings from './routes/my-meetings/my-meetings.jsx'
 import MyAvailability from './routes/my-availability/my-availability.jsx'
+import UserTimeslots from './routes/usertimeslots/usertimeslots'
 
 
 const router = createBrowserRouter([
@@ -88,6 +89,9 @@ const router = createBrowserRouter([
       {
         path: "my-availability",
         element: <MyAvailability />
+      },{
+        path: "user-timeslots",
+        element: <UserTimeslots/>
       }
     ]
   }
