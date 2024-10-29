@@ -87,6 +87,13 @@
   color: #5f5656;
 }
 
+.timeslots-table tr:nth-child(even) td {
+  color: #ffffff; 
+}
+.timeslots-table tr:nth-child(odd) td {
+  color: #ffffff; 
+}
+
 .timeslots-details-button {
   padding: 5px 10px;
   cursor: pointer;

@@ -95,11 +95,15 @@
 }
 
 .manage-users-page .table-with-bordered th {
-  background-color:  #ffffff;
+  background-color: #ffffff;
 }
 
-.manage-users-page .table-with-bordered tr:nth-child(even) {
-  background-color: #004d00;
+.manage-users-page .table-with-bordered tr:nth-child(odd) td {
+  color: #ffffff;
+}
+
+.manage-users-page .table-with-bordered tr:nth-child(even) td {
+  color: #ffffff;
 }
 
 .manage-users-page .loader {
