@@ -31,20 +31,3 @@ func getTutorsAvailability(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func getEverythingByFilter(w http.ResponseWriter, r *http.Request) {
-
-	//TODO Filter By Things 
-	filter := userHour.TutorsAndHours{}
-
-	
-	UsersAndTimeSlots, err := userHour.GetUserTimeslotByFilter(database, filter)
-
-
-	if err != nil {
-		//TODO Return non Generic Error
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	responses.RespondWithJSON(w, http.StatusOK, UsersAndTimeSlots)
-}
