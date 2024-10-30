@@ -59,10 +59,12 @@ func createDatabase() {
 		log.Fatal(err)
 	}
 
+	db.DB.SetMaxOpenConns(100)
+
 	logger.LogSetUpDb(1, db.DB)
 
 
-	//seeding.ResetDataTables(db.DB, "TestMcGee")
+	seeding.ResetDataTables(db.DB, "TestMcGee")
 	seeding.CreateTables(db.DB)
 	seeding.SetupConstraints(db.DB)
 	seeding.SeedData(db.DB)
