@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+
 )
 
 func CreateTables(db *sql.DB) {
@@ -88,10 +89,12 @@ func createGlobalSettingsTable() {
 func createHoursTable() {
 	query := "CREATE TABLE IF NOT EXISTS hours(" +
 		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`timeCode` INT NOT NULL," +
 		"`startTime` varchar(255) NOT NULL," +
 		"`endTime` varchar(225) NOT NULL," +
 		"`dayOfWeek` int DEFAULT NULL," +
-		"`active` boolean DEFAULT 0);"
+		"`active` boolean DEFAULT 0, "+
+		"UNIQUE INDEX `timeCode_UNIQUE` (`timeCode` ASC) VISIBLE);"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating hours table")
 

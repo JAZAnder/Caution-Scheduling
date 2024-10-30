@@ -86,7 +86,7 @@ func (h *Hour) UpdateHour(db *sql.DB) error{
 }
 
 func (h *Hour) CreateHour(db *sql.DB) error{
-	query := "INSERT INTO `hours` (`startTime`, `endTime`, `dayOfWeek`) VALUES ('"+h.StartTime+"','"+h.EndTime+"','"+strconv.Itoa(h.DayOfWeek)+"')"
+	query := "INSERT INTO `hours` (`timeCode`,`startTime`, `endTime`, `dayOfWeek`) VALUES ('"+strconv.Itoa(h.TimeCode)+"','"+h.StartTime+"','"+h.EndTime+"','"+strconv.Itoa(h.DayOfWeek)+"')"
 	err := db.QueryRow(query)
 
 	if err != nil{
