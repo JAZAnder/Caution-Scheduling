@@ -94,7 +94,7 @@ func createHoursTable() {
 		"`endTime` varchar(225) NOT NULL," +
 		"`dayOfWeek` int DEFAULT NULL," +
 		"`active` boolean DEFAULT 0, "+
-		"UNIQUE INDEX `timeCode_UNIQUE` (`timeCode` ASC) VISIBLE);"
+		"UNIQUE INDEX `timeCode_UNIQUE` (`timeCode`, `dayOfWeek`));"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating hours table")
 
