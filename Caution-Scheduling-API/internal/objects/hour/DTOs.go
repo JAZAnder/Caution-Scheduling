@@ -6,6 +6,7 @@ type Hour struct{
 	StartTime string `json:"startTime"`
 	EndTime string `json:"endTime"`
 	DayOfWeek int `json:"dayOfWeek"`
+	Active bool `json:"active"`
 }
 
 type FilterHour struct{
@@ -15,6 +16,13 @@ type FilterHour struct{
 	DayOfWeek string `json:"dayOfWeek"`
 }
 
+type SQLHour struct{
+	TimeCode string `json:"timeCode"`
+	StartTime string `json:"startTime"`
+	EndTime string `json:"endTime"`
+	DayOfWeek string `json:"dayOfWeek"`
+	Active string `json:"active"`
+}
 
 type TimeslotsMultiDay struct{
 	StartTime string `json:"startTime"`

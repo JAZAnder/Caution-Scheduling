@@ -113,12 +113,12 @@ func (h *Hour) CreateHour(db *sql.DB) error {
 	return nil
 }
 
-func MassCreateHour(db *sql.DB, timeslots []Hour) error {
+func MassCreateHour(db *sql.DB, timeslots []SQLHour) error {
 
-	query := "INSERT INTO `hours` (`timeCode`,`startTime`, `endTime`, `dayOfWeek`) VALUES "
+	query := "INSERT INTO `hours` (`timeCode`,`startTime`, `endTime`, `dayOfWeek`, `active`) VALUES "
 
 	for _, timeslot := range timeslots {
-		sqlString := "('" + strconv.Itoa(timeslot.TimeCode) + "','" + timeslot.StartTime + "','" + timeslot.EndTime + "','" + strconv.Itoa(timeslot.DayOfWeek) + "'),"
+		sqlString := "('" + timeslot.TimeCode + "','" + timeslot.StartTime + "','" + timeslot.EndTime + "','" + timeslot.DayOfWeek + "', '"+timeslot.Active+"'),"
 		query = query + sqlString
 	}
 	query = strings.TrimRight(query, ",")

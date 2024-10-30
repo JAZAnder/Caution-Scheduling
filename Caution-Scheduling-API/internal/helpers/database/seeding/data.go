@@ -2,7 +2,7 @@ package seeding
 
 import (
 	"database/sql"
-	"strconv"	
+	"strconv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
@@ -104,30 +104,17 @@ func seedUsers() {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
 
-	//Timeslot1  User
-	err = nil
-	timeSlot1 := hour.Hour{
-		StartTime: "10:15 AM",
-		EndTime:   "12:30 PM",
-		DayOfWeek: 1,
-	}
-
-	err = timeSlot1.CreateHour(database)
-
-	if err == nil {
-		logger.Log(2, "database", "Seeding Data", "System", timeSlot1.StartTime+" - "+timeSlot1.EndTime+" Timeslot is Created")
-	} else {
-		logger.Log(3, "database", "Seeding Data", "System", err.Error())
-	}
-
 	//Assign Tutor to Timeslot1
 	err = nil
 
 	userHour1 := userHour.UserHour{}
 
-	hours, _ := hour.GetHours(database)
+	hour, _ := hour.GetHourByTimeCodeAndDay(database, hour.FilterHour{
+		DayOfWeek: "1",
+		TimeCode:  "9150930",
+	})
 	users, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor2"})
-	userHour1.HourId = hours[0].Id
+	userHour1.HourId = hour.Id
 	userHour1.TutorId, _ = strconv.Atoi(users[0].UserId)
 
 	userHour1.CreateUserHour(database)
@@ -141,318 +128,382 @@ func seedUsers() {
 }
 
 func seedTimeSlots() {
-	timeSlots := [...]hour.Hour{
+	timeSlots := []hour.Hour{
 		{
 			TimeCode:  7000715,
 			StartTime: "7:00 AM",
 			EndTime:   "7:15 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  7150730,
 			StartTime: "7:15 AM",
 			EndTime:   "7:30 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  7300745,
 			StartTime: "7:30 AM",
 			EndTime:   "7:45 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  7450800,
 			StartTime: "7:45 AM",
 			EndTime:   "8:00 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  8000815,
 			StartTime: "8:00 AM",
 			EndTime:   "8:15 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  8150830,
 			StartTime: "8:15 AM",
 			EndTime:   "8:30 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  8300845,
 			StartTime: "8:30 AM",
 			EndTime:   "8:45 AM",
+			Active:    false,
 		},
 		{
 			TimeCode:  8450900,
 			StartTime: "8:45 AM",
 			EndTime:   "9:00 AM",
+			Active:    false,
 		}, {
 			TimeCode:  9000915,
 			StartTime: "9:00 AM",
 			EndTime:   "9:15 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  9150930,
 			StartTime: "9:15 AM",
 			EndTime:   "9:30 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  9300945,
 			StartTime: "9:30 AM",
 			EndTime:   "9:45 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  9451000,
 			StartTime: "9:45 AM",
 			EndTime:   "10:00 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  10001015,
 			StartTime: "10:00 AM",
 			EndTime:   "10:15 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  10151030,
 			StartTime: "10:15 AM",
 			EndTime:   "10:30 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  10301045,
 			StartTime: "10:30 AM",
 			EndTime:   "10:45 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  10451100,
 			StartTime: "10:45 AM",
 			EndTime:   "11:00 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  11001115,
 			StartTime: "11:00 AM",
 			EndTime:   "11:15 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  11151130,
 			StartTime: "11:15 AM",
 			EndTime:   "11:30 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  11301145,
 			StartTime: "11:30 AM",
 			EndTime:   "11:45 AM",
+			Active:    true,
 		},
 		{
 			TimeCode:  11451200,
 			StartTime: "11:45 AM",
 			EndTime:   "12:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  12001215,
 			StartTime: "12:00 PM",
 			EndTime:   "12:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  12151230,
 			StartTime: "12:15 PM",
 			EndTime:   "12:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  12301245,
 			StartTime: "12:30 PM",
 			EndTime:   "12:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  12451300,
 			StartTime: "12:45 PM",
 			EndTime:   "1:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  13001315,
 			StartTime: "1:00 PM",
 			EndTime:   "1:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  13151330,
 			StartTime: "1:15 PM",
 			EndTime:   "1:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  13301345,
 			StartTime: "1:30 PM",
 			EndTime:   "1:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  13451400,
 			StartTime: "1:45 PM",
 			EndTime:   "2:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  14001415,
 			StartTime: "2:00 PM",
 			EndTime:   "2:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  14151430,
 			StartTime: "2:15 PM",
 			EndTime:   "2:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  14301445,
 			StartTime: "2:30 PM",
 			EndTime:   "2:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  14451500,
 			StartTime: "2:45 PM",
 			EndTime:   "3:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  15001515,
 			StartTime: "3:00 PM",
 			EndTime:   "3:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  15151530,
 			StartTime: "3:15 PM",
 			EndTime:   "3:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  15301545,
 			StartTime: "3:30 PM",
 			EndTime:   "3:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  15451600,
 			StartTime: "3:45 PM",
 			EndTime:   "4:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  16001615,
 			StartTime: "4:00 PM",
 			EndTime:   "4:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  16151630,
 			StartTime: "4:15 PM",
 			EndTime:   "4:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  16301645,
 			StartTime: "4:30 PM",
 			EndTime:   "4:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  16451700,
 			StartTime: "4:45 PM",
 			EndTime:   "5:00 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  17001715,
 			StartTime: "5:00 PM",
 			EndTime:   "5:15 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  17151730,
 			StartTime: "5:15 PM",
 			EndTime:   "5:30 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  17301745,
 			StartTime: "5:30 PM",
 			EndTime:   "5:45 PM",
+			Active:    true,
 		},
 		{
 			TimeCode:  17451800,
 			StartTime: "5:45 PM",
 			EndTime:   "6:00 PM",
+			Active:    true,
 		}, {
 			TimeCode:  18001815,
 			StartTime: "6:00 PM",
 			EndTime:   "6:15 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  18151830,
 			StartTime: "6:15 PM",
 			EndTime:   "6:30 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  18301845,
 			StartTime: "6:30 PM",
 			EndTime:   "6:45 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  18451900,
 			StartTime: "6:45 PM",
 			EndTime:   "7:00 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  19001915,
 			StartTime: "7:00 PM",
 			EndTime:   "7:15 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  19151930,
 			StartTime: "7:15 PM",
 			EndTime:   "7:30 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  19301945,
 			StartTime: "7:30 PM",
 			EndTime:   "7:45 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  19452000,
 			StartTime: "7:45 PM",
 			EndTime:   "8:00 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  20002015,
 			StartTime: "8:00 PM",
 			EndTime:   "8:15 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  20152030,
 			StartTime: "8:15 PM",
 			EndTime:   "8:30 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  20302045,
 			StartTime: "8:30 PM",
 			EndTime:   "8:45 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  20452100,
 			StartTime: "8:45 PM",
 			EndTime:   "9:00 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  21002115,
 			StartTime: "9:00 PM",
 			EndTime:   "9:15 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  21152130,
 			StartTime: "9:15 PM",
 			EndTime:   "9:30 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  21302145,
 			StartTime: "9:30 PM",
 			EndTime:   "9:45 PM",
+			Active:    false,
 		},
 		{
 			TimeCode:  21452200,
 			StartTime: "9:45 PM",
 			EndTime:   "10:00 PM",
+			Active:    false,
 		},
 	}
-	
-
 
 	for dayOfWeek := 1; dayOfWeek <= 5; dayOfWeek++ {
-		timeslotsWithDays := []hour.Hour{}
-		
+		timeslotsWithDays := []hour.SQLHour{}
+
 		for _, timeSlot := range timeSlots {
-			newTimeslot := hour.Hour{
-				TimeCode: timeSlot.TimeCode,
+			newTimeslot := hour.SQLHour{
 				StartTime: timeSlot.StartTime,
-				EndTime: timeSlot.EndTime,
-				DayOfWeek: dayOfWeek,
+				EndTime:   timeSlot.EndTime,
+			}
+
+			newTimeslot.TimeCode = strconv.Itoa(timeSlot.TimeCode)
+			newTimeslot.DayOfWeek = strconv.Itoa(dayOfWeek)
+			if timeSlot.Active {
+				newTimeslot.Active = "1"
+			} else {
+				newTimeslot.Active = "0"
 			}
 
 			timeslotsWithDays = append(timeslotsWithDays, newTimeslot)
@@ -461,7 +512,7 @@ func seedTimeSlots() {
 		err := hour.MassCreateHour(database, timeslotsWithDays)
 
 		if err == nil {
-			logger.Log(2, "database", "Seeding Data", "System", "Created all timeslots for day# "+ strconv.Itoa(dayOfWeek))
+			logger.Log(2, "database", "Seeding Data", "System", "Created all timeslots for day# "+strconv.Itoa(dayOfWeek))
 		} else {
 			logger.Log(3, "database", "Seeding Data", "System", err.Error())
 		}
