@@ -125,7 +125,7 @@ func seedUsers() {
 
 	hours, _ := hour.GetHours(database)
 	users, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor2"})
-	userHour1.HourId = hours[1].Id
+	userHour1.HourId = hours[0].Id
 	userHour1.TutorId, _ = strconv.Atoi(users[0].UserId)
 
 	userHour1.CreateUserHour(database)
