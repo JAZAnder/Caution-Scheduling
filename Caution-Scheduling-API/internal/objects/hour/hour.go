@@ -80,6 +80,23 @@ func (h *Hour) GetHour(db *sql.DB) error {
 	return err
 }
 
+func GetHourByTimeCodeAndDay(db *sql.DB, filter FilterHour) (Hour, error) {
+	var result Hour
+	var err error
+
+	result.DayOfWeek, err = strconv.Atoi(filter.DayOfWeek)
+	if err != nil { return Hour{}, err }
+
+	result.TimeCode, err = strconv.Atoi(filter.TimeCode)
+	if err != nil { return Hour{}, err }
+
+	query := "SELECT Id, startTime, endTime FROM hours WHERE timeCode=" + filter.TimeCode + " AND dayOfWeek = " + filter.DayOfWeek + ";"
+	err = db.QueryRow(query).Scan(&result.Id, &result.StartTime, &result.EndTime)
+	if err != nil { return Hour{}, err }
+
+	return result, nil
+}
+
 func (h *Hour) UpdateHour(db *sql.DB) error {
 	query := "UPDATE `hours` SET `startTime` = '" + h.StartTime + "', `endTime` = '" + h.EndTime + "' WHERE `hours`.`id` = " + strconv.Itoa(h.Id) + ""
 	_, err := db.Exec(query)

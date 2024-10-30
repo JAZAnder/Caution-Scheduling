@@ -8,6 +8,14 @@ type Hour struct{
 	DayOfWeek int `json:"dayOfWeek"`
 }
 
+type FilterHour struct{
+	TimeCode string `json:"timeCode"`
+	StartTime string `json:"startTime"`
+	EndTime string `json:"endTime"`
+	DayOfWeek string `json:"dayOfWeek"`
+}
+
+
 type TimeslotsMultiDay struct{
 	StartTime string `json:"startTime"`
 	EndTime string `json:"endTime"`
