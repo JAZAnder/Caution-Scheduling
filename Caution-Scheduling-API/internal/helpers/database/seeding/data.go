@@ -5,9 +5,11 @@ import (
 	"strconv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	meeting "github.com/JAZAnder/Caution-Scheduling/internal/objects/Meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
+
 )
 
 var database *sql.DB
@@ -17,7 +19,7 @@ func SeedData(db *sql.DB) {
 	seedTimeSlots()
 	seedUsers()
 	seedUserHours()
-
+	seedMeetings()
 }
 
 func seedUsers() {
@@ -103,7 +105,6 @@ func seedUsers() {
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
-
 }
 
 func seedTimeSlots() {
@@ -525,6 +526,26 @@ func seedUserHours() {
 				logger.Log(3, "database", "Seeding Data", "System", err.Error())
 			}
 		}
+	}
+
+}
+
+func seedMeetings() {
+	var meeting meeting.Meeting
+	tutor, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor"})
+	tutorHour, _ := userHour.GetUserTimeslotByFilter(database, userHour.TutorsAndHours{TutorId: tutor[0].UserId, HourId: "9300945", DayOfWeek: "1"})
+	student, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Student"})
+
+	meeting.StudentId, _ = strconv.Atoi(student[0].UserId)
+	meeting.UserHourId, _ = strconv.Atoi(tutorHour[0].Id)
+	meeting.Date = 12152024
+
+	err := meeting.CreateMeeting(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName +" with "+tutor[0].UserName +" on "+ strconv.Itoa(meeting.Date) +" at "+ tutorHour[0].HourId)
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
 
 }

@@ -130,10 +130,9 @@ func createLabsTable() {
 
 func createMeetingsTable() {
 	query := "CREATE TABLE IF NOT EXISTS meetings(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
 		"`tutorHourId` int DEFAULT NULL," +
-		"`labId` int DEFAULT NULL," +
-		"`studentName` varchar(255) NOT NULL," +
-		"`studentEmail` varchar(255) NOT NULL," +
+		"`studentId` int DEFAULT NULL," +
 		"`date` BIGINT NOT NULL );"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating meetings table")

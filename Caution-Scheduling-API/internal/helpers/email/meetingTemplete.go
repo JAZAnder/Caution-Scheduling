@@ -81,7 +81,6 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             <ul>
                 <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
                 <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
-                <li><strong>Location:</strong> ` + strconv.Itoa(meeting.LabId) + `</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>
@@ -169,7 +168,6 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             <ul>
                 <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
                 <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
-                <li><strong>Location:</strong> ` + strconv.Itoa(meeting.LabId) + `</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>
