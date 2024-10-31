@@ -81,37 +81,33 @@ func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHour
 	return filteredResults, nil
 }
 
-// // func (uh *UserHour) DeleteUserHour(db *sql.DB) error {
-// // 	query := "DELETE FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(uh.HourId) + "' AND `username` = '" + uh.Tutor + "'"
-// // 	_, err := db.Exec(query)
-// // 	fmt.Println(query)
-// // 	return err
-// // }
 
-// func (uh *UserHour) GetHours(db *sql.DB) ([]UserHour, error) {
-// 	rows, err := db.Query("SELECT `Id`, `hourId`, `username`, `available` FROM `userHours` WHERE `username` = '" + uh.Tutor + "'")
+func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int)([]TutorsAndHours, error){
+	rows, err := db.Query("SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
+		" FROM userHours Join hours on userHours.hourId = hours.Id join localusers on userHours.userId = localusers.Id " +
+		" Where userId = "+strconv.Itoa(userId)+" And userHours.id NOT IN ( " +
+				" Select userHours.id" +
+				" From meetings join userHours on meetings.tutorHourId = userHours.id " +
+				" where userHours.userId = "+strconv.Itoa(userId)+" AND date = "+strconv.Itoa(date)+");")
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-// 	userHours := []UserHour{}
-// 	var tempAva int
-// 	for rows.Next() {
-// 		var uh UserHour
-// 		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor, &tempAva); err != nil {
-// 			return nil, err
-// 		}
-// 		if tempAva == 1 {
-// 			uh.Available = true
-// 		} else {
-// 			uh.Available = false
-// 		}
-// 		userHours = append(userHours, uh)
-// 	}
-// 	return userHours, nil
-// }
+	filteredResults := []TutorsAndHours{}
+
+	for rows.Next() {
+		var result TutorsAndHours
+		if err := rows.Scan(&result.Id, &result.TutorId, &result.FirstName, &result.LastName, &result.HourId, &result.StartTime, &result.EndTime, &result.DayOfWeek); err != nil {
+			return nil, err
+		}
+
+		filteredResults = append(filteredResults, result)
+	}
+
+	return filteredResults, nil
+}
 
 func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHour, error) {
 	rows, err := db.Query("SELECT `Id`, `hourId`, `userId`, `available` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
