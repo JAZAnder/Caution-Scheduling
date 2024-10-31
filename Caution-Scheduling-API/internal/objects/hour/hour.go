@@ -76,7 +76,7 @@ func (h *Hour) GetHour(db *sql.DB) error {
 	query := "SELECT startTime, endTime, dayOfWeek  FROM hours WHERE id=" + strconv.Itoa(h.Id)
 	err := db.QueryRow(query).Scan(&h.StartTime, &h.EndTime, &tempDayOfWeek)
 
-	h.DayOfWeek, err = strconv.Atoi(tempDayOfWeek)
+	h.DayOfWeek, _ = strconv.Atoi(tempDayOfWeek)
 	return err
 }
 

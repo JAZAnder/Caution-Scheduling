@@ -138,64 +138,64 @@ func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHour, error) {
 	return userHours, nil
 }
 
-// func (uh *UserHour) GetAvailableHours(db *sql.DB) ([]UserHour, error) {
-// 	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `username` = '" + uh.Tutor + "' AND `available` = 1;")
+func (uh *UserHour) GetAvailableHours(db *sql.DB) ([]UserHour, error) {
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `username` = '" + strconv.Itoa(uh.TutorId) + "' AND `available` = 1;")
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-// 	userHours := []UserHour{}
+	userHours := []UserHour{}
 
-// 	for rows.Next() {
-// 		var uh UserHour
-// 		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor); err != nil {
-// 			return nil, err
-// 		}
-// 		uh.Available = true
-// 		userHours = append(userHours, uh)
-// 	}
-// 	return userHours, nil
-// }
+	for rows.Next() {
+		var uh UserHour
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId); err != nil {
+			return nil, err
+		}
+		uh.Available = true
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}
 
-// func GetUserHours(db *sql.DB) ([]UserHour, error) {
-// 	rows, err := db.Query("SELECT `Id`, `hourId`, `username`, `available` FROM `userHours`")
+func GetUserHours(db *sql.DB) ([]UserHour, error) {
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username`, `available` FROM `userHours`")
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-// 	userHours := []UserHour{}
+	userHours := []UserHour{}
 
-// 	for rows.Next() {
-// 		var uh UserHour
-// 		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.Tutor, &uh.Available); err != nil {
-// 			return nil, err
-// 		}
-// 		userHours = append(userHours, uh)
-// 	}
-// 	return userHours, nil
-// }
+	for rows.Next() {
+		var uh UserHour
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId, &uh.Available); err != nil {
+			return nil, err
+		}
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}
 
-// func GetUsersByHour(db *sql.DB, hourId int)([]UserHour, error){
-// 	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(hourId)  + "' AND `available` = 1;")
+func GetUsersByHour(db *sql.DB, hourId int)([]UserHour, error){
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(hourId)  + "' AND `available` = 1;")
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-// 	userHours := []UserHour{}
+	userHours := []UserHour{}
 
-// 	for rows.Next() {
-// 		var uh UserHour
-// 		if err := rows.Scan(&uh.Id, &uh.HourId ,&uh.Tutor); err != nil {
-// 			return nil, err
-// 		}
-// 		uh.Available = true
-// 		userHours = append(userHours, uh)
-// 	}
-// 	return userHours, nil
-// }
+	for rows.Next() {
+		var uh UserHour
+		if err := rows.Scan(&uh.Id, &uh.HourId ,&uh.TutorId); err != nil {
+			return nil, err
+		}
+		uh.Available = true
+		userHours = append(userHours, uh)
+	}
+	return userHours, nil
+}

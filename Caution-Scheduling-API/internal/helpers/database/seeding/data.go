@@ -8,7 +8,6 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
-
 )
 
 var database *sql.DB
@@ -17,6 +16,7 @@ func SeedData(db *sql.DB) {
 	database = db
 	seedTimeSlots()
 	seedUsers()
+	seedUserHours()
 
 }
 
@@ -86,10 +86,10 @@ func seedUsers() {
 	//Tutor  User
 	err = nil
 	var Tutor2 user.LocalUser = user.LocalUser{
-		UserName:  "Tutor2",
-		FirstName: "School2",
-		LastName:  "Tutor2",
-		FullName:  "School Tutor2",
+		UserName:  "Tutor",
+		FirstName: "School",
+		LastName:  "Tutor",
+		FullName:  "School Tutor",
 		Email:     "tutor@localhost.com",
 		Password:  "P@33word123!",
 		IsAdmin:   false,
@@ -100,27 +100,6 @@ func seedUsers() {
 
 	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", Tutor2.UserName+" user is Created")
-	} else {
-		logger.Log(3, "database", "Seeding Data", "System", err.Error())
-	}
-
-	//Assign Tutor to Timeslot1
-	err = nil
-
-	userHour1 := userHour.UserHour{}
-
-	hour, _ := hour.GetHourByTimeCodeAndDay(database, hour.FilterHour{
-		DayOfWeek: "1",
-		TimeCode:  "9150930",
-	})
-	users, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor2"})
-	userHour1.HourId = hour.Id
-	userHour1.TutorId, _ = strconv.Atoi(users[0].UserId)
-
-	userHour1.CreateUserHour(database)
-
-	if err == nil {
-		logger.Log(2, "database", "Seeding Data", "System", "Tutor: "+users[0].UserName+" User Hour is Created")
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
@@ -517,4 +496,35 @@ func seedTimeSlots() {
 			logger.Log(3, "database", "Seeding Data", "System", err.Error())
 		}
 	}
+}
+
+func seedUserHours() {
+
+	daysOfWeek := []string{"1", "3"}
+	timeCodes := []string{"9150930", "9300945", "9451000", "14001415", "14151430", "14301445", "14451500"}
+
+	for _, dayOfWeek := range daysOfWeek {
+		for _, timeCode := range timeCodes {
+			userHour := userHour.UserHour{}
+
+			hour, _ := hour.GetHourByTimeCodeAndDay(database, hour.FilterHour{
+				DayOfWeek: dayOfWeek,
+				TimeCode:  timeCode,
+			})
+
+			users, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor"})
+
+			userHour.HourId = hour.Id
+			userHour.TutorId, _ = strconv.Atoi(users[0].UserId)
+
+			err := userHour.CreateUserHour(database)
+
+			if err == nil {
+				logger.Log(2, "database", "Seeding Data", "System", "Tutor: "+users[0].UserName+" User Hour is Created for "+users[0].UserName+" at "+strconv.Itoa(hour.TimeCode)+" on day#"+strconv.Itoa(hour.DayOfWeek))
+			} else {
+				logger.Log(3, "database", "Seeding Data", "System", err.Error())
+			}
+		}
+	}
+
 }
