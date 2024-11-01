@@ -4,24 +4,27 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
+
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
-	"github.com/gorilla/mux"
+
 )
 
 func getTutorsAvailability(w http.ResponseWriter, r *http.Request) {
-	var uh userHour.UserHour
-	var err error
 	vars := mux.Vars(r)
-	uh.TutorId, err = strconv.Atoi(vars["userId"]) 
-
-	if err != nil {
-		//TODO Return non Generic Error
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+	tutorId, err := strconv.Atoi(vars["tutorId"]) //TODO Return non Generic Error
+	if err != nil { responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	date, err := strconv.Atoi(vars["date"]) //TODO Return non Generic Error
+	if err != nil { responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	userHours, err := uh.GetHoursByUserId(database)
+	userHours, err := userHour.GetAvailableHoursByUserAndDay(database, tutorId, date)
+
+
 
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())

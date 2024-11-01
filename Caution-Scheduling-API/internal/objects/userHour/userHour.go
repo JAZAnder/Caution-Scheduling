@@ -83,12 +83,13 @@ func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHour
 
 
 func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int)([]TutorsAndHours, error){
-	rows, err := db.Query("SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
+	query := "SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
 		" FROM userHours Join hours on userHours.hourId = hours.Id join localusers on userHours.userId = localusers.Id " +
 		" Where userId = "+strconv.Itoa(userId)+" And userHours.id NOT IN ( " +
 				" Select userHours.id" +
 				" From meetings join userHours on meetings.tutorHourId = userHours.id " +
-				" where userHours.userId = "+strconv.Itoa(userId)+" AND date = "+strconv.Itoa(date)+");")
+				" where userHours.userId = "+strconv.Itoa(userId)+" AND date = "+strconv.Itoa(date)+");"
+	rows, err := db.Query(query)
 
 	if err != nil {
 		return nil, err

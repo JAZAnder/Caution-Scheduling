@@ -14,7 +14,8 @@ func AddUseTimeslotRoutes(a *mux.Router) {
 	//Tutor Routes
 
 	//Student Routes
-	a.HandleFunc("/api/availability/{userId}", getTutorsAvailability).Methods("GET")
+	a.HandleFunc("/api/availability/{tutorId}/{date}", getTutorsAvailability).Methods("GET")
+
 	//Global Routes
 
 }
