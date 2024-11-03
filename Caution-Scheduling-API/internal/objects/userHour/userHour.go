@@ -110,6 +110,34 @@ func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int)([]TutorsAnd
 	return filteredResults, nil
 }
 
+func GetAvailableHoursByDay(db *sql.DB, date int)([]TutorsAndHours, error){
+	query := "SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
+		" FROM userHours Join hours on userHours.hourId = hours.Id join localusers on userHours.userId = localusers.Id " +
+		" Where userHours.id NOT IN ( " +
+				" Select userHours.id" +
+				" From meetings join userHours on meetings.tutorHourId = userHours.id " +
+				" where date = "+strconv.Itoa(date)+");"
+	rows, err := db.Query(query)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	filteredResults := []TutorsAndHours{}
+
+	for rows.Next() {
+		var result TutorsAndHours
+		if err := rows.Scan(&result.Id, &result.TutorId, &result.FirstName, &result.LastName, &result.HourId, &result.StartTime, &result.EndTime, &result.DayOfWeek); err != nil {
+			return nil, err
+		}
+
+		filteredResults = append(filteredResults, result)
+	}
+
+	return filteredResults, nil
+}
+
 func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHour, error) {
 	rows, err := db.Query("SELECT `Id`, `hourId`, `userId`, `available` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
 
