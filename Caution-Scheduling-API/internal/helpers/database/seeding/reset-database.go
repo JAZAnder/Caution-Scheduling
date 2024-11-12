@@ -19,6 +19,9 @@ func ResetDataTables(db *sql.DB, userName string) {
 	dropHoursTable(userName)
 	dropSessionCookieTable(userName)
 	dropLocalUserTables(userName)
+	dropTopicsTable(userName)
+	dropNotesTable(userName)
+	
 	
 
 	//Rebuilding
@@ -173,15 +176,9 @@ func dropSessionCookieTable(userName string) {
 }
 
 func dropLogsTable(userName string) {
-	query := "CREATE TABLE IF NOT EXISTS `logs`(" +
-		"`id` INT AUTO_INCREMENT PRIMARY KEY, " +
-		"`level` VARCHAR(10) NOT NULL," +
-		"`category` VARCHAR(25) NOT NULL," +
-		"`subCategory` VARCHAR(25) NOT NULL," +
-		"`user` VARCHAR(50) NOT NULL," +
-		"`message` VARCHAR(255) NOT NULL );"
+	query := "DROP TABLE `logs`;"
 
-	logger.Log(2, "database", "Drop Table", userName, "Creating logs table")
+	logger.Log(2, "database", "Drop Table", userName, "Dropping logs table")
 
 	logger.Log(1, "database", "Drop Table", userName, query)
 
@@ -189,7 +186,40 @@ func dropLogsTable(userName string) {
 	if err != nil {
 		logger.Log(4, "database", "Drop Table", userName, err.Error())
 	} else {
-		logger.Log(2, "database", "Drop Table", userName, "logs table either created or already existed")
+		logger.Log(2, "database", "Drop Table", userName, "logs table dropped")
+	}
+
+}
+
+
+func dropTopicsTable(userName string) {
+	query := "DROP TABLE topic;" 
+
+	logger.Log(2, "database", "Create Table", userName, "Dropping topic table")
+
+	logger.Log(1, "database", "Create Table", userName, query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", userName, err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", userName, "topic table Dropped")
+	}
+
+}
+
+func dropNotesTable(userName string) {
+	query := "DROP TABLE note;" 
+
+	logger.Log(2, "database", "Create Table", userName, "Drop note table")
+
+	logger.Log(1, "database", "Create Table", userName, query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", userName, err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", userName, "note table Dropped")
 	}
 
 }

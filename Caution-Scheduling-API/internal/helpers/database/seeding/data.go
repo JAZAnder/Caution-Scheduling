@@ -549,3 +549,7 @@ func seedMeetings() {
 	}
 
 }
+
+func seedTopics(){
+	
+}
