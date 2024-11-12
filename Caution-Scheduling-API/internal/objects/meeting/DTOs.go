@@ -5,4 +5,5 @@ type Meeting struct{
 	UserHourId int `json:"userHourId"`
 	StudentId int `json:"studentId"`
 	Date int `json:"date"`
+	TopicId int `json:"topicId"`
 }

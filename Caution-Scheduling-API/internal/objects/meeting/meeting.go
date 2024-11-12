@@ -3,9 +3,9 @@ package meeting
 import (
 	"database/sql"
 	"fmt"
-
 	//"errors"
 	"strconv"
+
 )
 
 // func (m *Meeting) GetMeeting(db *sql.DB) error{
@@ -28,12 +28,12 @@ import (
 
 func (m *Meeting) CreateMeeting(db *sql.DB) error {
 
-	query := "INSERT INTO `meetings` (`tutorHourId`, `studentId`, `date`) VALUES ('" + strconv.Itoa(m.UserHourId) + "', '" + strconv.Itoa(m.StudentId) + "', '" + strconv.Itoa(m.Date) + "');"
+	query := "INSERT INTO `meetings` (`topicId`,`tutorHourId`, `studentId`, `date`) VALUES ('" + strconv.Itoa(m.TopicId) + "','" + strconv.Itoa(m.UserHourId) + "', '" + strconv.Itoa(m.StudentId) + "', '" + strconv.Itoa(m.Date) + "');"
 	fmt.Print(query)
-	errsql := db.QueryRow(query)
+	errSql := db.QueryRow(query)
 
-	if errsql.Err() != nil {
-		return errsql.Err()
+	if errSql.Err() != nil {
+		return errSql.Err()
 	}
 
 	return nil
