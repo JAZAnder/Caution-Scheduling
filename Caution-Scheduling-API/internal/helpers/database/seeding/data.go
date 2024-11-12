@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-	meeting "github.com/JAZAnder/Caution-Scheduling/internal/objects/Meeting"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
