@@ -7,26 +7,15 @@ import (
 	//"net/http"
 	//"strconv"
 
-	"github.com/gorilla/mux"
-
 	//"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
 	//"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	//"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-
 )
 
-var(
+var (
 	database = db.GetDatabase()
 )
-
-func AddMeetingRoutes(a *mux.Router) {
-	// a.HandleFunc("/api/meeting", createMeeting).Methods("POST")
-	// a.HandleFunc("/api/meeting/{id:[0-9]+}", getMeeting).Methods("GET")
-	// a.HandleFunc("/api/meetings", getMeetings).Methods("GET")
-	// a.HandleFunc("/api/meeting/{id:[0-9]+}", deleteMeeting).Methods("DELETE")
-	// a.HandleFunc("/api/meetings/mine", getMyMeetings).Methods("GET")
-}
 
 // func getMeeting(w http.ResponseWriter, r *http.Request) {
 // 	vars := mux.Vars(r)
@@ -81,30 +70,6 @@ func AddMeetingRoutes(a *mux.Router) {
 // 		return
 // 	}
 // 	responses.RespondWithJSON(w, http.StatusOK, meetings)
-// }
-
-// func createMeeting(w http.ResponseWriter, r *http.Request) {
-// 	var m meeting.Meeting
-// 	var err error
-
-// 	m.UserHourId, err = strconv.Atoi(r.PostFormValue("userHourId"))
-// 	m.LabId, err = strconv.Atoi(r.PostFormValue("labId"))
-// 	m.StudentName = r.PostFormValue("studentName")
-// 	m.StudentEmail = r.PostFormValue("studentEmail")
-// 	m.Date, err = strconv.Atoi(r.PostFormValue("date"))
-
-// 	if err != nil || len(m.StudentName) <= 0 || len(m.StudentEmail) <= 0 {
-// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
-// 		return
-// 	}
-
-// 	err = m.CreateMeeting(database)
-// 	if err != nil {
-// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	responses.RespondWithJSON(w, http.StatusCreated, m)
 // }
 
 // func getMeetings(w http.ResponseWriter, r *http.Request) {
