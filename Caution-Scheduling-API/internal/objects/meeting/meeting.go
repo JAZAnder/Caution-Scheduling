@@ -6,6 +6,8 @@ import (
 	//"errors"
 	"strconv"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+
 )
 
 // func (m *Meeting) GetMeeting(db *sql.DB) error{
@@ -82,26 +84,39 @@ func (m *Meeting) CreateMeeting(db *sql.DB) error {
 // 	return meetings, nil
 // }
 
-// func GetMyMeetings(db *sql.DB, userName string) ([]Meeting, error) {
-// 	rows, err := db.Query("SELECT m.Id, m.tutorHourId, m.labId, m.studentName, m.studentEmail, m.date FROM meetings m JOIN userHours u ON m.tutorHourId = u.Id WHERE u.username ='" + userName + "'")
+func GetMyMeetings(db *sql.DB, userId int) ([]BasicMeetingDto, error) {
+	query :=  "SELECT  m.Id, m.date, topic.Id, topic.topic, h.Id, h.startTime, h.endTime, tutor.Id, tutor.firstName, tutor.lastName, tutor.email, student.Id, student.firstName, student.lastName, student.email " +
+			"FROM meetings m " +
+			"join userHours uh on m.tutorHourId = uh.id  " +
+			"join localusers tutor on uh.userId = tutor.Id " +
+			"join hours h on uh.hourId = h.Id " +
+			"join localusers student on m.studentId = student.Id " +
+			"left join topic on m.topicId = topic.Id " +
+			"Where student.Id = " + strconv.Itoa(userId) + " or tutor.Id = " + strconv.Itoa(userId) +
+			";"
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
 
-// 	defer rows.Close()
+			logger.Log(1, "Database", "GetMeetings", "System", query)
 
-// 	meetings := []Meeting{}
+	rows, err := db.Query(query)
 
-// 	for rows.Next() {
-// 		var m Meeting
-// 		if err := rows.Scan(&m.Id, &m.UserHourId, &m.LabId, &m.StudentName, &m.StudentEmail, &m.Date); err != nil {
-// 			return nil, err
-// 		}
-// 		meetings = append(meetings, m)
-// 	}
-// 	return meetings, nil
-// }
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	meetings := []BasicMeetingDto{}
+
+	for rows.Next() {
+		var m BasicMeetingDto
+		if err := rows.Scan(&m.Id, &m.Date, &m.Topic.Id, &m.Topic.Description, &m.Hour.Id, &m.Hour.StartTime, &m.Hour.EndTime, &m.Tutor.Id, &m.Tutor.FirstName, &m.Tutor.LastName, &m.Tutor.Email, &m.Student.Id, &m.Student.FirstName, &m.Student.LastName, &m.Student.Email); err != nil {
+			return nil, err
+		}
+		meetings = append(meetings, m)
+	}
+	return meetings, nil
+}
 
 // func (m *Meeting) DeleteMeeting(db *sql.DB) error {
 // 	query := "DELETE FROM `meetings` WHERE `meetings`.`Id`=" + strconv.Itoa(m.Id) + ""

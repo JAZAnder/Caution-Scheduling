@@ -6,11 +6,17 @@ import (
 	//"fmt"
 	//"net/http"
 	//"strconv"
+	// "database/sql"
+	// "errors"
+	// "fmt"
+	// "net/http"
 
 	//"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	db "github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
-	//"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
+	//"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	//"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	//"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+
 )
 
 var (
@@ -36,40 +42,6 @@ var (
 // 		return
 // 	}
 // 	responses.RespondWithJSON(w, http.StatusOK, m)
-// }
-
-// func getMyMeetings(w http.ResponseWriter, r *http.Request) {
-// 	var c user.SessionCookie
-// 	cookie, err := r.Cookie("key")
-// 	if err != nil {
-// 		if errors.Is(err, http.ErrNoCookie) {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 			return
-// 		}
-// 	}
-
-// 	c.Cookie = cookie.Value
-
-// 	currentUser, err := c.CheckSession(database)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 			return
-// 		}
-// 	}
-
-// 	meetings, err := meeting.GetMyMeetings(database, currentUser.UserName)
-// 	if err != nil {
-// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-// 	responses.RespondWithJSON(w, http.StatusOK, meetings)
 // }
 
 // func getMeetings(w http.ResponseWriter, r *http.Request) {
