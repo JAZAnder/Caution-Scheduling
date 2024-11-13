@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 )
 
 func (uh *UserHour) GetUserHour(db *sql.DB) error {
@@ -81,14 +83,13 @@ func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHour
 	return filteredResults, nil
 }
 
-
-func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int)([]TutorsAndHours, error){
+func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int) ([]TutorsAndHours, error) {
 	query := "SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
 		" FROM userHours Join hours on userHours.hourId = hours.Id join localusers on userHours.userId = localusers.Id " +
-		" Where userId = "+strconv.Itoa(userId)+" And userHours.id NOT IN ( " +
-				" Select userHours.id" +
-				" From meetings join userHours on meetings.tutorHourId = userHours.id " +
-				" where userHours.userId = "+strconv.Itoa(userId)+" AND date = "+strconv.Itoa(date)+");"
+		" Where userId = " + strconv.Itoa(userId) + " And userHours.id NOT IN ( " +
+		" Select userHours.id" +
+		" From meetings join userHours on meetings.tutorHourId = userHours.id " +
+		" where userHours.userId = " + strconv.Itoa(userId) + " AND date = " + strconv.Itoa(date) + ");"
 	rows, err := db.Query(query)
 
 	if err != nil {
@@ -110,13 +111,13 @@ func GetAvailableHoursByUserAndDay(db *sql.DB, userId int, date int)([]TutorsAnd
 	return filteredResults, nil
 }
 
-func GetAvailableHoursByDay(db *sql.DB, date int)([]TutorsAndHours, error){
+func GetAvailableHoursByDay(db *sql.DB, date int) ([]TutorsAndHours, error) {
 	query := "SELECT userHours.id, userHours.userId,localusers.firstName, localusers.lastName, userHours.hourId, hours.startTime, hours.endTime, hours.dayOfWeek " +
 		" FROM userHours Join hours on userHours.hourId = hours.Id join localusers on userHours.userId = localusers.Id " +
 		" Where userHours.id NOT IN ( " +
-				" Select userHours.id" +
-				" From meetings join userHours on meetings.tutorHourId = userHours.id " +
-				" where date = "+strconv.Itoa(date)+");"
+		" Select userHours.id" +
+		" From meetings join userHours on meetings.tutorHourId = userHours.id " +
+		" where date = " + strconv.Itoa(date) + ");"
 	rows, err := db.Query(query)
 
 	if err != nil {
@@ -204,8 +205,8 @@ func GetUserHours(db *sql.DB) ([]UserHour, error) {
 	return userHours, nil
 }
 
-func GetUsersByHour(db *sql.DB, hourId int)([]UserHour, error){
-	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(hourId)  + "' AND `available` = 1;")
+func GetUsersByHour(db *sql.DB, hourId int) ([]UserHour, error) {
+	rows, err := db.Query("SELECT `Id`, `hourId`, `username` FROM `userHours` WHERE `hourId` = '" + strconv.Itoa(hourId) + "' AND `available` = 1;")
 
 	if err != nil {
 		return nil, err
@@ -216,11 +217,31 @@ func GetUsersByHour(db *sql.DB, hourId int)([]UserHour, error){
 
 	for rows.Next() {
 		var uh UserHour
-		if err := rows.Scan(&uh.Id, &uh.HourId ,&uh.TutorId); err != nil {
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId); err != nil {
 			return nil, err
 		}
 		uh.Available = true
 		userHours = append(userHours, uh)
 	}
 	return userHours, nil
+}
+
+func GetUserByUserHour(db *sql.DB, userHourId int) (user.LocalUser, error) {
+	query := "select u.Id, u.firstName, u.lastName, u.fullName, u.email From userHours join localusers u on userHours.userId = u.Id where userHours.id = '" + strconv.Itoa(userHourId) + "';"
+	rows, err := db.Query(query)
+
+	logger.Log(1, "Database", "userHours", "System", query)
+
+	if err != nil {
+		return user.LocalUser{}, err
+	}
+	defer rows.Close()
+
+	var u user.LocalUser
+	rows.Next()
+	if err := rows.Scan(&u.UserId, &u.FirstName, &u.LastName, &u.FullName, &u.Email); err != nil {
+		return user.LocalUser{}, err
+	}
+
+	return u, nil
 }

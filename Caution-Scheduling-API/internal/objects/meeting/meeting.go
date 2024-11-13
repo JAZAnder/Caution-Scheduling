@@ -96,7 +96,7 @@ func GetMyMeetings(db *sql.DB, userId int) ([]BasicMeetingDto, error) {
 			";"
 
 
-			logger.Log(1, "Database", "GetMeetings", "System", query)
+			logger.Log(1, "Database", "GetMeetings", "databaseMaster", query)
 
 	rows, err := db.Query(query)
 

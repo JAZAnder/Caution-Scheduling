@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/email"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 
 )
 
@@ -65,12 +67,14 @@ func createMeeting(w http.ResponseWriter, r *http.Request) {
 
 	m.StudentId = currentUser.UserId
 
-
 	err = m.CreateMeeting(database)
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	tutor,_ := userHour.GetUserByUserHour(database, m.UserHourId)
+	email.NewMeeting(currentUser,tutor , m)
 
 	responses.RespondWithJSON(w, http.StatusCreated, m)
 
@@ -109,4 +113,3 @@ func getMyMeetings(w http.ResponseWriter, r *http.Request) {
 	}
 	responses.RespondWithJSON(w, http.StatusOK, meetings)
 }
-
