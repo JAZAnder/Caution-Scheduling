@@ -5,7 +5,7 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/note"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/topic"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
 type Meeting struct {
@@ -24,4 +24,24 @@ type BasicMeetingDto struct {
 	Date    int `json:"date"`
 	Topic   topic.Topic
 	Notes   []note.Note
+}
+
+type AdminMeetingDto struct {
+	Id      int `json:"id"`
+	TutorHour userHour.UserHourExpanded
+	Student user.AdminViewUserInformation
+	Date    int `json:"date"`
+	Topic   topic.Topic
+	Notes   []note.Note
+}
+
+type MeetingFilter struct{
+	Id      int `json:"id"`
+	Tutor string `json:"tutor"`
+	Student string `json:"student"`
+	StartTime string `json:"startTime"`
+	EndTime string `json:"endTime"`
+	DayOfWeek int `json:"dayOfWeek"`
+	Date    int `json:"date"`
+	Topic   int `json:"topic"`
 }
