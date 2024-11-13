@@ -98,8 +98,6 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
 	logger.Log(1, "Email", "Meeting", "emailManager", "Email has been send to "+student.FullName+" at "+student.Email+" informing them about a meeting they scheduled")
 	sendEmail(student.Email, student.FullName, "New Meeting Scheduled", htmlContent, plainTextContent)
 
-	return
-
 }
 
 func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
