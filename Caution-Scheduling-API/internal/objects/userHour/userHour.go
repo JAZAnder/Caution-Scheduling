@@ -61,7 +61,7 @@ func (uh *UserHour) DeleteUserHourById(db *sql.DB) error {
 }
 
 func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHours, error) {
-	rows, err := db.Query("SELECT uh.id, lu.Id As `userId`,lu.firstName, lu.lastName, h.Id As `hourId`, h.startTime, h.endTime, h.dayOfWeek  FROM userHours `uh` inner join localusers `lu` on uh.userId = lu.Id inner join hours `h` on uh.hourId = h.Id where lu.id = '" + filter.TutorId + "' OR h.id = '" + filter.HourId + "' OR h.dayOfWeek = '" + filter.DayOfWeek + "';")
+	rows, err := db.Query("SELECT uh.id, lu.Id As `userId`,lu.firstName, lu.lastName, h.Id As `hourId`, h.startTime, h.endTime, h.dayOfWeek  FROM userHours `uh` inner join localusers `lu` on uh.userId = lu.Id inner join hours `h` on uh.hourId = h.Id where lu.id = '" + filter.TutorId + "' AND h.timeCode = '" + filter.HourId + "' AND h.dayOfWeek = '" + filter.DayOfWeek + "';")
 	if err != nil {
 		return nil, err
 	}

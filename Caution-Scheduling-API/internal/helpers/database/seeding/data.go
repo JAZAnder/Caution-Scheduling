@@ -537,12 +537,13 @@ func seedMeetings() {
 	tutor, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Tutor"})
 	tutorHour, _ := userHour.GetUserTimeslotByFilter(database, userHour.TutorsAndHours{TutorId: tutor[0].UserId, HourId: "9300945", DayOfWeek: "1"})
 	student, _ := user.GetUsersByFilter(database, user.AdminViewUserInformation{UserName: "Student"})
-
 	meeting.StudentId, _ = strconv.Atoi(student[0].UserId)
 	meeting.UserHourId, _ = strconv.Atoi(tutorHour[0].Id)
-	meeting.Date = 12152024
+	meeting.TopicId = 1
 
-	err := meeting.CreateMeeting(database)
+
+	meeting.Date = 12152024
+		err := meeting.CreateMeeting(database)
 
 	if err == nil {
 		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName+" with "+tutor[0].UserName+" on "+strconv.Itoa(meeting.Date)+" at "+tutorHour[0].HourId)
@@ -581,18 +582,17 @@ func seedMeetings() {
 }
 
 func seedTopics() {
-	topics := []string{"Computer Science","Algorithm Design", "Discrete Structures", "Web Development", "Computer Networking", "Computer Architecture", "Data Structures ", "Operating Systems", "System Administration"}
+	topics := []string{"Computer Science", "Algorithm Design", "Discrete Structures", "Web Development", "Computer Networking", "Computer Architecture", "Data Structures ", "Operating Systems", "System Administration"}
 
 	for _, description := range topics {
 		topic := topic.Topic{
 			Description: description,
 		}
 
-
 		err := topic.AddTopic(database)
 
 		if err == nil {
-			logger.Log(2, "database", "Seeding Data", "System", "Topic: " +topic.Description)
+			logger.Log(2, "database", "Seeding Data", "System", "Topic: "+topic.Description)
 		} else {
 			logger.Log(3, "database", "Seeding Data", "System", err.Error())
 		}

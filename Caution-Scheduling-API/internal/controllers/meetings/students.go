@@ -20,6 +20,11 @@ func createMeeting(w http.ResponseWriter, r *http.Request) {
 	m.UserHourId, err = strconv.Atoi(r.PostFormValue("userHourId"))
 	m.Date, err = strconv.Atoi(r.PostFormValue("date"))
 	m.UserHourId, err = strconv.Atoi(r.PostFormValue("userHourId"))
+	m.TopicId, err = strconv.Atoi(r.PostFormValue("topicId"))
+
+	if err != nil {
+		m.TopicId = 1
+	}
 
 	cookie, err := r.Cookie("key")
 

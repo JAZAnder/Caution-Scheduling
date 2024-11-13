@@ -30,7 +30,7 @@ import (
 
 func (m *Meeting) CreateMeeting(db *sql.DB) error {
 
-	query := "INSERT INTO `meetings` (`topicId`,`tutorHourId`, `studentId`, `date`) VALUES ('" + strconv.Itoa(m.TopicId) + "','" + strconv.Itoa(m.UserHourId) + "', '" + strconv.Itoa(m.StudentId) + "', '" + strconv.Itoa(m.Date) + "');"
+	query := "INSERT INTO `meetings` (`tutorHourId`, `studentId`, `date`, `topicId`) VALUES ('" + strconv.Itoa(m.UserHourId) + "', '" + strconv.Itoa(m.StudentId) + "', '" + strconv.Itoa(m.Date) + "', '"+strconv.Itoa(m.TopicId)+"');"
 	fmt.Print(query)
 	errSql := db.QueryRow(query)
 
