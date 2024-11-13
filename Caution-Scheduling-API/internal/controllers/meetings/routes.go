@@ -28,6 +28,7 @@ func addTutorRoutes(a *mux.Router){
 }
 
 func addSupervisorRoutes(a *mux.Router){
+	a.HandleFunc("/api/meetings/filter", getAllMeetingsByFilter).Methods("GET")
 
 }
 
