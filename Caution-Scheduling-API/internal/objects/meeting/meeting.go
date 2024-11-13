@@ -85,7 +85,7 @@ func (m *Meeting) CreateMeeting(db *sql.DB) error {
 // }
 
 func GetMyMeetings(db *sql.DB, userId int) ([]BasicMeetingDto, error) {
-	query :=  "SELECT  m.Id, m.date, topic.Id, topic.topic, h.Id, h.startTime, h.endTime, tutor.Id, tutor.firstName, tutor.lastName, tutor.email, student.Id, student.firstName, student.lastName, student.email " +
+	query :=  "SELECT  m.Id, m.date, topic.Id, topic.description, h.Id, h.startTime, h.endTime, tutor.Id, tutor.firstName, tutor.lastName, tutor.email, student.Id, student.firstName, student.lastName, student.email " +
 			"FROM meetings m " +
 			"join userHours uh on m.tutorHourId = uh.id  " +
 			"join localusers tutor on uh.userId = tutor.Id " +

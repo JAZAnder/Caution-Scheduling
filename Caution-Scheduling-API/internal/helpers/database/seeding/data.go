@@ -5,8 +5,9 @@ import (
 	"strconv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/topic"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 
@@ -19,6 +20,7 @@ func SeedData(db *sql.DB) {
 	seedTimeSlots()
 	seedUsers()
 	seedUserHours()
+	seedTopics()
 	seedMeetings()
 }
 
@@ -543,13 +545,57 @@ func seedMeetings() {
 	err := meeting.CreateMeeting(database)
 
 	if err == nil {
-		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName +" with "+tutor[0].UserName +" on "+ strconv.Itoa(meeting.Date) +" at "+ tutorHour[0].HourId)
+		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName+" with "+tutor[0].UserName+" on "+strconv.Itoa(meeting.Date)+" at "+tutorHour[0].HourId)
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	err = nil
+	tutorHour, _ = userHour.GetUserTimeslotByFilter(database, userHour.TutorsAndHours{TutorId: tutor[0].UserId, HourId: "9300945", DayOfWeek: "3"})
+	meeting.UserHourId, _ = strconv.Atoi(tutorHour[0].Id)
+
+	meeting.Date = 12172024
+
+	err = meeting.CreateMeeting(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName+" with "+tutor[0].UserName+" on "+strconv.Itoa(meeting.Date)+" at "+tutorHour[0].HourId)
+	} else {
+		logger.Log(3, "database", "Seeding Data", "System", err.Error())
+	}
+
+	err = nil
+	tutorHour, _ = userHour.GetUserTimeslotByFilter(database, userHour.TutorsAndHours{TutorId: tutor[0].UserId, HourId: "14151430", DayOfWeek: "1"})
+	meeting.UserHourId, _ = strconv.Atoi(tutorHour[0].Id)
+
+	meeting.Date = 12152024
+
+	err = meeting.CreateMeeting(database)
+
+	if err == nil {
+		logger.Log(2, "database", "Seeding Data", "System", "Meeting Created for "+student[0].UserName+" with "+tutor[0].UserName+" on "+strconv.Itoa(meeting.Date)+" at "+tutorHour[0].HourId)
 	} else {
 		logger.Log(3, "database", "Seeding Data", "System", err.Error())
 	}
 
 }
 
-func seedTopics(){
-	
+func seedTopics() {
+	topics := []string{"Computer Science","Algorithm Design", "Discrete Structures", "Web Development", "Computer Networking", "Computer Architecture", "Data Structures ", "Operating Systems", "System Administration"}
+
+	for _, description := range topics {
+		topic := topic.Topic{
+			Description: description,
+		}
+
+
+		err := topic.AddTopic(database)
+
+		if err == nil {
+			logger.Log(2, "database", "Seeding Data", "System", "Topic: " +topic.Description)
+		} else {
+			logger.Log(3, "database", "Seeding Data", "System", err.Error())
+		}
+
+	}
 }

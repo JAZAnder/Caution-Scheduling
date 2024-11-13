@@ -154,7 +154,7 @@ func createMeetingsTable() {
 func createTopicsTable() {
 	query := "CREATE TABLE IF NOT EXISTS topic(" +
 		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
-		"`topic` VARCHAR(255) DEFAULT NULL);"
+		"`description` VARCHAR(255) DEFAULT NULL);"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating topic table")
 
