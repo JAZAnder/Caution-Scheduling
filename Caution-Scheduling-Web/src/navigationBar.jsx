@@ -68,6 +68,9 @@ export default function NavigationBar() {
                       <Link to={'/meetings'}>Meetings</Link>
                     </li>
                     <li>
+                      <Link to={'/admin/adminmeetings'}>Admin Meetings</Link>
+                    </li>
+                    <li>
                       <Link to={'/users'}>Users</Link>
                     </li>
                     <li>
