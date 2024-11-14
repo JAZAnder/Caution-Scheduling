@@ -65,7 +65,8 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = async (token) => {
+  const handleGoogleLogin = async (res) => {
+    const token = res.credential;
     try {
       const response = await fetch('/api/luser/google-login', {
         method: 'POST',
@@ -122,9 +123,9 @@ export default function Login() {
               {error && <div className="login-page-error-message">{error}</div>}
               <span>or sign in with</span>
               <SignInWithGoogleButton
-                onSuccess={handleGoogleLogin}
-                onFailure={(msg) => setError(msg)}
-              />
+  onSuccess={handleGoogleLogin}
+  onFailure={(err) => setError('Google login failed. Please try again.')}
+/>
             </form>
           </div>
           <div className="login-page-intro">
