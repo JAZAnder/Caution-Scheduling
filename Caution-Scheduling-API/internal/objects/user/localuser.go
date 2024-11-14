@@ -8,6 +8,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func (u *LocalUser) GetUserByEmail(db *sql.DB) error {
+	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role`, `googleId` FROM `localusers` WHERE `email` = ?;"
+	result := db.QueryRow(query, u.Email)
+
+	err := result.Scan(&u.UserId, &u.UserName, &u.FirstName, &u.LastName, &u.Email, &u.Role, &u.GoogleId)
+	if err == sql.ErrNoRows {
+		return errors.New("user not found")
+	}
+	return err
+}
+
 func (su *SQLLocalUser) toLocalUser() (LocalUser, error) {
 
 	user := LocalUser{
@@ -33,9 +44,9 @@ func (su *SQLLocalUser) toLocalUser() (LocalUser, error) {
 func (dto *CreateLocalUserDto) ToLocalUser() (LocalUser, error) {
 
 	user := LocalUser{
-		UserName: dto.UserName,
+		UserName:  dto.UserName,
 		FirstName: dto.FirstName,
-		LastName: dto.LastName,
+		LastName:  dto.LastName,
 		FullName:  dto.FirstName + " " + dto.LastName,
 		Email:     dto.Email,
 		Password:  dto.Password,
@@ -100,7 +111,7 @@ func (u *LocalUser) ToAdminViewUserInformation() (AdminViewUserInformation, erro
 
 	Id := strconv.Itoa(u.UserId)
 	return AdminViewUserInformation{
-		UserId: Id,
+		UserId:    Id,
 		UserName:  u.UserName,
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
@@ -147,7 +158,7 @@ func (u *LocalUser) checkValidUser() bool {
 }
 
 func (u *LocalUser) checkValidUserWithoutId() bool {
-	if  u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
+	if u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
 		return false
 	}
 	return true
@@ -171,7 +182,7 @@ func (u *LocalUser) Login(db *sql.DB) error {
 	result = db.QueryRow(query)
 
 	var isAdmin string
-	err = result.Scan(&u.UserId,&u.FirstName, &u.LastName, &u.Email, &isAdmin, &u.Role, &u.FullName, &u.GoogleId)
+	err = result.Scan(&u.UserId, &u.FirstName, &u.LastName, &u.Email, &isAdmin, &u.Role, &u.FullName, &u.GoogleId)
 	if err != nil {
 		return err
 	}
@@ -228,14 +239,13 @@ func GetLusers(db *sql.DB) ([]TutorInformation, error) {
 
 		viewableUser, _ := user.ToTutorInformation()
 
-		
 		userToReturn = append(userToReturn, viewableUser)
 	}
 	return userToReturn, nil
 }
 
 func GetUsersByFilter(db *sql.DB, filter AdminViewUserInformation) ([]AdminViewUserInformation, error) {
-	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers WHERE `Id` lIKE'%"+ filter.UserId +"%' AND `Username` like '%"+filter.UserName+"%' AND `firstName` Like '%"+filter.FirstName+"%' AND `lastName` Like '%"+filter.LastName+"%' AND `email` like '%"+filter.Email+"%' AND `role` Like '%"+filter.Role+"%';"
+	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role` FROM localusers WHERE `Id` lIKE'%" + filter.UserId + "%' AND `Username` like '%" + filter.UserName + "%' AND `firstName` Like '%" + filter.FirstName + "%' AND `lastName` Like '%" + filter.LastName + "%' AND `email` like '%" + filter.Email + "%' AND `role` Like '%" + filter.Role + "%';"
 	rows, err := db.Query(query)
 
 	if err != nil {
@@ -259,7 +269,6 @@ func GetUsersByFilter(db *sql.DB, filter AdminViewUserInformation) ([]AdminViewU
 
 		viewableUser, _ := user.ToAdminViewUserInformation()
 
-		
 		userToReturn = append(userToReturn, viewableUser)
 	}
 	return userToReturn, nil
@@ -290,7 +299,6 @@ func GetTutors(db *sql.DB) ([]TutorInformation, error) {
 
 		viewableUser, _ := user.ToTutorInformation()
 
-		
 		userToReturn = append(userToReturn, viewableUser)
 	}
 	return userToReturn, nil
