@@ -6,6 +6,10 @@
   padding: 2rem;
 }
 
+.manage-users-container1 {
+  margin: 10% 20px 10% 20px; /* Adds 10% top and bottom, 20px left and right */
+}
+
 .manage-users-page #filterOnBar {
   width: 85%;
   margin-left: auto;
