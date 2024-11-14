@@ -75,6 +75,18 @@ export default function Login() {
         },
         body: JSON.stringify({ token }),
       });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        let errorMessage = errorResponse.error || 'Google login failed. Please try again.';
+  
+        if (errorMessage === 'Access restricted to @selu.edu email addresses') {
+          errorMessage = 'Use your university email to login';
+        }
+  
+        setError(errorMessage);
+        return;
+      }
   
       if (!response.ok) {
         const errorText = await response.text();

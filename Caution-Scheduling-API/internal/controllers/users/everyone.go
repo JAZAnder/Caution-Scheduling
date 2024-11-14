@@ -32,6 +32,11 @@ func googleLoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !strings.HasSuffix(googleUser.Email, "@selu.edu") {
+		responses.RespondWithError(w, http.StatusForbidden, "Access restricted to @selu.edu email addresses")
+		return
+	}
+
 	var u user.LocalUser
 	u.Email = googleUser.Email
 	err = u.GetUserByEmail(database)
