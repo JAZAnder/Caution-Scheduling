@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/joho/godotenv"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database/seeding"
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-
 )
 
 var once sync.Once
@@ -63,8 +63,14 @@ func createDatabase() {
 
 	logger.LogSetUpDb(1, db.DB)
 
-
-	seeding.ResetDataTables(db.DB, "TestMcGee")
+	environmentReset, err := strconv.ParseBool(os.Getenv("ENVIRONMENT_RESET"))
+	if err != nil {
+		environmentReset = false
+	}
+	if(environmentReset){
+		seeding.ResetDataTables(db.DB, "Environment")
+	}
+	
 	seeding.CreateTables(db.DB)
 	seeding.SetupConstraints(db.DB)
 	seeding.SeedData(db.DB)

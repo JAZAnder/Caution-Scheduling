@@ -1,7 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 import './users.css';
-import useFetch, { CachePolicies } from "use-http";
+import useFetch from "use-http";
 import React, { useEffect, useState } from "react";
 import UserDetailsButton from "./details/details";
 import NewUserButton from "./create/create";
@@ -42,9 +42,9 @@ function ManageUsers() {
 
   return (
     <>
-      <Background />
+      
       <div className="manage-users-page">
-        <div style={{ minHeight: "150px" }}> Black Space?</div>
+        
 
         <div id="filterOnBar">
           <form>
