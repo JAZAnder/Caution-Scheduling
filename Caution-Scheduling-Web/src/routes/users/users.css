@@ -121,7 +121,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Specific styles for buttons */
 .manage-users-page .details-button,
 .manage-users-page .reset-search-button {
   background-color: black;

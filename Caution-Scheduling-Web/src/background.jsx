@@ -1,15 +1,11 @@
 import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
-import BackgroundImage from "./assets/backgroundimage.webp";
+import './background.css';
 
 export default function Background() {
   return (
-    <>
-      <img
-        src={BackgroundImage}
-        alt="Placeholder"
-        className="lab-schedule-image2"
-      />
-    </>
+    <div className="background-image">
+      {/* <Outlet /> */}
+    </div>
   );
 }
+
