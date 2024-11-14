@@ -76,6 +76,9 @@ export default function NavigationBar() {
                     <li>
                       <Link to={'/timeslots'}>Timeslots</Link>
                     </li>
+                    <li>
+                      <Link to={'/timeslotmanagement'}>Timeslot Management</Link>
+                    </li>
                   </>
                 )}
                 {user && user.role === 'Supervisor' && (
@@ -162,6 +165,9 @@ export default function NavigationBar() {
                     </LinkContainer>
                     <LinkContainer to="/timeslots">
                       <Nav.Link className="cs-nav-link">Timeslots</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/timeslotmanagement">
+                      <Nav.Link className="cs-nav-link">Timeslot Management</Nav.Link>
                     </LinkContainer>
                   </>
                 )}

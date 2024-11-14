@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(170deg, #059669, #1a5632);
+  background: #1a5632;
   border: 2px solid gray;
   border-radius: 10px;
   margin: 20px;
@@ -40,6 +40,7 @@
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;
+  border: none;
 }
 
 .timeslots-filter {
@@ -72,6 +73,7 @@
   color: white;
   height: 36px;
   border-radius: 5px;
+  border: none;
 }
 
 .timeslots-table {
@@ -84,15 +86,27 @@
   border: 1px solid gray;
   padding: 10px;
   text-align: center;
-  color: white;
+  color: #5f5656;
+}
+
+.timeslots-table tr:nth-child(even) td {
+  background: #ffffff;
+}
+.timeslots-table tr:nth-child(odd) td {
+  background: #f5f5f5;
 }
 
 .timeslots-details-button {
   padding: 5px 10px;
   cursor: pointer;
-  background-color: rgb(255, 255, 255);
+  background-color: #ffc107;
   color: rgb(0, 0, 0);
   border-radius: 5px;
+  border: none;
+}
+
+.timeslots-tablerow{
+  background-color: #ffffff;
 }
 
 @media (max-width: 900px) {

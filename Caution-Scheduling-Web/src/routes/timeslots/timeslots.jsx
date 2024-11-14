@@ -101,7 +101,7 @@ const timeslots = () => {
             <Col xs={12}>
               <Table striped bordered hover responsive className="timeslots-table">
                 <thead>
-                  <tr>
+                <tr className="timeslots-tablerow">
                     <th>Id</th>
                     <th>Day of Week</th>
                     <th>Start Time</th>
@@ -215,7 +215,7 @@ function ListFilteredTimeSlots({FLdayOfWeek, FLstartTime, FLendTime, debounce}){
     <>
     <table className="timeslots-table">
               <thead>
-                <tr>
+              <tr className="timeslots-tablerow">
                   <th>Id</th>
                   <th>Day of Week</th>
                   <th>Start Time</th>

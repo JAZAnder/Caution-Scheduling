@@ -129,7 +129,7 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
     <div id="userNameTable">
       <table className="table-with-bordered">
         <thead>
-          <tr>
+        <tr>
             <th>User Id</th>
             <th>Username</th>
             <th>First Name</th>
