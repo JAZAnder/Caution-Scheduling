@@ -86,7 +86,7 @@ export default function NavigationBar() {
                 {user && user.role === 'Tutor' && (
                   <>
                     <li>
-                      <Link to={'/my-meetings'}>My Meetings</Link>
+                      <Link to={'/meetings'}>My Meetings</Link>
                     </li>
                     <li>
                       <Link to={'/my-availability'}>My Availability</Link>
@@ -98,7 +98,7 @@ export default function NavigationBar() {
                 )}
                 {user && user.role === 'Student' && (
                   <li>
-                    <Link to={'/my-meetings'}>My Meetings</Link>
+                    <Link to={'/meetings'}>My Meetings</Link>
                   </li>
                 )}
               </ul>
@@ -172,7 +172,7 @@ export default function NavigationBar() {
                 )}
                 {user && user.role === 'Tutor' && (
                   <>
-                    <LinkContainer to="/my-meetings">
+                    <LinkContainer to="/meetings">
                       <Nav.Link className="cs-nav-link">My Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/my-availability">
