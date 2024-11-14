@@ -26,6 +26,7 @@ import MyMeetings from './routes/my-meetings/my-meetings.jsx'
 import MyAvailability from './routes/my-availability/my-availability.jsx'
 import UserTimeslots from './routes/usertimeslots/usertimeslots'
 import TimeslotManagement from './routes/tutortimeslots/tutortimeslots.jsx'
+import AdminMeetings from './routes/admin/meetings/meetings.jsx';
 
 
 const router = createBrowserRouter([
@@ -88,7 +89,7 @@ const router = createBrowserRouter([
         element: <TimeslotManagement />
       },
       {
-        path: "my-meetings",
+        path: "meetings",
         element: <MyMeetings />
       },
       {
@@ -97,6 +98,14 @@ const router = createBrowserRouter([
       },{
         path: "user-timeslots",
         element: <UserTimeslots/>
+      },{
+        path: "admin",
+        children:[
+          {
+            path: "meetings",
+            element: <AdminMeetings/>
+        }
+      ]
       }
     ]
   }

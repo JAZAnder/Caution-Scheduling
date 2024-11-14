@@ -190,7 +190,7 @@ export default function NavigationBar() {
                   </>
                 )}
                 {user && user.role === 'Student' && (
-                  <LinkContainer to="/my-meetings">
+                  <LinkContainer to="/meetings">
                     <Nav.Link className="cs-nav-link">My Meetings</Nav.Link>
                   </LinkContainer>
                 )}

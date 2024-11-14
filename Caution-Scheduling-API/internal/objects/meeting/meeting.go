@@ -126,7 +126,7 @@ func GetAllMeetingsByFilter(db *sql.DB, filter MeetingFilter) ([]AdminMeetingDto
 			"join hours h on uh.hourId = h.Id " +
 			"join localusers student on m.studentId = student.Id " +
 			"left join topic on m.topicId = topic.Id " +
-			"Where tutor.fullName like '%"+filter.Tutor+"%' AND student.fullName like '&"+filter.Student+"&' AND h.startTime like '%"+filter.StartTime+"%' AND h.endTime like '%"+filter.EndTime+"%' "
+			"Where tutor.fullName like '%"+filter.Tutor+"%' AND student.fullName like '%"+filter.Student+"%' AND h.startTime like '%"+filter.StartTime+"%' AND h.endTime like '%"+filter.EndTime+"%' "
 
 
 

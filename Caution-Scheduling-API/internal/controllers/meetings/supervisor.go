@@ -22,11 +22,11 @@ func getAllMeetingsByFilter(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	filter.Topic, err = strconv.Atoi(r.URL.Query().Get("topicId"))
-	if err != nil { responses.RespondWithError(w, http.StatusBadRequest, "Invalid Payload"); return }
+	if err != nil { filter.Topic = 0 }
 	filter.Date, err = strconv.Atoi(r.URL.Query().Get("date"))
-	if err != nil { responses.RespondWithError(w, http.StatusBadRequest, "Invalid Payload"); return }
+	if err != nil { filter.Date = 0 }
 	filter.DayOfWeek, err = strconv.Atoi(r.URL.Query().Get("dayOfWeek"))
-	if err != nil { responses.RespondWithError(w, http.StatusBadRequest, "Invalid Payload"); return }
+	if err != nil { filter.DayOfWeek = 0 }
 
 
 
