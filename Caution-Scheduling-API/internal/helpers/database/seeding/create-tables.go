@@ -4,7 +4,6 @@ import (
 	"database/sql"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
-
 )
 
 func CreateTables(db *sql.DB) {
@@ -19,6 +18,10 @@ func CreateTables(db *sql.DB) {
 	createUserHoursTable()
 	createSessionCookieTable()
 	createLogsTable()
+	createGlobalSettingsTable()
+	createTopicsTable()
+	createNotesTable()
+
 }
 
 func createLocalUserTables() {
@@ -66,12 +69,34 @@ func createUserSettingsTable() {
 	}
 }
 
+func createGlobalSettingsTable() {
+	query := "CREATE TABLE IF NOT EXISTS userSettings(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`userName` varchar(255) unique," +
+		"`ReceiveMeetingEmails` boolean NOT NULL" +
+		");"
+
+	logger.Log(2, "database", "Create Table", "System", "Creating localUsers table")
+
+	logger.Log(1, "database", "Create Table", "System", query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", "System", err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", "System", "userSettings table either created or already existed")
+	}
+}
+
 func createHoursTable() {
 	query := "CREATE TABLE IF NOT EXISTS hours(" +
 		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`timeCode` INT NOT NULL," +
 		"`startTime` varchar(255) NOT NULL," +
 		"`endTime` varchar(225) NOT NULL," +
-		"`dayOfWeek` int DEFAULT NULL);"
+		"`dayOfWeek` int DEFAULT NULL," +
+		"`active` boolean DEFAULT 0, " +
+		"UNIQUE INDEX `timeCode_UNIQUE` (`timeCode`, `dayOfWeek`));"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating hours table")
 
@@ -107,11 +132,11 @@ func createLabsTable() {
 
 func createMeetingsTable() {
 	query := "CREATE TABLE IF NOT EXISTS meetings(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
 		"`tutorHourId` int DEFAULT NULL," +
-		"`labId` int DEFAULT NULL," +
-		"`studentName` varchar(255) NOT NULL," +
-		"`studentEmail` varchar(255) NOT NULL," +
-		"`date` BIGINT NOT NULL );"
+		"`studentId` int DEFAULT NULL," +
+		"`date` BIGINT NOT NULL ," +
+		"`topicId` int DEFAULT NULL);"
 
 	logger.Log(2, "database", "Create Table", "System", "Creating meetings table")
 
@@ -122,6 +147,44 @@ func createMeetingsTable() {
 		logger.Log(4, "database", "Create Table", "System", err.Error())
 	} else {
 		logger.Log(2, "database", "Create Table", "System", "meetings table either created or already existed")
+	}
+
+}
+
+func createTopicsTable() {
+	query := "CREATE TABLE IF NOT EXISTS topic(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`description` VARCHAR(255) DEFAULT NULL);"
+
+	logger.Log(2, "database", "Create Table", "System", "Creating topic table")
+
+	logger.Log(1, "database", "Create Table", "System", query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", "System", err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", "System", "topic table either created or already existed")
+	}
+
+}
+
+func createNotesTable() {
+	query := "CREATE TABLE IF NOT EXISTS note(" +
+		"`Id` int AUTO_INCREMENT PRIMARY KEY," +
+		"`userId` INT NOT NULL ," +
+		"`meetingId` INT NOT NULL ," +
+		"`note` VARCHAR(255) DEFAULT NULL);"
+
+	logger.Log(2, "database", "Create Table", "System", "Creating note table")
+
+	logger.Log(1, "database", "Create Table", "System", query)
+
+	_, err := database.Exec(query)
+	if err != nil {
+		logger.Log(4, "database", "Create Table", "System", err.Error())
+	} else {
+		logger.Log(2, "database", "Create Table", "System", "note table either created or already existed")
 	}
 
 }

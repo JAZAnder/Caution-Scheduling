@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 )
 
 func Demo() {
@@ -33,16 +35,15 @@ func Demo() {
 
 func sendEmail(toEmail string, toName string, subject string, htmlContent string, plainTextContent string) {
 	from := mail.NewEmail("Caution Scheduling", "scheduling@tutoring.cantusolutions.com")
-	to:= mail.NewEmail(toName, toEmail)
+	to := mail.NewEmail(toName, toEmail)
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
+
 	if err != nil {
-		log.Println(err)
+		logger.Log(4, "Email", "Send Email", "emailManager", err.Error())
 	} else {
-		fmt.Println(response.StatusCode)
-		fmt.Println(response.Body)
-		fmt.Println(response.Headers)
+		logger.Log(2, "Email", "Send Email", "emailManager", strconv.Itoa(response.StatusCode)+"  "+response.Body)
 	}
 
 }

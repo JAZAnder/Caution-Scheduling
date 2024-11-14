@@ -10,6 +10,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
@@ -24,7 +25,7 @@ import Labs from './routes/labs/labs.jsx'
 import Timeslots from './routes/timeslots/timeslots.jsx'
 import MyMeetings from './routes/my-meetings/my-meetings.jsx'
 import MyAvailability from './routes/my-availability/my-availability.jsx'
-
+import UserTimeslots from './routes/usertimeslots/usertimeslots'
 
 const router = createBrowserRouter([
   {
@@ -88,13 +89,21 @@ const router = createBrowserRouter([
       {
         path: "my-availability",
         element: <MyAvailability />
+      },
+      {
+        path: "user-timeslots",
+        element: <UserTimeslots/>
       }
     ]
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <RouterProvider router={router} />
-  </AuthProvider>
+  <StrictMode>
+    <GoogleOAuthProvider clientId="825468007612-o1e2kp9d6dedh7l6c2mgem4bqf2fjnpn.apps.googleusercontent.com">
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </GoogleOAuthProvider>
+  </StrictMode>
 );

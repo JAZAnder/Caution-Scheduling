@@ -15,22 +15,17 @@ const onFailure = (res) => {
 
 
 
-function SignInWithGoogleButton() {
+function SignInWithGoogleButton({ onSuccess, onFailure }) {
     return (
-        <>
-            <GoogleOAuthProvider clientId="825468007612-o1e2kp9d6dedh7l6c2mgem4bqf2fjnpn.apps.googleusercontent.com">
-                <GoogleLogin
-                    buttonText="Login"
-                    onSuccess={onSuccess}
-                    onFailure={onFailure}
-                    cookiePolicy={'single_host_origin'}
-                    isSignedIn={true}
-                />
-            </GoogleOAuthProvider>
-
-        </>
-    )
-}
+      <GoogleOAuthProvider clientId={clientId}>
+        <GoogleLogin
+          onSuccess={onSuccess}
+          onError={onFailure}
+          useOneTap
+        />
+      </GoogleOAuthProvider>
+    );
+  }
 
 
 

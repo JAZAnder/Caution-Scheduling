@@ -2,125 +2,117 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
-import "./ScheduleMeeting.css";
+import "./scheduleMeeting.css";
 import axios from "axios";
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [tutors, setTutors] = useState([]);
   const [availableTutors, setAvailableTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState("");
   const [tutorAvailability, setTutorAvailability] = useState([]);
-  const [tutorsAvailabilityMap, setTutorsAvailabilityMap] = useState({});
-  const [hours, setHours] = useState([]);
   const [scheduledMeetings, setScheduledMeetings] = useState([]);
 
-  useEffect(() => {
-    const fetchTutorsAndAvailability = async () => {
-      try {
-        const tutorsResponse = await axios.get("/api/lusers/tutors");
-        const tutorsData = tutorsResponse.data;
-        setTutors(tutorsData);
-
-        const availabilityPromises = tutorsData.map((tutor) =>
-          axios.get(`/api/availability/${tutor.userId}`).then((res) => ({
-            tutorId: tutor.userId,
-            availability: res.data,
-          }))
-        );
-
-        const availabilityResults = await Promise.all(availabilityPromises);
-
-        const availabilityMap = {};
-        availabilityResults.forEach((result) => {
-          availabilityMap[result.tutorId] = result.availability;
-        });
-
-        setTutorsAvailabilityMap(availabilityMap);
-      } catch (error) {
-        console.error("Error fetching tutors or their availability:", error);
-      }
-    };
-
-    fetchTutorsAndAvailability();
-  }, []);
-
-  useEffect(() => {
-    const fetchHours = async () => {
-      try {
-        const response = await axios.get("/api/hours");
-        console.log("Hours Data:", response.data);
-        setHours(response.data);
-      } catch (error) {
-        console.error("Error fetching hours:", error);
-      }
-    };
-    fetchHours();
-  }, []);
-
-  useEffect(() => {
-    if (
-      selectedDate &&
-      tutors.length > 0 &&
-      Object.keys(tutorsAvailabilityMap).length > 0 &&
-      hours.length > 0
-    ) {
-      const jsDayOfWeek = selectedDate.getDay();
-
-      const dayOfWeekMap = {
-        1: 1, // Monday
-        2: 2, // Tuesday
-        3: 3, // Wednesday
-        4: 4, // Thursday
-      };
-
-      const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
-
-      if (!dayOfWeek) {
-        setAvailableTutors([]);
-        return;
-      }
-
-      const tutorsAvailableOnDate = tutors.filter((tutor) => {
-        const availability = tutorsAvailabilityMap[tutor.userId];
-        if (!availability) return false;
-
-        const availableHourIds = availability
-          .filter((slot) => slot.available)
-          .map((slot) => slot.hourId);
-
-        const hoursForDay = hours.filter(
-          (hour) =>
-            hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
-        );
-
-        return hoursForDay.length > 0;
-      });
-
-      setAvailableTutors(tutorsAvailableOnDate);
-    } else {
-      setAvailableTutors([]);
-    }
-  }, [selectedDate, tutors, tutorsAvailabilityMap, hours]);
-
-  const isWeekday = (date) => {
-    const day = date.getDay();
-    return day >= 1 && day <= 4; // Monday to Thursday
+  const formatSelectedDate = () => {
+    if (!selectedDate) return "";
+    const day = String(selectedDate.getDate()).padStart(2, "0");
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const year = selectedDate.getFullYear();
+    return `${month}${day}${year}`;
   };
 
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const fetchAvailableTutors = async () => {
+      try {
+        const formattedDate = formatSelectedDate();
+        const response = await axios.get(`/api/availability/${formattedDate}`);
+        const uniqueTutors = Array.from(new Set(response.data.map(tutor => tutor.tutor)))
+          .map(id => response.data.find(tutor => tutor.tutor === id));
+        setAvailableTutors(uniqueTutors);
+      } catch (error) {
+        console.error("Error fetching available tutors for the date:", error);
+      }
+    };
+
+    fetchAvailableTutors();
+    setSelectedTutor("");
+    setTutorAvailability([]);
+    setScheduledMeetings([]);
+    setStartTime("");
+    setEndTime("");
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (!selectedTutor || !selectedDate) return;
+
+    const fetchTutorAvailability = async () => {
+      try {
+        const formattedDate = formatSelectedDate();
+        const response = await axios.get(
+          `/api/availability/${selectedTutor}/${formattedDate}`
+        );
+        const slots = response.data;
+        const selectedDayOfWeek = selectedDate.getDay();
+        const filteredSlots = slots.filter(
+          (slot) => parseInt(slot.dayOfWeek) === selectedDayOfWeek
+        );
+        const mergedSlots = mergeAvailabilitySlots(filteredSlots);
+        setTutorAvailability(mergedSlots);
+      } catch (error) {
+        console.error("Error fetching tutor's availability:", error);
+      }
+    };
+
+    fetchTutorAvailability();
+    setStartTime("");
+    setEndTime("");
+  }, [selectedTutor, selectedDate]);
+
+  useEffect(() => {
+    if (!selectedTutor || !selectedDate) return;
+
+    const fetchScheduledMeetings = async () => {
+      try {
+        const formattedDate = selectedDate.toISOString().split("T")[0];
+        const response = await axios.get(
+          `/api/scheduledMeetings/${selectedTutor}/${formattedDate}`
+        );
+        const meetings = response.data;
+        const selectedDayOfWeek = selectedDate.getDay();
+        const filteredMeetings = meetings.filter(
+          (meeting) => {
+            const meetingDate = new Date(meeting.date);
+            return meetingDate.getDay() === selectedDayOfWeek;
+          }
+        );
+
+        setScheduledMeetings(filteredMeetings);
+      } catch (error) {
+        console.error("Error fetching scheduled meetings:", error);
+      }
+    };
+
+    fetchScheduledMeetings();
+  }, [selectedTutor, selectedDate]);
+
   const parseTime = (timeStr) => {
-    const [time, modifier] = timeStr.split(" ");
+    timeStr = timeStr.trim();
+    let time, modifier;
+    const regex = /(\d{1,2}:\d{2})\s*([AP]M)/i;
+    const match = timeStr.match(regex);
+    if (match) {
+      time = match[1];
+      modifier = match[2].toUpperCase();
+    } else {
+      console.error(`Invalid time format: ${timeStr}`);
+      return null;
+    }
     let [hours, minutes] = time.split(":").map(Number);
-
-    if (modifier === "PM" && hours !== 12) {
-      hours += 12;
-    }
-    if (modifier === "AM" && hours === 12) {
-      hours = 0;
-    }
-
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
     return hours * 60 + minutes;
   };
 
@@ -128,154 +120,119 @@ const ScheduleMeeting = ({ isAdmin }) => {
     let hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes < 10 ? "0" : ""}${minutes} ${ampm}`;
+  };
 
-    return `${hours < 10 ? "0" : ""}${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes} ${ampm}`;
+  const mergeAvailabilitySlots = (slots) => {
+    if (!slots.length) return [];
+    slots.sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime));
+    const mergedSlots = [];
+    let currentSlot = { ...slots[0] };
+
+    for (let i = 1; i < slots.length; i++) {
+      const nextSlot = slots[i];
+      const currentEnd = parseTime(currentSlot.endTime);
+      const nextStart = parseTime(nextSlot.startTime);
+
+      if (currentEnd === nextStart) {
+        currentSlot.endTime = nextSlot.endTime;
+      } else {
+        mergedSlots.push(currentSlot);
+        currentSlot = { ...nextSlot };
+      }
+    }
+
+    mergedSlots.push(currentSlot);
+    return mergedSlots;
+  };
+
+  const isTimeSlotAvailable = (startMinutes, endMinutes) => {
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+
+    const meetingsOnDate = scheduledMeetings.filter(
+      (meeting) =>
+        meeting.tutorId === selectedTutor &&
+        meeting.date === formattedDate
+    );
+
+    for (let meeting of meetingsOnDate) {
+      const meetingStart = parseTime(meeting.startTime);
+      const meetingEnd = parseTime(meeting.endTime);
+      if (
+        startMinutes < meetingEnd && endMinutes > meetingStart
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const getAvailableStartTimes = () => {
-    if (!selectedTutor || !selectedDate) {
-      return [];
-    }
+    if (!tutorAvailability.length) return [];
 
-    const jsDayOfWeek = selectedDate.getDay(); 
+    let startTimes = new Set();
 
-    const dayOfWeekMap = {
-      1: 1, // Monday
-      2: 2, // Tuesday
-      3: 3, // Wednesday
-      4: 4, // Thursday
-    };
+    tutorAvailability.forEach((slot) => {
+      const slotStart = parseTime(slot.startTime);
+      const slotEnd = parseTime(slot.endTime);
 
-    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
+      for (let time = slotStart; time <= slotEnd - 15; time += 15) {
+        let isAvailable = true;
 
-    if (!dayOfWeek) {
-      return [];
-    }
+        for (let meeting of scheduledMeetings) {
+          const meetingStart = parseTime(meeting.startTime);
+          const meetingEnd = parseTime(meeting.endTime);
+          if (
+            time < meetingEnd && (time + 15) > meetingStart
+          ) {
+            isAvailable = false;
+            break;
+          }
+        }
 
-    const availableHourIds = tutorAvailability
-      .filter((slot) => slot.available)
-      .map((slot) => slot.hourId);
-
-    const hoursForDay = hours.filter(
-      (hour) => hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
-    );
-
-    let allStartTimes = [];
-
-    hoursForDay.forEach((hour) => {
-      const startMinutes = parseTime(hour.startTime);
-      const endMinutes = parseTime(hour.endTime) - 15;
-      for (let time = startMinutes; time <= endMinutes; time += 15) {
-        allStartTimes.push(formatTime(time));
+        if (isAvailable) {
+          startTimes.add(formatTime(time));
+        }
       }
     });
 
-    const formattedDate = selectedDate.toISOString().split("T")[0];
-    const bookedTimes = scheduledMeetings
-      .filter(
-        (meeting) =>
-          meeting.tutorId === selectedTutor && meeting.date === formattedDate
-      )
-      .map((meeting) => ({
-        start: parseTime(meeting.startTime),
-        end: parseTime(meeting.endTime),
-      }));
+    const startTimesArray = Array.from(startTimes).sort((a, b) => parseTime(a) - parseTime(b));
 
-    const availableStartTimes = allStartTimes.filter((timeStr) => {
-      const time = parseTime(timeStr);
-      const isBooked = bookedTimes.some(
-        (booking) => time >= booking.start && time < booking.end
-      );
-      return !isBooked;
-    });
-
-    return availableStartTimes;
+    return startTimesArray;
   };
 
   const getAvailableEndTimes = () => {
-    if (!startTime || !selectedTutor || !selectedDate) {
-      return [];
-    }
+    if (!startTime || !tutorAvailability.length) return [];
 
-    const jsDayOfWeek = selectedDate.getDay();
+    const selectedStartTime = parseTime(startTime);
 
-    const dayOfWeekMap = {
-      1: 1,
-      2: 2,
-      3: 3,
-      4: 4,
-    };
-
-    const dayOfWeek = dayOfWeekMap[jsDayOfWeek];
-
-    const availableHourIds = tutorAvailability
-      .filter((slot) => slot.available)
-      .map((slot) => slot.hourId);
-
-    const hoursForDay = hours.filter(
-      (hour) => hour.dayOfWeek === dayOfWeek && availableHourIds.includes(hour.id)
-    );
-
-    const startMinutes = parseTime(startTime);
-
-    const currentHourBlock = hoursForDay.find((hour) => {
-      const hourStart = parseTime(hour.startTime);
-      const hourEnd = parseTime(hour.endTime);
-      return startMinutes >= hourStart && startMinutes < hourEnd;
+    const currentSlot = tutorAvailability.find((slot) => {
+      const start = parseTime(slot.startTime);
+      const end = parseTime(slot.endTime);
+      return selectedStartTime >= start && selectedStartTime < end;
     });
 
-    if (!currentHourBlock) {
-      return [];
-    }
+    if (!currentSlot) return [];
 
-    const hourEndMinutes = parseTime(currentHourBlock.endTime);
-
+    const slotEnd = parseTime(currentSlot.endTime);
     let endTimes = [];
-    for (
-      let time = startMinutes + 15;
-      time <= hourEndMinutes;
-      time += 15
+    let proposedEndTime = selectedStartTime + 15;
+
+    while (
+      proposedEndTime <= selectedStartTime + 45 &&
+      proposedEndTime <= slotEnd
     ) {
-      endTimes.push(formatTime(time));
+      if (isTimeSlotAvailable(selectedStartTime, proposedEndTime)) {
+        endTimes.push(formatTime(proposedEndTime));
+      } else {
+        break;
+      }
+      proposedEndTime += 15;
     }
 
-    const formattedDate = selectedDate.toISOString().split("T")[0];
-    const bookedTimes = scheduledMeetings
-      .filter(
-        (meeting) =>
-          meeting.tutorId === selectedTutor && meeting.date === formattedDate
-      )
-      .map((meeting) => ({
-        start: parseTime(meeting.startTime),
-        end: parseTime(meeting.endTime),
-      }));
-
-    const availableEndTimes = endTimes.filter((timeStr) => {
-      const endTimeMinutes = parseTime(timeStr);
-      const isBooked = bookedTimes.some(
-        (booking) =>
-          startMinutes < booking.end &&
-          endTimeMinutes > booking.start &&
-          startMinutes < endTimeMinutes
-      );
-      return !isBooked;
-    });
-
-    return availableEndTimes;
-  };
-
-  const handleTutorChange = (e) => {
-    const selectedTutorId = e.target.value;
-    setSelectedTutor(selectedTutorId);
-
-    const availability = tutorsAvailabilityMap[selectedTutorId] || [];
-    setTutorAvailability(availability);
-
-    setStartTime("");
-    setEndTime("");
+    return endTimes;
   };
 
   const handleScheduleMeeting = () => {
@@ -285,7 +242,6 @@ const ScheduleMeeting = ({ isAdmin }) => {
     }
 
     const formattedDate = selectedDate.toISOString().split("T")[0];
-
     const newMeeting = {
       tutorId: selectedTutor,
       date: formattedDate,
@@ -293,16 +249,28 @@ const ScheduleMeeting = ({ isAdmin }) => {
       endTime: endTime,
     };
 
-    setScheduledMeetings([...scheduledMeetings, newMeeting]);
+    const startMinutes = parseTime(startTime);
+    const endMinutes = parseTime(endTime);
+    if (!isTimeSlotAvailable(startMinutes, endMinutes)) {
+      alert("Selected time slot is no longer available.");
+      return;
+    }
 
-    alert("Meeting scheduled successfully!");
+    const saveMeeting = async () => {
+      try {
+        await axios.post('/api/scheduleMeeting', newMeeting);
+        setScheduledMeetings([...scheduledMeetings, newMeeting]);
+        alert("Meeting scheduled successfully!");
+        setStartTime("");
+        setEndTime("");
+      } catch (error) {
+        console.error("Error scheduling meeting:", error);
+        alert("Failed to schedule meeting. Please try again.");
+      }
+    };
 
-    setStartTime("");
-    setEndTime("");
+    saveMeeting();
   };
-
-  const availableStartTimes = getAvailableStartTimes();
-  const availableEndTimes = getAvailableEndTimes();
 
   return (
     <>
@@ -316,18 +284,19 @@ const ScheduleMeeting = ({ isAdmin }) => {
           selected={selectedDate}
           onChange={(date) => {
             setSelectedDate(date);
-            setSelectedTutor("");
             setStartTime("");
             setEndTime("");
-            setTutorAvailability([]);
           }}
-          filterDate={isWeekday}
+          filterDate={(date) => {
+            const day = date.getDay();
+            return day >= 1 && day <= 4;
+          }}
           placeholderText="Select a date"
           className="input-field"
         />
         <select
           value={selectedTutor}
-          onChange={handleTutorChange}
+          onChange={(e) => setSelectedTutor(e.target.value)}
           className="input-field"
           disabled={!availableTutors.length}
         >
@@ -335,8 +304,8 @@ const ScheduleMeeting = ({ isAdmin }) => {
             Select a Tutor
           </option>
           {availableTutors.map((tutor) => (
-            <option key={tutor.userId} value={tutor.userId}>
-              {tutor.fullName}
+            <option key={tutor.tutor} value={tutor.tutor}>
+              {tutor.firstName} {tutor.lastName}
             </option>
           ))}
         </select>
@@ -348,12 +317,12 @@ const ScheduleMeeting = ({ isAdmin }) => {
               setEndTime("");
             }}
             className="input-field time-select"
-            disabled={!availableStartTimes.length}
+            disabled={!getAvailableStartTimes().length}
           >
             <option value="" disabled>
               Select start time
             </option>
-            {availableStartTimes.map((time, index) => (
+            {getAvailableStartTimes().map((time, index) => (
               <option key={index} value={time}>
                 {time}
               </option>
@@ -363,12 +332,12 @@ const ScheduleMeeting = ({ isAdmin }) => {
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
             className="input-field time-select"
-            disabled={!availableEndTimes.length}
+            disabled={!getAvailableEndTimes().length}
           >
             <option value="" disabled>
               Select end time
             </option>
-            {availableEndTimes.map((time, index) => (
+            {getAvailableEndTimes().map((time, index) => (
               <option key={index} value={time}>
                 {time}
               </option>

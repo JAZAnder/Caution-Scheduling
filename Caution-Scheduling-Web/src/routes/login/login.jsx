@@ -65,6 +65,44 @@ export default function Login() {
     }
   };
 
+  const handleGoogleLogin = async (res) => {
+    const token = res.credential;
+    try {
+      const response = await fetch('/api/luser/google-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        let errorMessage = errorResponse.error || 'Google login failed. Please try again.';
+  
+        if (errorMessage === 'Access restricted to @selu.edu email addresses') {
+          errorMessage = 'Use your university email to login';
+        }
+  
+        setError(errorMessage);
+        return;
+      }
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        setError(`Google login failed: ${errorText}`);
+        return;
+      }
+  
+      const userData = await response.json();
+      login(userData);
+      navigate('/');
+    } catch (err) {
+      console.error("Error during Google login:", err);
+      setError('Google login failed. Please try again.');
+    }
+  };
+
   return (
     <>
       <Background />
@@ -96,7 +134,10 @@ export default function Login() {
               </button>
               {error && <div className="login-page-error-message">{error}</div>}
               <span>or sign in with</span>
-              <SignInWithGoogleButton />
+              <SignInWithGoogleButton
+  onSuccess={handleGoogleLogin}
+  onFailure={(err) => setError('Google login failed. Please try again.')}
+/>
             </form>
           </div>
           <div className="login-page-intro">

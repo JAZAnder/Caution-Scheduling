@@ -11,6 +11,11 @@ export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
   const isMobile = useMediaQuery('(max-width: 900px)'); 
 
+  const handleLogout = (e) => {
+    e.preventDefault(); // Prevent default link behavior
+    logout(); // Call the logout function from AuthContext
+  };
+
   return (
     <div className="cs-navigation-bar">
       {!isMobile ? ( 
@@ -35,7 +40,7 @@ export default function NavigationBar() {
                 </li>
                 {user ? (
                   <li>
-                    <Link to={'/login'} onClick={logout}>Log Out</Link>
+                    <Link to={'/login'} onClick={handleLogout}>Log Out</Link>
                   </li>
                 ) : (
                   <li>
@@ -130,7 +135,7 @@ export default function NavigationBar() {
                 </LinkContainer>
                 {user ? (
                   <LinkContainer to="/login">
-                    <Nav.Link className="cs-nav-link" onClick={logout}>Log Out</Nav.Link>
+                    <Nav.Link className="cs-nav-link" onClick={handleLogout}>Log Out</Nav.Link>
                   </LinkContainer>
                 ) : (
                   <LinkContainer to="/login">

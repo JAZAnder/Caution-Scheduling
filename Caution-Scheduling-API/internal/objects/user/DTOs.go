@@ -63,6 +63,13 @@ type TutorInformation struct{
 	FullName string `json:"fullName"`
 }
 
+type StandardUserInformationId struct{
+	Id   int `json:"id"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Email      string `json:"email"`
+}
+
 type StandardUserInformation struct{
 	UserName   string `json:"userName"`
 	FirstName  string `json:"firstName"`

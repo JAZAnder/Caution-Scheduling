@@ -4,24 +4,46 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
+
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
-	"github.com/gorilla/mux"
+
 )
 
 func getTutorsAvailability(w http.ResponseWriter, r *http.Request) {
-	var uh userHour.UserHour
-	var err error
 	vars := mux.Vars(r)
-	uh.TutorId, err = strconv.Atoi(vars["userId"]) 
-
-	if err != nil {
-		//TODO Return non Generic Error
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+	tutorId, err := strconv.Atoi(vars["tutorId"]) //TODO Return non Generic Error
+	if err != nil { responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	date, err := strconv.Atoi(vars["date"]) //TODO Return non Generic Error
+	if err != nil { responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	userHours, err := uh.GetHoursByUserId(database)
+	userHours, err := userHour.GetAvailableHoursByUserAndDay(database, tutorId, date)
+
+
+
+	if err != nil {
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	responses.RespondWithJSON(w, http.StatusOK, userHours)
+}
+
+func getTutorsAvailabilityByDateOnly(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	date, err := strconv.Atoi(vars["date"]) //TODO Return non Generic Error
+	if err != nil { responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	userHours, err := userHour.GetAvailableHoursByDay(database, date)
+
+
 
 	if err != nil {
 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
@@ -31,20 +53,4 @@ func getTutorsAvailability(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func getEverythingByFilter(w http.ResponseWriter, r *http.Request) {
 
-	//TODO Filter By Things 
-	filter := userHour.TutorsAndHours{}
-
-	
-	UsersAndTimeSlots, err := userHour.GetUserTimeslotByFilter(database, filter)
-
-
-	if err != nil {
-		//TODO Return non Generic Error
-		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	responses.RespondWithJSON(w, http.StatusOK, UsersAndTimeSlots)
-}

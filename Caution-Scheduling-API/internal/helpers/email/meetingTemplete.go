@@ -6,6 +6,7 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+
 )
 
 func NewMeeting(student user.LocalUser, tutor user.LocalUser, meeting meeting.Meeting) {
@@ -14,10 +15,10 @@ func NewMeeting(student user.LocalUser, tutor user.LocalUser, meeting meeting.Me
 }
 
 func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
-	if !student.Settings.ReceiveMeetingEmails {
-		logger.Log(2, "Email", "New Meeting Student", student.UserName, student.FirstName+" "+student.LastName+" has declined to receive emails.")
-		return
-	}
+	// if !student.Settings.ReceiveMeetingEmails {
+	// 	logger.Log(2, "Email", "New Meeting Student", student.UserName, student.FirstName+" "+student.LastName+" has declined to receive emails.")
+	// 	return
+	// }
 
 	htmlContent := `<!DOCTYPE html>
 <html lang="en">
@@ -81,7 +82,6 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             <ul>
                 <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
                 <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
-                <li><strong>Location:</strong> ` + strconv.Itoa(meeting.LabId) + `</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>
@@ -95,17 +95,16 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
 `
 	plainTextContent := `Hi ` + student.FullName + `, Thank you for scheduling a meeting with Caution Scheduling! Meeting Details: ` + strconv.Itoa(meeting.Date) + ` -- ` + strconv.Itoa(meeting.UserHourId) + ``
 
+	logger.Log(1, "Email", "Meeting", "emailManager", "Email has been send to "+student.FullName+" at "+student.Email+" informing them about a meeting they scheduled")
 	sendEmail(student.Email, student.FullName, "New Meeting Scheduled", htmlContent, plainTextContent)
-
-	return
 
 }
 
 func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
-	if !tutor.Settings.ReceiveMeetingEmails {
-		logger.Log(2, "Email", "New Meeting Student", tutor.UserName, tutor.FirstName+" "+tutor.LastName+" has declined to receive emails.")
-		return
-	}
+	// if !tutor.Settings.ReceiveMeetingEmails {
+	// 	logger.Log(2, "Email", "New Meeting Student", tutor.UserName, tutor.FirstName+" "+tutor.LastName+" has declined to receive emails.")
+	// 	return
+	// }
 
 	htmlContent := `<!DOCTYPE html>
 <html lang="en">
@@ -169,7 +168,6 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             <ul>
                 <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
                 <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
-                <li><strong>Location:</strong> ` + strconv.Itoa(meeting.LabId) + `</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>
@@ -182,7 +180,6 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
 </html>
 `
 	plainTextContent := `Hi ` + tutor.FullName + `, Thank you for scheduling a meeting with Caution Scheduling! Meeting Details: ` + strconv.Itoa(meeting.Date) + ` -- ` + strconv.Itoa(meeting.UserHourId) + ``
-
+    logger.Log(1, "Email", "Meeting", "emailManager", "Email has been send to "+tutor.FullName+" at "+tutor.Email+" informing them about a meeting that was scheduled with them")
 	sendEmail(tutor.Email, tutor.FullName, "New Meeting Scheduled", htmlContent, plainTextContent)
-	return
 }
