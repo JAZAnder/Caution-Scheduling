@@ -6,6 +6,10 @@
   margin: auto; 
 }
 
+.tutor-timeslots-container {
+  margin: 10% 20px 10% 20px; 
+}
+
 .timeslot-table {
   width: 100%;
   table-layout: fixed; 

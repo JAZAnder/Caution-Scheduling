@@ -42,69 +42,68 @@ function ManageUsers() {
 
   return (
     <>
-      
-      <div className="manage-users-page">
-        
+      <Background />
+      <div className="manage-users-container1">
+        <div className="manage-users-page">
+          <div id="filterOnBar">
+            <form>
+              <input
+                id="username"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                type="text"
+                autoComplete="username"
+                placeholder="Username"
+              />
+              <input
+                id="FirstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                type="text"
+                placeholder="First Name"
+              />
+              <input
+                id="LastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                type="text"
+                placeholder="Last Name"
+              />
+              <input
+                id="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Email"
+              />
+              <select
+                name="role"
+                id="role"
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value=""> role </option>
+                <option value="1"> Student</option>
+                <option value="2"> Tutors</option>
+                <option value="3"> Supervisors</option>
+                <option value="4"> Administrators</option>
+              </select>
 
-        <div id="filterOnBar">
-          <form>
-            <input
-              id="username"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              type="text"
-              autoComplete="username"
-              placeholder="Username"
-            />
-            <input
-              id="FirstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              type="text"
-              placeholder="First Name"
-            />
-            <input
-              id="LastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              type="text"
-              placeholder="Last Name"
-            />
-            <input
-              id="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="text"
-              placeholder="Email"
-            />
-            <select
-              name="role"
-              id="role"
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value=""> role </option>
-              <option value="1"> Student</option>
-              <option value="2"> Tutors</option>
-              <option value="3"> Supervisors</option>
-              <option value="4"> Administrators</option>
-            </select>
-
-            <button type="button" disabled={loading} onClick={resetSearch}>
-              {loading ? 'Waiting' : 'Reset Search'}
-            </button>
-          </form>
-          <NewUserButton />
+              <button type="button" disabled={loading} onClick={resetSearch}>
+                {loading ? 'Waiting' : 'Reset Search'}
+              </button>
+            </form>
+            <NewUserButton />
+          </div>
+          
+          <ListFilteredUser
+            FLuserName={userName}
+            FLfirstName={firstName}
+            FLlastName={lastName}
+            FLemail={email}
+            FLrole={role}
+            debounce={debounce}
+          />
         </div>
-        
-        <ListFilteredUser
-          FLuserName={userName}
-          FLfirstName={firstName}
-          FLlastName={lastName}
-          FLemail={email}
-          FLrole={role}
-          debounce={debounce}
-        />
-
       </div>
     </>
   );
@@ -129,7 +128,7 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
     <div id="userNameTable">
       <table className="table-with-bordered">
         <thead>
-        <tr>
+          <tr>
             <th>User Id</th>
             <th>Username</th>
             <th>First Name</th>
