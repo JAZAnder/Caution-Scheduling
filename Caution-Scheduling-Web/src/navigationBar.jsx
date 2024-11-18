@@ -1,19 +1,22 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext'; 
 import schedulingLogo from './assets/CautionSchedulingLogoUpdate.png';
 import useMediaQuery from './context/useMediaQuery';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import "./App.css"; // Ensure it includes the updated, scoped CSS
+import "./App.css"; 
 
 export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
   const isMobile = useMediaQuery('(max-width: 900px)'); 
+  const navigate = useNavigate();
 
   const handleLogout = (e) => {
-    e.preventDefault(); // Prevent default link behavior
-    logout(); // Call the logout function from AuthContext
+    e.preventDefault();
+    logout(); 
+    navigate('/'); 
+    window.location.reload(); 
   };
 
   return (
