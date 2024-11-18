@@ -21,7 +21,7 @@ function MyMeeting() {
   }
 
   if (!meetings || meetings.length === 0) {
-    return <div>No meetings found.</div>;
+    return <div className="text-center">No meetings found.</div>;
   }
 
   console.log('Meetings Data:', meetings);
@@ -135,42 +135,45 @@ function MyMeeting() {
   return (
     <>
       <Background />
-      <div className="mymeetings-body">
-        <div id="userNameTable">
-          <table className="table-with-bordered">
-            <thead>
-              <tr>
-                <th>Meeting Id(s)</th>
-                <th>Topic</th>
-                <th>Student</th>
-                <th>Tutor</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mergedMeetings.map((meeting, i) => (
-                <tr key={i}>
-                  <td>{meeting.mergedIds.join(', ')}</td>
-                  <td>{meeting.Topic.description}</td>
-                  <td>
-                    {meeting.Student.firstName} {meeting.Student.lastName}
-                  </td>
-                  <td>
-                    {meeting.Tutor.firstName} {meeting.Tutor.lastName}
-                  </td>
-                  <td>{meeting.date}</td>
-                  <td>
-                    {meeting.Hour.startTime} - {meeting.Hour.endTime}
-                  </td>
-                  <td>
-                    <MeetingDetailsButton meeting={meeting} />
-                  </td>
+      <div className="my-meetings-container">
+        <div className="mymeetings-body">
+          <div className="mymeetings-page">
+          <h2 className="my-meetings-h2">My Meetings</h2>
+            <table className="mymeetings-table">
+              <thead>
+                <tr>
+                  <th>Meeting Id(s)</th>
+                  <th>Topic</th>
+                  <th>Student</th>
+                  <th>Tutor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Details</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {mergedMeetings.map((meeting, i) => (
+                  <tr key={i}>
+                    <td>{meeting.mergedIds.join(', ')}</td>
+                    <td>{meeting.Topic.description}</td>
+                    <td>
+                      {meeting.Student.firstName} {meeting.Student.lastName}
+                    </td>
+                    <td>
+                      {meeting.Tutor.firstName} {meeting.Tutor.lastName}
+                    </td>
+                    <td>{meeting.date}</td>
+                    <td>
+                      {meeting.Hour.startTime} - {meeting.Hour.endTime}
+                    </td>
+                    <td>
+                      <MeetingDetailsButton meeting={meeting} className="details-details-button" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>
