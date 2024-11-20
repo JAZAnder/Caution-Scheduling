@@ -14,10 +14,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuth
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
-import Otherlink from "./routes/otherlink/otherlink.jsx"
 import Labschedule from "./routes/labschedule/labschedule.jsx"
 import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
-import Signinlab from './routes/signinlab/signinlab.jsx'
 import Aboutus from './routes/aboutus/aboutus.jsx'
 import Users from './routes/users/users.jsx'
 import Labs from './routes/labs/labs.jsx'
@@ -49,20 +47,12 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: "otherlink",
-        element: <Otherlink /> 
-      },
-      {
         path: "labschedule",
         element: <Labschedule /> 
       },
       {
         path: "schedulemeeting",
         element: <Schedulemeeting /> 
-      },
-      {
-        path: "signinlab",
-        element: <Signinlab /> 
       },
       {
         path: "aboutus",
