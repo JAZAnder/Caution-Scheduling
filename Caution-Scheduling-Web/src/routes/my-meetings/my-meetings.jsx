@@ -21,7 +21,14 @@ function MyMeeting() {
   }
 
   if (!meetings || meetings.length === 0) {
-    return <div className="text-center">No meetings found.</div>;
+    return (
+      <>
+        <Background />
+        <div className="my-meetings-container">
+          <div className="text-center">No meetings found. Try clicking another tab or reload?</div>
+        </div>
+      </>
+    );
   }
 
   console.log('Meetings Data:', meetings);
