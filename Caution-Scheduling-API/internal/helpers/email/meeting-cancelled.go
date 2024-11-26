@@ -1,4 +1,36 @@
-<!DOCTYPE html>
+package email
+
+import (
+	"strconv"
+
+
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
+	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
+)
+
+var db = database.GetDatabase()
+func MeetingCancel(student user.LocalUser, tutor user.LocalUser, meeting meeting.Meeting) {
+	meetingCancel(student, meeting)
+	meetingCancel(tutor, meeting)
+}
+
+func meetingCancel(student user.LocalUser, meeting meeting.Meeting) {
+	// if !student.Settings.ReceiveMeetingEmails {
+	// 	logger.Log(2, "Email", "New Meeting Student", student.UserName, student.FirstName+" "+student.LastName+" has declined to receive emails.")
+	// 	return
+	// }
+
+	var uh = userHour.UserHour{Id: meeting.Id}
+	uh.GetUserHour(db)
+	
+	var h = hour.Hour{Id: uh.HourId}
+	h.GetHour(db)
+
+	htmlContent := `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -111,13 +143,13 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span>Was scheduled for: <span class="highlight">December 6, 2024</span></span>
+                <span>Was scheduled for: <span class="highlight">` + strconv.Itoa(meeting.Date)  + `</span></span>
             </div>
             <div class="detail-item">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>At: <span class="highlight">1:00 PM EST</span></span>
+                <span>At: <span class="highlight"> `+ h.StartTime + `</span></span>
             </div>
         </div>
 
@@ -132,3 +164,11 @@
     </div>
 </body>
 </html>
+
+`
+	plainTextContent := `Hi ` + student.FullName + `, Thank you for scheduling a meeting with Caution Scheduling! Meeting Details: ` + strconv.Itoa(meeting.Date) + ` -- ` + strconv.Itoa(meeting.UserHourId) + ``
+
+	logger.Log(1, "Email", "Meeting", "emailManager", "Email has been send to "+student.FullName+" at "+student.Email+" informing them about a meeting they scheduled")
+	sendEmail(student.Email, student.FullName, "New Meeting Scheduled", htmlContent, plainTextContent)
+
+}
