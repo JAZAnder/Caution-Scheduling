@@ -258,7 +258,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
     const saveMeeting = async () => {
       try {
-        await axios.post('/api/scheduleMeeting', newMeeting);
+        await axios.post('/api/meeting', newMeeting);
         setScheduledMeetings([...scheduledMeetings, newMeeting]);
         alert("Meeting scheduled successfully!");
         setStartTime("");
