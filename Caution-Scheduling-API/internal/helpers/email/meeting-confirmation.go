@@ -3,6 +3,7 @@ package email
 import (
 	"strconv"
 
+
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/hour"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
@@ -10,12 +11,13 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/userHour"
 )
 
-func MeetingCancel(student user.LocalUser, tutor user.LocalUser, meeting meeting.Meeting) {
-	meetingCancel(student, meeting)
-	meetingCancel(tutor, meeting)
+
+func MeetingCreated(student user.LocalUser, tutor user.LocalUser, meeting meeting.Meeting) {
+	meetingCreated(student, meeting)
+	meetingCreated(tutor, meeting)
 }
 
-func meetingCancel(student user.LocalUser, meeting meeting.Meeting) {
+func meetingCreated(student user.LocalUser, meeting meeting.Meeting) {
 	// if !student.Settings.ReceiveMeetingEmails {
 	// 	logger.Log(2, "Email", "New Meeting Student", student.UserName, student.FirstName+" "+student.LastName+" has declined to receive emails.")
 	// 	return
@@ -32,11 +34,11 @@ func meetingCancel(student user.LocalUser, meeting meeting.Meeting) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting Cancelled</title>
+    <title>Meeting Confirmation</title>
     <style>
         :root {
-            --southeastern-green: #2B5234;
-            --southeastern-gold: #FFC72C;
+            --southeastern-green: #2B5234;  /* Pantone 357 C */
+            --southeastern-gold: #FFC72C;   /* Pantone 123 C */
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -54,7 +56,7 @@ func meetingCancel(student user.LocalUser, meeting meeting.Meeting) {
             border-top: 4px solid var(--southeastern-green);
         }
         .status-banner {
-            background-color: #64748b;
+            background-color: var(--southeastern-green);
             color: white;
             padding: 15px 20px;
             border-radius: 6px;
@@ -118,41 +120,37 @@ func meetingCancel(student user.LocalUser, meeting meeting.Meeting) {
             color: var(--southeastern-green);
             font-weight: 500;
         }
-        .emoji {
-            font-size: 1.2em;
-            margin-right: 5px;
-        }
     </style>
 </head>
 <body>
     <div class="email-container">
         <div class="status-banner">
-            Meeting Cancelled 
+            Meeting Confirmed
         </div>
         
-        <h2>Sometimes plans change...</h2>
+        <h2>Hello there,</h2>
         
-        <p>Your meeting has been cancelled - no worries! Feel free to reschedule whenever you're ready. We'll be here! <span class="emoji">👋</span></p>
+        <p>Thank you for scheduling your meeting! We're looking forward to connecting with you.</p>
         
         <div class="meeting-details">
-            <h3 style="margin-top: 0;">Cancelled Meeting Details:</h3>
+            <h3 style="margin-top: 0;">Meeting Details:</h3>
             <div class="detail-item">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span>Was scheduled for: <span class="highlight">` + strconv.Itoa(meeting.Date)  + `</span></span>
+                <span>Date: <span class="highlight">`+ strconv.Itoa(meeting.Date)+`</span></span>
             </div>
             <div class="detail-item">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>At: <span class="highlight"> `+ h.StartTime + `</span></span>
+                <span>Time: <span class="highlight">`+h.StartTime+`</span></span>
             </div>
         </div>
 
-        <p>Ready to reschedule? We'd love to meet with you!</p>
+        <p>Need to make changes? No problem! You can reschedule or cancel your meeting if needed.</p>
         
-        <a href="#" class="button">Schedule New Meeting</a>
+        <a href="#" class="button">Add to Calendar</a>
         
         <div class="footer">
             <p>Questions? Contact us at <a href="mailto:support@tutoring.cantusolutions.com">support@tutoring.cantusolutions.com</a></p>
