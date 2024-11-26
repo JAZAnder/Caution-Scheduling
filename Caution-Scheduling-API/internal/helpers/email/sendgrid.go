@@ -12,7 +12,9 @@ import (
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
+	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/database"
 )
+var db = database.GetDatabase()
 
 func Demo() {
 
