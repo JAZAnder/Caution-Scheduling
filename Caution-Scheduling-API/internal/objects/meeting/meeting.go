@@ -92,8 +92,8 @@ func GetMyMeetings(db *sql.DB, userId int) ([]BasicMeetingDto, error) {
 			"join hours h on uh.hourId = h.Id " +
 			"join localusers student on m.studentId = student.Id " +
 			"left join topic on m.topicId = topic.Id " +
-			"Where student.Id = " + strconv.Itoa(userId) + " or tutor.Id = " + strconv.Itoa(userId) +
-			";"
+			"Where (state = 1) AND (student.Id = " + strconv.Itoa(userId) + " or tutor.Id = " + strconv.Itoa(userId) +
+			");"
 
 
 			logger.Log(1, "Database", "GetMeetings", "databaseMaster", query)
@@ -126,7 +126,7 @@ func GetAllMeetingsByFilter(db *sql.DB, filter MeetingFilter) ([]AdminMeetingDto
 			"join hours h on uh.hourId = h.Id " +
 			"join localusers student on m.studentId = student.Id " +
 			"left join topic on m.topicId = topic.Id " +
-			"Where tutor.fullName like '%"+filter.Tutor+"%' AND student.fullName like '%"+filter.Student+"%' AND h.startTime like '%"+filter.StartTime+"%' AND h.endTime like '%"+filter.EndTime+"%' "
+			"Where status = 1 AND tutor.fullName like '%"+filter.Tutor+"%' AND student.fullName like '%"+filter.Student+"%' AND h.startTime like '%"+filter.StartTime+"%' AND h.endTime like '%"+filter.EndTime+"%' "
 
 
 
@@ -166,8 +166,14 @@ func GetAllMeetingsByFilter(db *sql.DB, filter MeetingFilter) ([]AdminMeetingDto
 	return meetings, nil
 }
 
-// func (m *Meeting) DeleteMeeting(db *sql.DB) error {
-// 	query := "DELETE FROM `meetings` WHERE `meetings`.`Id`=" + strconv.Itoa(m.Id) + ""
-// 	_, err := db.Exec(query)
-// 	return err
-// }
+func ArchiveMeeting(db *sql.DB, meetingId int) error {
+	query := "UPDATE `meetings` SET `state` = '2' WHERE (`Id` = '"+strconv.Itoa(meetingId)+"');"
+	_, err := db.Exec(query)
+	return err
+}
+
+func DeleteMeeting(db *sql.DB, meetingId int) error {
+	query := "UPDATE `meetings` SET `state` = '0' WHERE (`Id` = '"+strconv.Itoa(meetingId)+"');"
+	_, err := db.Exec(query)
+	return err
+}
