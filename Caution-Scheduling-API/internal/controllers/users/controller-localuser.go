@@ -157,12 +157,30 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if !currentUser.IsAdmin {
-		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+	
+	authorized, err := currentUser.HasSupervisorRights()
+
+	if err != nil {
+		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	if !authorized {
+		responses.RespondWithError(w, http.StatusForbidden, "Insufficient Permissions")
+		return
+	}
+
+
 	u.UserName = r.PostFormValue("UserName")
+
+
+	u.GetUser(database)
+
+	if u.Role > currentUser.Role  {
+		responses.RespondWithError(w, http.StatusForbidden, "Supervisors are Unable to reset Administrator Passwords")
+		return
+	}
+
 	u.Password = r.PostFormValue("password")
 	u.ChangePassword(database)
 	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
