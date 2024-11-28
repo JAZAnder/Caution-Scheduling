@@ -35,6 +35,7 @@ func createLocalUserTables() {
 		"`role` int NOT NULL," +
 		"`fullName` varchar(225) NOT NULL," +
 		"`googleId` varchar(225)," +
+		"`strikes` int DEFAULT 0," +
 		"`isAdmin` boolean NOT NULL" +
 		");"
 
@@ -136,7 +137,11 @@ func createMeetingsTable() {
 		"`tutorHourId` int DEFAULT NULL," +
 		"`studentId` int DEFAULT NULL," +
 		"`date` BIGINT NOT NULL ," +
+		"`state` int DEFAULT 1," +
 		"`topicId` int DEFAULT NULL);"
+		//State 0 = Deleted
+		//State 1 = Active
+		//State 2 = Archived
 
 	logger.Log(2, "database", "Create Table", "System", "Creating meetings table")
 
