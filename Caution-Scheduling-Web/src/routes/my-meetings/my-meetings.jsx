@@ -66,6 +66,16 @@ function MyMeeting() {
     return hours * 60 + minutes;
   }
 
+  function minutesToTimeString(totalMinutes) {
+    let hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) hours -= 12;
+    if (hours === 0) hours = 12;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    return `${hours}:${displayMinutes} ${ampm}`;
+  }
+
   function getStartTimeMinutes(meeting) {
     if (!meeting.Hour || !meeting.Hour.startTime) {
       console.error('Error: meeting.Hour.startTime is undefined for meeting:', meeting);
@@ -96,35 +106,49 @@ function MyMeeting() {
     let currentMergedMeeting = {
       ...meetingsArray[0],
       mergedIds: [meetingsArray[0].id],
+      mergedStartTime: getStartTimeMinutes(meetingsArray[0]),
+      mergedEndTime: getEndTimeMinutes(meetingsArray[0]),
     };
 
     for (let i = 1; i < meetingsArray.length; i++) {
       const currentMeeting = meetingsArray[i];
 
-      const prevEndTime = getEndTimeMinutes(currentMergedMeeting);
       const currStartTime = getStartTimeMinutes(currentMeeting);
+      const currEndTime = getEndTimeMinutes(currentMeeting);
 
       if (
         currentMergedMeeting.date === currentMeeting.date &&
         currentMergedMeeting.Tutor.id === currentMeeting.Tutor.id &&
         currentMergedMeeting.Student.id === currentMeeting.Student.id &&
         currentMergedMeeting.Topic.id === currentMeeting.Topic.id &&
-        prevEndTime !== null &&
         currStartTime !== null &&
-        prevEndTime === currStartTime
+        currEndTime !== null &&
+        currStartTime <= currentMergedMeeting.mergedEndTime
       ) {
-        currentMergedMeeting.Hour.endTime = currentMeeting.Hour.endTime;
+        // Update merged start and end times
+        currentMergedMeeting.mergedStartTime = Math.min(currentMergedMeeting.mergedStartTime, currStartTime);
+        currentMergedMeeting.mergedEndTime = Math.max(currentMergedMeeting.mergedEndTime, currEndTime);
         currentMergedMeeting.mergedIds.push(currentMeeting.id);
       } else {
+        // Before pushing, update Hour.startTime and Hour.endTime from merged times
+        currentMergedMeeting.Hour.startTime = minutesToTimeString(currentMergedMeeting.mergedStartTime);
+        currentMergedMeeting.Hour.endTime = minutesToTimeString(currentMergedMeeting.mergedEndTime);
         mergedMeetings.push(currentMergedMeeting);
+        // Start new currentMergedMeeting
         currentMergedMeeting = {
           ...currentMeeting,
           mergedIds: [currentMeeting.id],
+          mergedStartTime: currStartTime,
+          mergedEndTime: currEndTime,
         };
       }
     }
 
+    // Update the last merged meeting
+    currentMergedMeeting.Hour.startTime = minutesToTimeString(currentMergedMeeting.mergedStartTime);
+    currentMergedMeeting.Hour.endTime = minutesToTimeString(currentMergedMeeting.mergedEndTime);
     mergedMeetings.push(currentMergedMeeting);
+
     return mergedMeetings;
   }
 
