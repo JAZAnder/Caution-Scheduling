@@ -14,6 +14,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedTutor, setSelectedTutor] = useState("");
   const [tutorAvailability, setTutorAvailability] = useState([]);
   const [scheduledMeetings, setScheduledMeetings] = useState([]);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   const formatSelectedDate = () => {
     if (!selectedDate) return "";
@@ -183,7 +184,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
   const handleScheduleMeeting = () => {
     if (!selectedTutor || !selectedDate || !startTime || !endTime) {
-      alert("Please select a tutor, date, start time, and end time.");
+      setNotificationMessage("Please select a tutor, date, start time, and end time.");
       return;
     }
 
@@ -192,7 +193,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
     const endMinutes = parseTime(endTime);
 
     if (!isTimeSlotAvailable(startMinutes, endMinutes)) {
-      alert("Selected time slot is no longer available.");
+      setNotificationMessage("Selected time slot is no longer available.");
       return;
     }
 
@@ -210,7 +211,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
       if (slot) {
         tutorHourIds.push(slot.id); // slot.id is the tutorHourId
       } else {
-        alert(`No availability for time ${timeStr}`);
+        setNotificationMessage(`No availability for time ${timeStr}`);
         return;
       }
     }
@@ -236,7 +237,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
           console.log("API response:", response.data);
         }
 
-        alert("Meeting scheduled successfully!");
+        setNotificationMessage("Your meeting is scheduled");
         setScheduledMeetings([
           ...scheduledMeetings,
           ...tutorHourIds.map((id) => ({
@@ -251,11 +252,15 @@ const ScheduleMeeting = ({ isAdmin }) => {
         const errorMessage =
           error.response?.data?.message ||
           "Failed to schedule meeting. Please try again.";
-        alert(errorMessage);
+        setNotificationMessage(errorMessage);
       }
     };
 
     saveMeeting();
+  };
+
+  const closeNotification = () => {
+    setNotificationMessage('');
   };
 
   return (
@@ -340,6 +345,15 @@ const ScheduleMeeting = ({ isAdmin }) => {
           Schedule Meeting
         </button>
       </div>
+
+      {/* Notification Popup */}
+      {notificationMessage && (
+        <div className="notification-popup" onClick={closeNotification}>
+          <div className="notification-content">
+            <p>{notificationMessage}</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };
