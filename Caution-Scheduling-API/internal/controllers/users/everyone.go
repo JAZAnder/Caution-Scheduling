@@ -44,7 +44,7 @@ func googleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil && err.Error() == "user not found" {
 		u.FirstName = googleUser.GivenName
 		u.LastName = googleUser.FamilyName
-		u.UserName = strings.ToLower(googleUser.GivenName + "." + googleUser.FamilyName)
+		u.UserName = strings.ToLower(googleUser.Email)
 		u.Role = 1
 		u.FullName = u.FirstName + " " + u.LastName
 		u.GoogleId = googleUser.Sub
