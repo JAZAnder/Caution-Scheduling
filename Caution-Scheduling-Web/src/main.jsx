@@ -10,7 +10,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
+import { GoogleOAuthProvider } from '@react-oauth/google'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
@@ -28,6 +28,7 @@ import AdminMeetings from './routes/admin/meetings/meetings.jsx';
 import MyAvailability from './routes/my-availability/my-availability.jsx'
 import UserTimeslots from './routes/usertimeslots/usertimeslots'
 import TimeslotManagement from './routes/tutortimeslots/tutortimeslots.jsx'
+import MyProfile from './routes/MyProfile/MyProfile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
       {
         path: "user-timeslots",
         element: <UserTimeslots/>
+      },
+      {
+        path: "MyProfile",
+        element: <MyProfile />
       },{
         path: "admin",
         children:[

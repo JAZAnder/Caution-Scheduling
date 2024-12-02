@@ -1,26 +1,27 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext'; 
 import schedulingLogo from './assets/CautionSchedulingLogoUpdate.png';
 import useMediaQuery from './context/useMediaQuery';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import "./App.css"; // Ensure it includes the updated, scoped CSS
+import "./App.css"; 
 
 export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
   const isMobile = useMediaQuery('(max-width: 900px)'); 
+  const navigate = useNavigate();
 
-  const handleLogout = (e) => {
-    e.preventDefault(); // Prevent default link behavior
-    logout(); // Call the logout function from AuthContext
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout(); 
+    navigate('/'); 
   };
 
   return (
     <div className="cs-navigation-bar">
       {!isMobile ? ( 
         <>
-          {/* Desktop Header */}
           <header className="cs-topheader">
             <a href="/" className="cs-header-logo-link">
               <img
@@ -39,9 +40,14 @@ export default function NavigationBar() {
                   <Link to={'/otherlink'}>Other Link</Link>
                 </li>
                 {user ? (
-                  <li>
-                    <Link to={'/login'} onClick={handleLogout}>Log Out</Link>
-                  </li>
+                  <>
+                    <li>
+                      <Link to={'/MyProfile'}>My Profile</Link>
+                    </li>
+                    <li>
+                      <a href="#" onClick={handleLogout}>Log Out</a>
+                    </li>
+                  </>
                 ) : (
                   <li>
                     <Link to={'/login'}>Employee Login</Link>
@@ -51,7 +57,6 @@ export default function NavigationBar() {
             </nav>
           </header>
 
-          {/* Desktop Bottom Header */}
           <header className="cs-bottomheader">
             <nav>
               <ul className="cs-nav-list">
@@ -117,7 +122,6 @@ export default function NavigationBar() {
           </header>
         </>
       ) : ( 
-        // Mobile Navbar using React Bootstrap
         <Navbar className="cs-navbar" expand="lg" style={{ backgroundColor: '#1a5632' }}>
           <Container fluid>
             <LinkContainer to="/">
@@ -140,9 +144,14 @@ export default function NavigationBar() {
                   <Nav.Link className="cs-nav-link">Other Link</Nav.Link>
                 </LinkContainer>
                 {user ? (
-                  <LinkContainer to="/login">
-                    <Nav.Link className="cs-nav-link" onClick={handleLogout}>Log Out</Nav.Link>
-                  </LinkContainer>
+                  <>
+                    <LinkContainer to="/MyProfile">
+                      <Nav.Link className="cs-nav-link">My Profile</Nav.Link>
+                    </LinkContainer>
+                    <Nav.Link className="cs-nav-link" onClick={handleLogout} href="#">
+                      Log Out
+                    </Nav.Link>
+                  </>
                 ) : (
                   <LinkContainer to="/login">
                     <Nav.Link className="cs-nav-link">Employee Login</Nav.Link>
@@ -164,6 +173,9 @@ export default function NavigationBar() {
                   <>
                     <LinkContainer to="/meetings">
                       <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/adminmeetings">
+                      <Nav.Link className="cs-nav-link">Admin Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/users">
                       <Nav.Link className="cs-nav-link">Users</Nav.Link>
