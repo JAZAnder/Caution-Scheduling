@@ -12,7 +12,6 @@ export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
   const isMobile = useMediaQuery('(max-width: 900px)'); 
   const navigate = useNavigate();
-  const navigate = useNavigate();
 
   const handleLogout = async (e) => {
     e.preventDefault();
