@@ -55,8 +55,16 @@ func createLocalUser(w http.ResponseWriter, r *http.Request) {
 		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
 		return
 	}
+
+	goodPassword, err := helpers.PasswordTest(userToCreate.Password)
+
+	if !goodPassword {
+		responses.RespondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	
 	if helpers.IllegalString(userToCreate.UserName) || len(userToCreate.Password) <= 0 || helpers.IllegalString(userToCreate.FirstName) || helpers.IllegalString(userToCreate.LastName) || helpers.IllegalString(userToCreate.Email) {
-		responses.RespondWithError(w, http.StatusBadRequest, "All User Feilds Must Be Vaild")
+		responses.RespondWithError(w, http.StatusBadRequest, "All User Felid Must Be Valid")
 		return
 	}
 
