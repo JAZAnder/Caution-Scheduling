@@ -6,10 +6,12 @@ import useMediaQuery from './context/useMediaQuery';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import "./App.css"; 
+import "./App.css"; 
 
 export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
   const isMobile = useMediaQuery('(max-width: 900px)'); 
+  const navigate = useNavigate();
   const navigate = useNavigate();
 
   const handleLogout = async (e) => {
@@ -36,9 +38,6 @@ export default function NavigationBar() {
                 <li>
                   <Link to={'/'}>Home</Link>
                 </li>
-                <li>
-                  <Link to={'/otherlink'}>Other Link</Link>
-                </li>
                 {user ? (
                   <>
                     <li>
@@ -50,7 +49,7 @@ export default function NavigationBar() {
                   </>
                 ) : (
                   <li>
-                    <Link to={'/login'}>Employee Login</Link>
+                    <Link to={'/login'}>Login</Link>
                   </li>
                 )}
               </ul>
@@ -67,10 +66,7 @@ export default function NavigationBar() {
                   <Link to={"/schedulemeeting"}>Schedule a Meeting</Link>
                 </li>
                 <li>
-                  <Link to={"/signinlab"}>Sign into Lab</Link>
-                </li>
-                <li>
-                  <Link to={"/aboutus"}>About Us</Link>
+                  <Link to={"/aboutus"}>About the Team</Link>
                 </li>
                 {user && user.role === 'Administrator' && (
                   <>
@@ -88,9 +84,6 @@ export default function NavigationBar() {
                     </li>
                     <li>
                       <Link to={'/timeslots'}>Timeslots</Link>
-                    </li>
-                    <li>
-                      <Link to={'/timeslotmanagement'}>Timeslot Management</Link>
                     </li>
                   </>
                 )}
@@ -140,9 +133,6 @@ export default function NavigationBar() {
                 <LinkContainer to="/">
                   <Nav.Link className="cs-nav-link">Home</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/otherlink">
-                  <Nav.Link className="cs-nav-link">Other Link</Nav.Link>
-                </LinkContainer>
                 {user ? (
                   <>
                     <LinkContainer to="/MyProfile">
@@ -154,7 +144,7 @@ export default function NavigationBar() {
                   </>
                 ) : (
                   <LinkContainer to="/login">
-                    <Nav.Link className="cs-nav-link">Employee Login</Nav.Link>
+                    <Nav.Link className="cs-nav-link">Login</Nav.Link>
                   </LinkContainer>
                 )}
                 <LinkContainer to="/labschedule">
@@ -163,11 +153,8 @@ export default function NavigationBar() {
                 <LinkContainer to="/schedulemeeting">
                   <Nav.Link className="cs-nav-link">Schedule a Meeting</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/signinlab">
-                  <Nav.Link className="cs-nav-link">Sign into Lab</Nav.Link>
-                </LinkContainer>
                 <LinkContainer to="/aboutus">
-                  <Nav.Link className="cs-nav-link">About Us</Nav.Link>
+                  <Nav.Link className="cs-nav-link">About the Team</Nav.Link>
                 </LinkContainer>
                 {user && user.role === 'Administrator' && (
                   <>

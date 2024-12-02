@@ -14,10 +14,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Login from "./routes/login/login.jsx"
-import Otherlink from "./routes/otherlink/otherlink.jsx"
 import Labschedule from "./routes/labschedule/labschedule.jsx"
 import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
-import Signinlab from './routes/signinlab/signinlab.jsx'
 import Aboutus from './routes/aboutus/aboutus.jsx'
 import Users from './routes/users/users.jsx'
 import Labs from './routes/labs/labs.jsx'
@@ -27,8 +25,8 @@ import MyMeetings from './routes/my-meetings/my-meetings.jsx'
 import AdminMeetings from './routes/admin/meetings/meetings.jsx';
 import MyAvailability from './routes/my-availability/my-availability.jsx'
 import UserTimeslots from './routes/usertimeslots/usertimeslots'
-import TimeslotManagement from './routes/tutortimeslots/tutortimeslots.jsx'
 import MyProfile from './routes/MyProfile/MyProfile.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -50,20 +48,12 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: "otherlink",
-        element: <Otherlink /> 
-      },
-      {
         path: "labschedule",
         element: <Labschedule /> 
       },
       {
         path: "schedulemeeting",
         element: <Schedulemeeting /> 
-      },
-      {
-        path: "signinlab",
-        element: <Signinlab /> 
       },
       {
         path: "aboutus",
@@ -84,10 +74,6 @@ const router = createBrowserRouter([
       {
         path: "timeslots",
         element: <Timeslots />
-      },
-      {
-        path: "timeslotmanagement",
-        element: <TimeslotManagement />
       },
       {
         path: "meetings",

@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
 import "./scheduleMeeting.css";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import qs from 'qs';
 
 const ScheduleMeeting = ({ isAdmin }) => {
@@ -184,7 +186,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
   const handleScheduleMeeting = () => {
     if (!selectedTutor || !selectedDate || !startTime || !endTime) {
-      setNotificationMessage("Please select a tutor, date, start time, and end time.");
+      toast.error("Please select a tutor, date, start time, and end time.", {
+        position: "top-right",
+        icon: "❌",
+      });
       return;
     }
 
@@ -193,7 +198,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
     const endMinutes = parseTime(endTime);
 
     if (!isTimeSlotAvailable(startMinutes, endMinutes)) {
-      setNotificationMessage("Selected time slot is no longer available.");
+      toast.error("Selected time slot is no longer available.", {
+        position: "top-right",
+        icon: "❌",
+      });
       return;
     }
 
@@ -249,19 +257,16 @@ const ScheduleMeeting = ({ isAdmin }) => {
         setEndTime("");
       } catch (error) {
         console.error("Error scheduling meeting:", error);
-        const errorMessage =
-          error.response?.data?.message ||
-          "Failed to schedule meeting. Please try again.";
-        setNotificationMessage(errorMessage);
+        toast.error("Failed to schedule meeting. Please try again.", {
+          position: "top-right",
+          icon: "❌",
+        });
       }
     };
-
+  
     saveMeeting();
   };
-
-  const closeNotification = () => {
-    setNotificationMessage('');
-  };
+  
 
   return (
     <>
@@ -345,17 +350,9 @@ const ScheduleMeeting = ({ isAdmin }) => {
           Schedule Meeting
         </button>
       </div>
-
-      {/* Notification Popup */}
-      {notificationMessage && (
-        <div className="notification-popup" onClick={closeNotification}>
-          <div className="notification-content">
-            <p>{notificationMessage}</p>
-          </div>
-        </div>
-      )}
+      <ToastContainer />
     </>
-  );
+  );  
 };
 
 export default ScheduleMeeting;
