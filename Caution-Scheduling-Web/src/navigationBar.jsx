@@ -6,7 +6,6 @@ import useMediaQuery from './context/useMediaQuery';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import "./App.css"; 
-import "./App.css"; 
 
 export default function NavigationBar() {
   const { user, logout } = useContext(AuthContext);
@@ -19,9 +18,25 @@ export default function NavigationBar() {
     navigate('/'); 
   };
 
+  const getCenterTextClass = () => {
+    if (!user) return 'cs-center-text-default';
+    switch (user.role) {
+      case 'Administrator':
+        return 'cs-center-text-admin';
+      case 'Supervisor':
+        return 'cs-center-text-supervisor';
+      case 'Tutor':
+        return 'cs-center-text-tutor';
+      case 'Student':
+        return 'cs-center-text-student';
+      default:
+        return 'cs-center-text-default';
+    }
+  };
+
   return (
     <div className="cs-navigation-bar">
-      {!isMobile ? ( 
+      {!isMobile ? (
         <>
           <header className="cs-topheader">
             <a href="/" className="cs-header-logo-link">
@@ -31,7 +46,7 @@ export default function NavigationBar() {
                 className="cs-header-logo"
               />
             </a>
-            <span className="cs-center-text">Caution Scheduling</span>
+            <span className={getCenterTextClass()}>Caution Scheduling</span>
             <nav>
               <ul className="cs-nav-list">
                 <li>
@@ -113,7 +128,7 @@ export default function NavigationBar() {
             </nav> 
           </header>
         </>
-      ) : ( 
+      ) : (
         <Navbar className="cs-navbar" expand="lg" style={{ backgroundColor: '#1a5632' }}>
           <Container fluid>
             <LinkContainer to="/">

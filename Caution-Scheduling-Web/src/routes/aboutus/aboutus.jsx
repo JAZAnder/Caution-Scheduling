@@ -14,25 +14,25 @@ const AboutUs = () => {
     {
       name: "Joshua Cantu",
       description: "Team Leader - Senior - Information Technology",
-      descriptionextended: "GoLang, MySL, ReactJS, NGinx",
+      descriptionextended: "GoLang, MySQL, ReactJS, NGinx, Documentation",
       imgSrc: JoshImage,
     },
     {
       name: "Chase Leimbach",
       description: "Senior - Information Technology",
-      descriptionextended: "HTML, CSS, ReactJS",
+      descriptionextended: "HTML, CSS, ReactJS, Documentation",
       imgSrc: ChaseImage,
     },
     {
       name: "Ethan Stoulig",
       description: "Senior - Scientific",
-      descriptionextended: "GoLang, Documentation",
+      descriptionextended: "HTML, CSS, GoLang, Documentation",
       imgSrc: EthanImage,
     },
     {
       name: "Dmitriy Levytskyi",
       description: "Senior - Information Technology",
-      descriptionextended: "ReactJS, CSS, HTML, GoLang",
+      descriptionextended: "ReactJS, CSS, HTML, GoLang, Documentation",
       imgSrc: DimaImage,
     },
   ];
