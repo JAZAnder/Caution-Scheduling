@@ -19,7 +19,7 @@ func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
-	logger.Log(0, "HTTP Response", strconv.Itoa(code), "responseMaster", string(response),  )
+	logger.Log(1, "HTTP Response", strconv.Itoa(code), "responseMaster", string(response),  )
 }
 
 func RespondWithJSONNoLog(w http.ResponseWriter, code int, payload interface{}) {
