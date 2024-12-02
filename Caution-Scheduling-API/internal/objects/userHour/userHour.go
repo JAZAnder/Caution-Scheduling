@@ -139,26 +139,21 @@ func GetAvailableHoursByDay(db *sql.DB, date int) ([]TutorsAndHours, error) {
 	return filteredResults, nil
 }
 
-func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHour, error) {
-	rows, err := db.Query("SELECT `Id`, `hourId`, `userId`, `available` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
+func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHourSimple, error) {
+	rows, err := db.Query("SELECT `Id`, `hourId`, `userId` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
 
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	userHours := []UserHour{}
-	var tempAva int
+	userHours := []UserHourSimple{}
 	for rows.Next() {
-		var uh UserHour
-		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId, &tempAva); err != nil {
+		var uh UserHourSimple
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId); err != nil {
 			return nil, err
 		}
-		if tempAva == 1 {
-			uh.Available = true
-		} else {
-			uh.Available = false
-		}
+		
 		userHours = append(userHours, uh)
 	}
 	return userHours, nil
