@@ -81,9 +81,6 @@ export default function NavigationBar() {
                     <li>
                       <Link to={'/timeslots'}>Timeslots</Link>
                     </li>
-                    <li>
-                      <Link to={'/timeslotmanagement'}>Timeslot Management</Link>
-                    </li>
                   </>
                 )}
                 {user && user.role === 'Supervisor' && (

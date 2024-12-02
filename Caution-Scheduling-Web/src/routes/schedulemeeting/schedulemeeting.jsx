@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Background from "../../background";
 import "./scheduleMeeting.css";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ScheduleMeeting = ({ isAdmin }) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -237,10 +239,13 @@ const ScheduleMeeting = ({ isAdmin }) => {
 
   const handleScheduleMeeting = () => {
     if (!selectedTutor || !selectedDate || !startTime || !endTime) {
-      alert("Please select a tutor, date, start time, and end time.");
+      toast.error("Please select a tutor, date, start time, and end time.", {
+        position: "top-right",
+        icon: "❌",
+      });
       return;
     }
-
+  
     const formattedDate = selectedDate.toISOString().split("T")[0];
     const newMeeting = {
       tutorId: selectedTutor,
@@ -248,29 +253,39 @@ const ScheduleMeeting = ({ isAdmin }) => {
       startTime: startTime,
       endTime: endTime,
     };
-
+  
     const startMinutes = parseTime(startTime);
     const endMinutes = parseTime(endTime);
     if (!isTimeSlotAvailable(startMinutes, endMinutes)) {
-      alert("Selected time slot is no longer available.");
+      toast.error("Selected time slot is no longer available.", {
+        position: "top-right",
+        icon: "❌",
+      });
       return;
     }
-
+  
     const saveMeeting = async () => {
       try {
         await axios.post('/api/scheduleMeeting', newMeeting);
         setScheduledMeetings([...scheduledMeetings, newMeeting]);
-        alert("Meeting scheduled successfully!");
+        toast.success("Meeting scheduled successfully!", {
+          position: "top-right",
+          icon: "✅",
+        });
         setStartTime("");
         setEndTime("");
       } catch (error) {
         console.error("Error scheduling meeting:", error);
-        alert("Failed to schedule meeting. Please try again.");
+        toast.error("Failed to schedule meeting. Please try again.", {
+          position: "top-right",
+          icon: "❌",
+        });
       }
     };
-
+  
     saveMeeting();
   };
+  
 
   return (
     <>
@@ -352,8 +367,9 @@ const ScheduleMeeting = ({ isAdmin }) => {
           Schedule Meeting
         </button>
       </div>
+      <ToastContainer />
     </>
-  );
+  );  
 };
 
 export default ScheduleMeeting;
