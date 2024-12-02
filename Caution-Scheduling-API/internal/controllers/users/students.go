@@ -131,6 +131,12 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	authorization, err := u.HasStudentRights()
+	if !authorization{
+		responses.RespondWithError(w, http.StatusUnauthorized, err.Error())
+			return
+	}
+
 	u.UserName = user.UserName
 	u.Password = r.PostFormValue("oldPassword")
 	err = u.Login(database)
