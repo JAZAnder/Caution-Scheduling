@@ -171,6 +171,157 @@ function ListFilteredMeetings({
     );
   }
 
+  function parseDate(dateStr) {
+    if (!dateStr) return null;
+
+    if (typeof dateStr === 'string') {
+      if (dateStr.length === 8) {
+        const month = dateStr.substring(0, 2);
+        const day = dateStr.substring(2, 4);
+        const year = dateStr.substring(4, 8);
+        return new Date(`${year}-${month}-${day}`);
+      }
+
+      const parsedDate = new Date(dateStr);
+      if (!isNaN(parsedDate)) {
+        return parsedDate;
+      }
+    }
+
+    if (dateStr instanceof Date) {
+      return dateStr;
+    }
+
+    if (typeof dateStr === 'number') {
+      return new Date(dateStr);
+    }
+
+    return null;
+  }
+
+  function formatDate(dateStr) {
+    const date = parseDate(dateStr);
+    if (!date) return dateStr;
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  }
+
+  function timeToMinutes(timeStr) {
+    const timeParts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!timeParts) return null;
+    let hours = parseInt(timeParts[1], 10);
+    const minutes = parseInt(timeParts[2], 10);
+    const ampm = timeParts[3].toUpperCase();
+    if (ampm === 'PM' && hours !== 12) hours += 12;
+    if (ampm === 'AM' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  }
+
+  function minutesToTimeString(totalMinutes) {
+    let hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    if (hours > 12) hours -= 12;
+    if (hours === 0) hours = 12;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    return `${hours}:${displayMinutes} ${ampm}`;
+  }
+
+  function getStartTimeMinutes(meeting) {
+    if (!meeting.TutorHour || !meeting.TutorHour.Hour || !meeting.TutorHour.Hour.startTime) {
+      console.error('Error: meeting.TutorHour.Hour.startTime is undefined for meeting:', meeting);
+      return null;
+    }
+    return timeToMinutes(meeting.TutorHour.Hour.startTime);
+  }
+
+  function getEndTimeMinutes(meeting) {
+    if (!meeting.TutorHour || !meeting.TutorHour.Hour || !meeting.TutorHour.Hour.endTime) {
+      console.error('Error: meeting.TutorHour.Hour.endTime is undefined for meeting:', meeting);
+      return null;
+    }
+    return timeToMinutes(meeting.TutorHour.Hour.endTime);
+  }
+
+  let meetingsArray = [];
+  if (meetings) {
+    meetingsArray = Object.values(meetings);
+  }
+
+  meetingsArray.sort((a, b) => {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+    if (dateA && dateB && dateA - dateB !== 0) return dateA - dateB;
+    return getStartTimeMinutes(a) - getStartTimeMinutes(b);
+  });
+
+  function mergeConsecutiveMeetings(meetingsArray) {
+    const mergedMeetings = [];
+    if (meetingsArray.length === 0) return mergedMeetings;
+
+    let currentMergedMeeting = {
+      ...meetingsArray[0],
+      mergedIds: [meetingsArray[0].id],
+      mergedStartTime: getStartTimeMinutes(meetingsArray[0]),
+      mergedEndTime: getEndTimeMinutes(meetingsArray[0]),
+    };
+
+    for (let i = 1; i < meetingsArray.length; i++) {
+      const currentMeeting = meetingsArray[i];
+
+      const currStartTime = getStartTimeMinutes(currentMeeting);
+      const currEndTime = getEndTimeMinutes(currentMeeting);
+
+      if (
+        currentMergedMeeting.date === currentMeeting.date &&
+        currentMergedMeeting.TutorHour.Tutor.id === currentMeeting.TutorHour.Tutor.id &&
+        currentMergedMeeting.Student.id === currentMeeting.Student.id &&
+        currentMergedMeeting.Topic.id === currentMeeting.Topic.id &&
+        currStartTime !== null &&
+        currEndTime !== null &&
+        currStartTime <= currentMergedMeeting.mergedEndTime
+      ) {
+        currentMergedMeeting.mergedStartTime = Math.min(
+          currentMergedMeeting.mergedStartTime,
+          currStartTime
+        );
+        currentMergedMeeting.mergedEndTime = Math.max(
+          currentMergedMeeting.mergedEndTime,
+          currEndTime
+        );
+        currentMergedMeeting.mergedIds.push(currentMeeting.id);
+      } else {
+        currentMergedMeeting.TutorHour.Hour.startTime = minutesToTimeString(
+          currentMergedMeeting.mergedStartTime
+        );
+        currentMergedMeeting.TutorHour.Hour.endTime = minutesToTimeString(
+          currentMergedMeeting.mergedEndTime
+        );
+        mergedMeetings.push(currentMergedMeeting);
+        currentMergedMeeting = {
+          ...currentMeeting,
+          mergedIds: [currentMeeting.id],
+          mergedStartTime: currStartTime,
+          mergedEndTime: currEndTime,
+        };
+      }
+    }
+
+    currentMergedMeeting.TutorHour.Hour.startTime = minutesToTimeString(
+      currentMergedMeeting.mergedStartTime
+    );
+    currentMergedMeeting.TutorHour.Hour.endTime = minutesToTimeString(
+      currentMergedMeeting.mergedEndTime
+    );
+    mergedMeetings.push(currentMergedMeeting);
+
+    return mergedMeetings;
+  }
+
+  const mergedMeetings = mergeConsecutiveMeetings(meetingsArray);
+
   return (
     <>
       <Background />
@@ -179,7 +330,7 @@ function ListFilteredMeetings({
           <table className="table-with-bordered">
             <thead>
               <tr>
-                <th>Meeting Id</th>
+                <th>Meeting Id(s)</th>
                 <th>Topic</th>
                 <th>Student</th>
                 <th>Tutor</th>
@@ -189,29 +340,23 @@ function ListFilteredMeetings({
               </tr>
             </thead>
             <tbody>
-              {meetings &&
-                Object.keys(meetings).map((meeting, i) => (
+              {mergedMeetings &&
+                mergedMeetings.map((meeting, i) => (
                   <tr key={i}>
-                    <td>{meetings[meeting].id}</td>
-                    <td>{meetings[meeting].Topic.description}</td>
+                    <td>{meeting.mergedIds.join(', ')}</td>
+                    <td>{meeting.Topic.description}</td>
                     <td>
-                      {meetings[meeting].Student.firstName +
-                        " " +
-                        meetings[meeting].Student.lastName}
+                      {meeting.Student.firstName} {meeting.Student.lastName}
                     </td>
                     <td>
-                      {meetings[meeting].TutorHour.Tutor.firstName +
-                        " " +
-                        meetings[meeting].TutorHour.Tutor.lastName}
+                      {meeting.TutorHour.Tutor.firstName} {meeting.TutorHour.Tutor.lastName}
                     </td>
-                    <td>{meetings[meeting].date}</td>
+                    <td>{formatDate(meeting.date)}</td>
                     <td>
-                      {meetings[meeting].TutorHour.Hour.startTime +
-                        " - " +
-                        meetings[meeting].TutorHour.Hour.endTime}
+                      {meeting.TutorHour.Hour.startTime} - {meeting.TutorHour.Hour.endTime}
                     </td>
                     <td>
-                      <MeetingDetailsButton meeting={meetings[meeting]} />
+                      <MeetingDetailsButton meeting={meeting} />
                     </td>
                   </tr>
                 ))}

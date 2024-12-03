@@ -1,16 +1,28 @@
 import { Outlet, Link } from "react-router-dom";
 import Background from "../../background";
 import './my-meetings.css';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useFetch from "use-http";
 import MeetingDetailsButton from "./details/details.jsx";
 
 function MyMeeting() {
-  const { data: meetings, loading, error } = useFetch(
-    `/api/meetings`,
-    { method: "get" },
-    []
-  );
+  const [meetings, setMeetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { get, response, error } = useFetch('/api/meetings');
+
+  useEffect(() => {
+    async function fetchMeetings() {
+      setLoading(true);
+      const fetchedMeetings = await get();
+      if (response.ok) {
+        setMeetings(fetchedMeetings);
+      } else {
+        setMeetings([]);
+      }
+      setLoading(false);
+    }
+    fetchMeetings();
+  }, []); // Empty dependency array ensures this runs once on mount
 
   if (loading) {
     return (
@@ -62,6 +74,15 @@ function MyMeeting() {
     return null;
   }
 
+  function formatDate(dateStr) {
+    const date = parseDate(dateStr);
+    if (!date) return dateStr;
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  }
+
   function timeToMinutes(timeStr) {
     const timeParts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!timeParts) return null;
@@ -99,6 +120,7 @@ function MyMeeting() {
     return timeToMinutes(meeting.Hour.endTime);
   }
 
+  // Sort meetings
   meetings.sort((a, b) => {
     const dateA = parseDate(a.date);
     const dateB = parseDate(b.date);
@@ -106,6 +128,7 @@ function MyMeeting() {
     return getStartTimeMinutes(a) - getStartTimeMinutes(b);
   });
 
+  // Merge consecutive meetings
   function mergeConsecutiveMeetings(meetingsArray) {
     const mergedMeetings = [];
     if (meetingsArray.length === 0) return mergedMeetings;
@@ -132,16 +155,13 @@ function MyMeeting() {
         currEndTime !== null &&
         currStartTime <= currentMergedMeeting.mergedEndTime
       ) {
-        // Update merged start and end times
         currentMergedMeeting.mergedStartTime = Math.min(currentMergedMeeting.mergedStartTime, currStartTime);
         currentMergedMeeting.mergedEndTime = Math.max(currentMergedMeeting.mergedEndTime, currEndTime);
         currentMergedMeeting.mergedIds.push(currentMeeting.id);
       } else {
-        // Before pushing, update Hour.startTime and Hour.endTime from merged times
         currentMergedMeeting.Hour.startTime = minutesToTimeString(currentMergedMeeting.mergedStartTime);
         currentMergedMeeting.Hour.endTime = minutesToTimeString(currentMergedMeeting.mergedEndTime);
         mergedMeetings.push(currentMergedMeeting);
-        // Start new currentMergedMeeting
         currentMergedMeeting = {
           ...currentMeeting,
           mergedIds: [currentMeeting.id],
@@ -151,7 +171,6 @@ function MyMeeting() {
       }
     }
 
-    // Update the last merged meeting
     currentMergedMeeting.Hour.startTime = minutesToTimeString(currentMergedMeeting.mergedStartTime);
     currentMergedMeeting.Hour.endTime = minutesToTimeString(currentMergedMeeting.mergedEndTime);
     mergedMeetings.push(currentMergedMeeting);
@@ -169,7 +188,7 @@ function MyMeeting() {
       <div className="my-meetings-container">
         <div className="mymeetings-body">
           <div className="mymeetings-page">
-          <h2 className="my-meetings-h2">My Meetings</h2>
+            <h2 className="my-meetings-h2">My Meetings</h2>
             <table className="mymeetings-table">
               <thead>
                 <tr>
@@ -193,7 +212,7 @@ function MyMeeting() {
                     <td>
                       {meeting.Tutor.firstName} {meeting.Tutor.lastName}
                     </td>
-                    <td>{meeting.date}</td>
+                    <td>{formatDate(meeting.date)}</td>
                     <td>
                       {meeting.Hour.startTime} - {meeting.Hour.endTime}
                     </td>
