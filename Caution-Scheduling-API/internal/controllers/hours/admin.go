@@ -105,3 +105,71 @@ func createTimeslots(w http.ResponseWriter, r *http.Request) {
 
 	responses.RespondWithJSON(w, http.StatusCreated, timeslots)
 }
+
+func toggleTimeslot(w http.ResponseWriter, r *http.Request) {
+	// Checking for Authentication and Authorization
+	var c user.SessionCookie
+
+	cookie, err := r.Cookie("key")
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
+
+			return
+		} else {
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	c.Cookie = cookie.Value
+
+	currentUser, err := c.CheckSession(database)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
+			return
+		} else {
+			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	authorized, err := currentUser.HasAdministratorRights()
+
+	if (!authorized){
+		if err.Error() == "not valid user" {
+			responses.RespondWithError(w, http.StatusUnauthorized, err.Error())
+		}else{
+			responses.RespondWithError(w, http.StatusForbidden, err.Error())
+		}
+		
+	}
+
+
+	//Doing the Stuff
+	var h hour.Hour
+
+	h.Id, err = strconv.Atoi(r.PostFormValue("id")) 
+
+	if err != nil {
+		responses.RespondWithError(w, http.StatusBadRequest, "Cannot Parse Id")
+		return
+	}
+
+	h.Active, err = strconv.ParseBool(r.PostFormValue("active")) 
+
+	if err != nil {
+		responses.RespondWithError(w, http.StatusBadRequest, "Cannot Parse active")
+		return
+	}
+
+	if h.Active {
+		h.MakeHourActive(database)
+	}else {
+		h.MakeHourDisable(database)
+	}
+
+
+	responses.RespondWithJSON(w, http.StatusCreated, h)
+}
