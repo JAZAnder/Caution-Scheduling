@@ -9,6 +9,33 @@ import (
 
 )
 
+func (h *Hour) toPrettyHour(db *sql.DB) PrettyHour {
+	ph := PrettyHour{
+		Id: h.Id,
+		TimeCode: h.TimeCode,
+		StartTime: h.StartTime,
+		EndTime: h.EndTime,
+		Active: h.Active,
+	}
+
+	if(h.DayOfWeek == 1){
+		ph.DayOfWeek = "Monday"
+	}else if(h.DayOfWeek == 2){
+		ph.DayOfWeek = "Tuesday"
+	}else if(h.DayOfWeek == 3){
+		ph.DayOfWeek = "Wednesday"
+	}else if(h.DayOfWeek == 4){
+		ph.DayOfWeek = "Thursday"
+	}else if(h.DayOfWeek == 5){
+		ph.DayOfWeek = "Friday"
+	}else if(h.DayOfWeek == 6){
+		ph.DayOfWeek = "Saturday"
+	}else if(h.DayOfWeek == 0){
+		ph.DayOfWeek = "Sunday"
+	}
+	return ph
+}
+
 func (multiDay TimeslotsMultiDay) ToTimeslotArray() []Hour {
 	timeslots := []Hour{}
 
@@ -103,6 +130,24 @@ func (h *Hour) UpdateHour(db *sql.DB) error {
 	return err
 }
 
+func (h *Hour) MakeHourActive(db *sql.DB) error {
+	query := "UPDATE `hours` SET `active` = '1' WHERE `hours`.`id` = " + strconv.Itoa(h.Id) + ""
+	_, err := db.Exec(query)
+	if err != nil {
+		return err
+	}
+	return h.GetHour(db)
+}
+
+func (h *Hour) MakeHourDisable(db *sql.DB) error {
+	query := "UPDATE `hours` SET `active` = '0' WHERE `hours`.`id` = " + strconv.Itoa(h.Id) + ""
+	_, err := db.Exec(query)
+	if err != nil {
+		return err
+	}
+	return h.GetHour(db)
+}
+
 func (h *Hour) CreateHour(db *sql.DB) error {
 	query := "INSERT INTO `hours` (`timeCode`,`startTime`, `endTime`, `dayOfWeek`) VALUES ('" + strconv.Itoa(h.TimeCode) + "','" + h.StartTime + "','" + h.EndTime + "','" + strconv.Itoa(h.DayOfWeek) + "')"
 	err := db.QueryRow(query)
@@ -134,8 +179,8 @@ func MassCreateHour(db *sql.DB, timeslots []SQLHour) error {
 	return nil
 }
 
-func GetHours(db *sql.DB) ([]Hour, error) {
-	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek FROM hours")
+func GetHours(db *sql.DB) ([]PrettyHour, error) {
+	rows, err := db.Query("SELECT id, startTime, endTime, dayOfWeek, active FROM hours")
 
 	if err != nil {
 		return nil, err
@@ -143,15 +188,17 @@ func GetHours(db *sql.DB) ([]Hour, error) {
 
 	defer rows.Close()
 
-	hours := []Hour{}
+	hours := []PrettyHour{}
 
 	for rows.Next() {
 		var h Hour
-		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek)
+		err := rows.Scan(&h.Id, &h.StartTime, &h.EndTime, &h.DayOfWeek, &h.Active)
 		if err != nil {
 			return nil, err
 		}
-		hours = append(hours, h)
+
+		ph := h.toPrettyHour(db)
+		hours = append(hours, ph)
 	}
 	return hours, nil
 }
