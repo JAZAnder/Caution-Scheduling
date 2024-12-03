@@ -2,6 +2,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import useFetch, { CachePolicies } from "use-http";
 import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
+import Background from "../../background";
 
 const userTimeslots = () => {
   
@@ -45,6 +46,7 @@ const userTimeslots = () => {
 
   return (
     <>
+    <Background />
       <div className="underNavBarSpacer"></div>
 
       <div className="timeslots-filter">
