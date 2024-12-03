@@ -6,6 +6,7 @@ import useMediaQuery from "../../context/useMediaQuery.jsx";
 import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 import TimeslotDetailsButton from "./details/details"
 import NewTimeslotButton from "./create/create"
+import { Link, useNavigate } from 'react-router-dom';
 
 const timeslots = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
@@ -233,9 +234,7 @@ function ListFilteredTimeSlots({ FLdayOfWeek, FLstartTime, FLendTime, debounce }
                 <td>{timeSlots[timeslot].startTime}</td>
                 <td>{timeSlots[timeslot].endTime}</td>
                 <td>
-                  <Button variant="primary" >
-                    Tutors
-                  </Button>
+                <Link to={'/user-timeslots?hourId='+timeSlots[timeslot].id}> <Button variant="primary" >Tutors</Button></Link>
                 </td>
                 <td>
                   <TimeslotStateButton  timeslot={timeSlots[timeslot]}/>

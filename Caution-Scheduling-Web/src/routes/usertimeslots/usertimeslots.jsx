@@ -1,14 +1,15 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import useFetch, { CachePolicies } from "use-http";
+import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
 
 const userTimeslots = () => {
-  const [params] = useSearchParams();
-  const [hourId, setHourId] = useState(params.get("hourId"))
-  const [tutorId, setTutorId] = useState(params.get("tutorId"))
-  const [dayOfWeek, setDayOfWeek] = useState(params.get("dayOfWeek"))
+  
+  const [hourId, setHourId] = useState('null')
+  const [tutorId, setTutorId] = useState('null')
+  const [dayOfWeek, setDayOfWeek] = useState('null')
   const [debounce, setDebounce] = useState(true);
-
+  const navigate = useNavigate();
   const { data: timeslots, timeLoading } = useFetch(
     `/api/timeslots/codes`,
     { method: "get" },
@@ -32,11 +33,9 @@ const userTimeslots = () => {
     return () => clearTimeout(getData);
   }, [dayOfWeek, hourId, tutorId]);
 
-  const resetSearch = async (event) => {
-    setDayOfWeek('');
-    setHourId('');
-    setTutorId('');
-    setDebounce(!debounce);
+  const Search = async (event) => {
+    navigate("/user-timeslots?hourId="+hourId+"&tutorId="+tutorId+"&dayOfWeek="+dayOfWeek)
+    
   };
 
   if (usersLoading || timeLoading) {
@@ -107,23 +106,13 @@ const userTimeslots = () => {
 
         </select>
 
+<Button variant="primary" onClick={Search}>Search</Button>
 
-        <button
-          type="button"
-          onClick={resetSearch}
-          className="timeslots-search-button"
-        >
-          Reset Search
-        </button>
       </div>
 
       <div>
         <FilterUserTimeSlots
-          FLhourId={hourId}
-          FLtutorId={tutorId}
-          FLdayOfWeek={dayOfWeek}
           debounce={debounce}
-
         />
       </div>
 
@@ -133,11 +122,12 @@ const userTimeslots = () => {
   )
 }
 
-function FilterUserTimeSlots({ FLhourId, FLtutorId, FLdayOfWeek, debounce }) {
+function FilterUserTimeSlots({ debounce }) {
+  const [params] = useSearchParams();
 
-
-
-
+  const FLhourId = params.get("hourId")
+  const FLtutorId = params.get("tutorId")
+  const FLdayOfWeek = params.get("dayOfWeek")
 
 
   const { data: userTimeslots, loading, error } = useFetch(
@@ -179,7 +169,7 @@ function FilterUserTimeSlots({ FLhourId, FLtutorId, FLdayOfWeek, debounce }) {
                 <td>{userTimeslots[timeslot].startTime}</td>
                 <td>{userTimeslots[timeslot].endTime}</td>
                 <td>{userTimeslots[timeslot].dayOfWeek}</td>
-                <td><button>Delete</button></td>
+                <td><DeleteButton debounce={debounce} id={userTimeslots[timeslot].id}/></td>
 
               </tr>
             ))
@@ -189,6 +179,38 @@ function FilterUserTimeSlots({ FLhourId, FLtutorId, FLdayOfWeek, debounce }) {
       </table>
     </>
   )
+}
+
+function DeleteButton({id, debounce }){
+  const [deleted, setDeleted] = useState(false)
+  const requestOptions = {
+    method: 'DELETE',
+    redirect: 'follow',
+  };
+
+  const deleteTimeSlot = async (event) => {
+   setDeleted(true)
+   fetch('/api/luser/admin/timeslot/'+id, requestOptions)
+    
+  };
+
+  return(
+  <>
+  {deleted ? (
+
+    <Button disabled="disabled" variant="danger">Deleted</Button>
+
+  ) : (
+
+    <Button variant="danger" onClick={deleteTimeSlot}>Delete</Button>
+
+  )}
+  
+  </>
+  )
+
+  
+
 }
 
 export default userTimeslots
