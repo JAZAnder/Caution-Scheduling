@@ -7,7 +7,7 @@
 }
 
 .manage-users-container1 {
-  margin: 10% 20px 10% 20px; /* Adds 10% top and bottom, 20px left and right */
+  margin: 10% 20px 10% 20px;
 }
 
 .manage-users-page #filterOnBar {
@@ -88,7 +88,6 @@
 
 .manage-users-page .table-with-bordered {
   width: 100%;
-  color: #5f5656;
   border-collapse: collapse;
   text-align: center;
 }

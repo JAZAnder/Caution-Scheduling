@@ -86,7 +86,6 @@
   border: 1px solid gray;
   padding: 10px;
   text-align: center;
-  color: #5f5656;
 }
 
 .timeslots-table tr:nth-child(even) td {
