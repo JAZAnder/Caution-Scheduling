@@ -256,8 +256,10 @@ func removeTimeAdmin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if !currentUser.IsAdmin {
-		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
+	authorization, _ := currentUser.HasSupervisorRights()
+
+	if !authorization {
+		responses.RespondWithError(w, http.StatusForbidden, "Insufficient Permissions")
 		return
 	}
 

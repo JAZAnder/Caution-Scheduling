@@ -15,8 +15,8 @@ func AddUserRoutes(a *mux.Router) {
 	a.HandleFunc("/api/luser/whoami", whoami).Methods("GET")
 	a.HandleFunc("/api/luser/logout", logoutLocalUser).Methods("DELETE")
 	a.HandleFunc("/api/luser/resetmypasswd", changePassword).Methods("PUT")
-	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
-	a.HandleFunc("/api/lusers/tutors", getAllTutors).Methods("GET")
+	
+	//a.HandleFunc("/api/lusers/tutors", getAllTutors).Methods("GET") //Works but IDK why it is here, endpoint returns student usernames
 
 	//Tutor Routes
 	//a.HandleFunc("/api/luser/timeslot", addTime).Methods("POST")
@@ -24,6 +24,8 @@ func AddUserRoutes(a *mux.Router) {
 	//Supervisor Routes
 	a.HandleFunc("/api/luser/resetpasswd", resetPassword).Methods("PUT") //Only Admins can reset another Admins password
 	//a.HandleFunc("/api/luser/admin/timeslot", addTimeAdmin).Methods("POST")
+	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
+
 
 	//Administrator Routes
 	a.HandleFunc("/api/luser/admin/timeslot/{id:[0-9]+}", removeTimeAdmin).Methods("DELETE")

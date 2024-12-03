@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { Link, useNavigate } from 'react-router-dom';
 import "../users.css"
 
 function UserDetailsButton(user) {
@@ -89,9 +90,9 @@ function UserDetailsButton(user) {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose}>
-                        Availability
-                    </Button>
+                   
+                        <Link to={'/user-timeslots?tutorId='+user.user.userId}> <Button variant="primary" onClick={handleClose}>Availability</Button></Link>
+                    
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
