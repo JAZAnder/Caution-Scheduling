@@ -92,6 +92,21 @@ func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHour
 		if err := rows.Scan(&result.Id, &result.TutorId, &result.FirstName, &result.LastName, &result.HourId, &result.StartTime, &result.EndTime, &result.DayOfWeek); err != nil {
 			return nil, err
 		}
+		if(result.DayOfWeek == "1"){
+			result.DayOfWeek = "Monday"
+		}else if(result.DayOfWeek == "2"){
+			result.DayOfWeek = "Tuesday"
+		}else if(result.DayOfWeek == "3"){
+			result.DayOfWeek = "Wednesday"
+		}else if(result.DayOfWeek == "4"){
+			result.DayOfWeek = "Thursday"
+		}else if(result.DayOfWeek == "5"){
+			result.DayOfWeek = "Friday"
+		}else if(result.DayOfWeek == "6"){
+			result.DayOfWeek = "Saturday"
+		}else if(result.DayOfWeek == "0"){
+			result.DayOfWeek = "Sunday"
+		}
 
 		filteredResults = append(filteredResults, result)
 	}

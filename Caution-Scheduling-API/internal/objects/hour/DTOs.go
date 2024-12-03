@@ -9,6 +9,12 @@ type Hour struct{
 	Active bool `json:"active"`
 }
 
+type TimeCode struct{
+	TimeCode int `json:"timeCode"`
+	StartTime string `json:"startTime"`
+	EndTime string `json:"endTime"`
+}
+
 type PrettyHour struct{
 	Id int `json:"id"`
 	TimeCode int `json:"timeCode"`

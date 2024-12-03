@@ -230,3 +230,27 @@ func (h *Hour) DeleteHour(db *sql.DB) error {
 	_, err := db.Exec(query)
 	return err
 }
+
+func GetTimeCodes(db *sql.DB) ([]TimeCode, error) {
+	rows, err := db.Query("SELECT DISTINCT timeCode, startTime, endTime FROM hours;")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	hours := []TimeCode{}
+
+	for rows.Next() {
+		var h TimeCode
+		err := rows.Scan(&h.TimeCode, &h.StartTime, &h.EndTime)
+		if err != nil {
+			return nil, err
+		}
+
+
+		hours = append(hours, h)
+	}
+	return hours, nil
+}
