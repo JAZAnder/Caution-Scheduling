@@ -94,9 +94,6 @@ export default function NavigationBar() {
                       <Link to={'/users'}>Users</Link>
                     </li>
                     <li>
-                      <Link to={'/labs'}>Labs</Link>
-                    </li>
-                    <li>
                       <Link to={'/timeslots'}>Timeslots</Link>
                     </li>
                   </>

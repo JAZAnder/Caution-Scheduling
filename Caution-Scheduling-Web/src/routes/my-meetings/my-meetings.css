@@ -39,6 +39,12 @@
   color: #ffffff;
 }
 
+.mymeetings-text-center{
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+}
+
 .mymeetings-body .details-details-button {
   padding: 5px 10px;
   cursor: pointer;

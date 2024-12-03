@@ -25,7 +25,7 @@ function MyMeeting() {
       <>
         <Background />
         <div className="my-meetings-container">
-          <div className="text-center">No meetings found. Try clicking another tab or reload?</div>
+          <div className="mymeetings-text-center">No meetings found. Try clicking another tab or reload?</div>
         </div>
       </>
     );

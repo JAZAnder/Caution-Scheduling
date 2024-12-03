@@ -18,7 +18,6 @@ import Labschedule from "./routes/labschedule/labschedule.jsx"
 import Schedulemeeting from './routes/schedulemeeting/schedulemeeting.jsx';
 import Aboutus from './routes/aboutus/aboutus.jsx'
 import Users from './routes/users/users.jsx'
-import Labs from './routes/labs/labs.jsx'
 import Timeslots from './routes/timeslots/timeslots.jsx'
 import Meetings from './routes/my-meetings/my-meetings.jsx'
 import MyMeetings from './routes/my-meetings/my-meetings.jsx'
@@ -66,10 +65,6 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <Users />
-      },
-      {
-        path: "labs",
-        element: <Labs />
       },
       {
         path: "timeslots",

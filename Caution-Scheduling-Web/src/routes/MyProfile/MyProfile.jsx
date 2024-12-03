@@ -106,27 +106,28 @@ function MyProfile() {
       <div className="my-profile-container">
         <div className="myprofile-body">
           <div className="myprofile-page">
-            <h2 className="my-profile-h2">My Profile</h2>
-            <table className="myprofile-table">
-              <tbody>
-                <tr>
-                  <td>First Name:</td>
-                  <td>{userData.firstName}</td>
-                </tr>
-                <tr>
-                  <td>Last Name:</td>
-                  <td>{userData.lastName}</td>
-                </tr>
-                <tr>
-                  <td>Email:</td>
-                  <td>{userData.email}</td>
-                </tr>
-                <tr>
-                  <td>Role:</td>
-                  <td>{userData.role}</td>
-                </tr>
-              </tbody>
-            </table>
+            <h2 className="myprofile-h2">Personal Information</h2>
+            <div className="myprofile-info">
+              <div className="myprofile-info-column">
+                <p><strong>First Name</strong></p>
+                <p>{userData.firstName || 'N/A'}</p>
+              </div>
+              <div className="myprofile-info-column">
+                <p><strong>Last Name</strong></p>
+                <p>{userData.lastName || 'N/A'}</p>
+              </div>
+            </div>
+            <h2 className="myprofile-h2">Public Information</h2>
+            <div className="myprofile-info">
+              <div className="myprofile-info-column">
+                <p><strong>Email</strong></p>
+                <p>{userData.email || 'N/A'}</p>
+              </div>
+              <div className="myprofile-info-column">
+                <p><strong>Role</strong></p>
+                <p>{userData.role || 'N/A'}</p>
+              </div>
+            </div>
             <button
               className="change-password-button"
               onClick={() => setChangePasswordVisible(!changePasswordVisible)}
