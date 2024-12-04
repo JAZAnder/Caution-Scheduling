@@ -2,6 +2,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import useFetch, { CachePolicies } from "use-http";
 import { Container, Row, Col, Button, Form, Table } from 'react-bootstrap';
+import NewUserTimeslotButton from './create/create'
 
 const userTimeslots = () => {
   
@@ -108,6 +109,7 @@ const userTimeslots = () => {
 
 <Button variant="primary" onClick={Search}>Search</Button>
 
+<NewUserTimeslotButton/>
       </div>
 
       <div>

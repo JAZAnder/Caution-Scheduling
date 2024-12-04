@@ -175,56 +175,7 @@ func isAdmin(r *http.Request) (bool, error) {
 // 	responses.RespondWithJSON(w, http.StatusCreated, uh)
 // }
 
-// func addTimeAdmin(w http.ResponseWriter, r *http.Request) {
-// 	var c user.SessionCookie
-// 	var uh userHour.UserHour
-// 	cookie, err := r.Cookie("key")
-// 	if err != nil {
-// 		if errors.Is(err, http.ErrNoCookie) {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not Found")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 			return
-// 		}
-// 	}
 
-// 	c.Cookie = cookie.Value
-
-// 	currentUser, err := c.CheckSession(database)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Session Expired")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 			return
-// 		}
-// 	}
-
-// 	if !currentUser.IsAdmin {
-// 		responses.RespondWithError(w, http.StatusForbidden, "Insufficent Permissions")
-// 		return
-// 	}
-
-// 	hourId := r.PostFormValue("hourId")
-// 	uh.HourId, err = strconv.Atoi(hourId)
-// 	if err != nil {
-// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid Time Slot")
-// 		return
-// 	}
-// 	uh.Tutor = r.PostFormValue("username")
-
-// 	err = uh.CreateUserHour(database)
-
-// 	if err != nil {
-// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-// 	uh.Available = true
-// 	responses.RespondWithJSON(w, http.StatusCreated, uh)
-
-// }
 func removeTime() {
 	//TODORemove-Time-Userhour
 
