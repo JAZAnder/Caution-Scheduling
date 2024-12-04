@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Background from '../../background';
 import './MyProfile.css';
+import { Alert, Form, Button } from "react-bootstrap";
 
 function MyProfile() {
   const [userData, setUserData] = useState(null);
@@ -42,12 +43,10 @@ function MyProfile() {
     setPasswordChangeMessage('');
     setIsSuccessMessage(false);
 
-    const capitalLetterRegex = /[A-Z]/;
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-
-    if (!capitalLetterRegex.test(newPassword) || !specialCharRegex.test(newPassword)) {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
       setPasswordChangeMessage(
-        'New password must contain at least one capital letter and one special character.'
+        'New password must be at least 8 characters long and contain at least one capital letter and one special character.'
       );
       setIsSuccessMessage(false);
       return;
@@ -77,7 +76,7 @@ function MyProfile() {
         if (errorData.error === 'Password is Incorrect') {
           setPasswordChangeMessage('Old password is incorrect.');
         } else {
-          setPasswordChangeMessage(`Failed to change password: ${errorData.error || 'Unknown error'}`);
+          setPasswordChangeMessage(`Failed to change password: ${errorData.error || 'Unknown error.'}`);
         }
         setIsSuccessMessage(false);
       }
@@ -135,34 +134,36 @@ function MyProfile() {
               {changePasswordVisible ? 'Cancel' : 'Change Password'}
             </button>
             {changePasswordVisible && (
-              <form className="change-password-form" onSubmit={handleChangePassword}>
-                <div className="form-group">
-                  <label>Old Password:</label>
-                  <input
+              <Form className="change-password-form" onSubmit={handleChangePassword}>
+                {passwordChangeMessage && (
+                  <Alert variant={isSuccessMessage ? 'success' : 'danger'} className="mt-3">
+                    {passwordChangeMessage}
+                  </Alert>
+                )}
+                <Form.Group className="mb-3" controlId="formOldPassword">
+                  <Form.Label>Old Password:</Form.Label>
+                  <Form.Control
                     type="password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
+                    placeholder="Enter old password"
                     required
                   />
-                </div>
-                <div className="form-group">
-                  <label>New Password:</label>
-                  <input
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formNewPassword">
+                  <Form.Label>New Password:</Form.Label>
+                  <Form.Control
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
                     required
                   />
-                </div>
-                <button type="submit" className="submit-password-button">
+                </Form.Group>
+                <Button variant="primary" type="submit" disabled={!newPassword}>
                   Submit
-                </button>
-                {passwordChangeMessage && (
-                  <div className={isSuccessMessage ? 'success-message' : 'error-message'}>
-                    {passwordChangeMessage}
-                  </div>
-                )}
-              </form>
+                </Button>
+              </Form>
             )}
           </div>
         </div>

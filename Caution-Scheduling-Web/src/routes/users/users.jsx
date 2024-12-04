@@ -5,7 +5,7 @@ import useFetch from "use-http";
 import React, { useEffect, useState } from "react";
 import UserDetailsButton from "./details/details";
 import NewUserButton from "./create/create";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Alert } from "react-bootstrap";
 
 function ManageUsers() {
   const [loading, setLoading] = useState(false);
@@ -80,13 +80,14 @@ function ManageUsers() {
               <select
                 name="role"
                 id="role"
+                value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
-                <option value=""> role </option>
-                <option value="1"> Student</option>
-                <option value="2"> Tutors</option>
-                <option value="3"> Supervisors</option>
-                <option value="4"> Administrators</option>
+                <option value="">Role</option>
+                <option value="1">Student</option>
+                <option value="2">Tutor</option>
+                <option value="3">Supervisor</option>
+                <option value="4">Administrator</option>
               </select>
 
               <button type="button" disabled={loading} onClick={resetSearch}>
@@ -120,11 +121,15 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
   const [show, setShow] = useState(false);
   const [selectedUserName, setSelectedUserName] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [resetSuccess, setResetSuccess] = useState("");
+  const [resetError, setResetError] = useState("");
 
   const handleClose = () => {
     setShow(false);
     setSelectedUserName("");
     setNewPassword("");
+    setResetSuccess("");
+    setResetError("");
   };
 
   const handleShow = (userName) => {
@@ -133,6 +138,13 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
   };
 
   const handleResetPassword = async () => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setResetError("Password must be at least 8 characters long and contain at least one capital letter and one special character.");
+      setResetSuccess("");
+      return;
+    }
+
     try {
       const response = await fetch('/api/luser/resetpasswd', {
         method: 'PUT',
@@ -149,18 +161,19 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
       console.log("API Response:", responseData); 
   
       if (response.ok) {
-        alert(`Password reset successfully for ${selectedUserName}`);
+        setResetSuccess(`Password reset successfully for ${selectedUserName}.`);
+        setResetError("");
+        setNewPassword("");
       } else {
-        alert(`Error resetting password: ${responseData.message || JSON.stringify(responseData) || 'Unknown error'}`);
+        setResetError(`Error resetting password: ${responseData.message || 'Unknown error.'}`);
+        setResetSuccess("");
       }
     } catch (error) {
       console.error("Error resetting password:", error);
-      alert("Error resetting password. Please try again later.");
-    } finally {
-      handleClose();
+      setResetError("Error resetting password. Please try again later.");
+      setResetSuccess("");
     }
   };
-  
 
   if (loading) {
     return (
@@ -216,6 +229,8 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
           <Modal.Title>Reset Password for {selectedUserName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {resetSuccess && <Alert variant="success">{resetSuccess}</Alert>}
+          {resetError && <Alert variant="danger">{resetError}</Alert>}
           <Form.Group>
             <Form.Label>New Password</Form.Label>
             <Form.Control
@@ -224,6 +239,9 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
             />
+            <Form.Text className="text-muted">
+              Password must be at least 8 characters long and contain at least one capital letter and one special character.
+            </Form.Text>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
