@@ -323,11 +323,12 @@ func (u *LocalUser) GetUser(db *sql.DB) error {
 	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
 	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
 	u.Email = "REDACTED"
-	u.UserName = "REDACTED"
 	u.Password = "REDACTED"
 	u.IsAdmin = false
 	return err
 }
+
+
 
 func (u *LocalUser) HasStudentRights() (bool, error) {
 	if !u.checkValidUser() {
