@@ -245,7 +245,10 @@ const ScheduleMeeting = ({ isAdmin }) => {
           console.log("API response:", response.data);
         }
 
-        setNotificationMessage("Your meeting is scheduled");
+        toast.success("Meeting successfully scheduled!", {
+          position: "top-right",
+          icon: "✅",
+        });
         setScheduledMeetings([
           ...scheduledMeetings,
           ...tutorHourIds.map((id) => ({
