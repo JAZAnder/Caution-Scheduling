@@ -5,6 +5,7 @@ import useFetch from "use-http";
 import React, { useEffect, useState } from "react";
 import UserDetailsButton from "./details/details";
 import NewUserButton from "./create/create";
+import { Modal, Button, Form } from "react-bootstrap";
 
 function ManageUsers() {
   const [loading, setLoading] = useState(false);
@@ -116,6 +117,51 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
     [debounce]
   );
 
+  const [show, setShow] = useState(false);
+  const [selectedUserName, setSelectedUserName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const handleClose = () => {
+    setShow(false);
+    setSelectedUserName("");
+    setNewPassword("");
+  };
+
+  const handleShow = (userName) => {
+    setSelectedUserName(userName);
+    setShow(true);
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch('/api/luser/resetpasswd', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          UserName: selectedUserName,
+          password: newPassword,
+        }),
+      });
+  
+      const responseData = await response.json();
+      console.log("API Response:", responseData); 
+  
+      if (response.ok) {
+        alert(`Password reset successfully for ${selectedUserName}`);
+      } else {
+        alert(`Error resetting password: ${responseData.message || JSON.stringify(responseData) || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      alert("Error resetting password. Please try again later.");
+    } finally {
+      handleClose();
+    }
+  };
+  
+
   if (loading) {
     return (
       <center>
@@ -136,6 +182,7 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
             <th>Email</th>
             <th>Role</th>
             <th>Details</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -151,10 +198,47 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
                 <td>
                   <UserDetailsButton user={usersInfo[user]} />
                 </td>
+                <td>
+                  <button
+                    onClick={() => handleShow(usersInfo[user].userName)}
+                    className="reset-password-button"
+                  >
+                    Reset Password
+                  </button>
+                </td>
               </tr>
             ))}
         </tbody>
       </table>
+
+      <Modal show={show} onHide={handleClose} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>Reset Password for {selectedUserName}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>New Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter new password"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleResetPassword}
+            disabled={!newPassword}
+          >
+            Reset Password
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
