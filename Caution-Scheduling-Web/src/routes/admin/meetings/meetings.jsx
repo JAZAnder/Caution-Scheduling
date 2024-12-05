@@ -17,6 +17,7 @@ function AdminMeetings() {
   const [dayOfWeek, setDayOfWeek] = useState("");
   const [date, setDate] = useState("");
   const [debounce, setDebounce] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     setDebounce(!debounce);
@@ -26,9 +27,17 @@ function AdminMeetings() {
     const getData = setTimeout(() => {
       setDebounce(!debounce);
       console.log("Should Be Refresh");
-    }, 100);
+    }, 300);
     return () => clearTimeout(getData);
   }, [tutorName, studentName, endTime, startTime, topicId, dayOfWeek, date]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); 
+
+    return () => clearInterval(timer);
+  }, []);
 
   const resetSearch = async (event) => {
     setTutorName("");
@@ -45,6 +54,7 @@ function AdminMeetings() {
 
   return (
     <>
+      <Background />
       <div className="admin-meetings-container">
         <div className="admin-meetings-page">
           <h2 className="admin-meetings-h2">Admin Meetings</h2>
@@ -72,7 +82,7 @@ function AdminMeetings() {
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
                 type="text"
-                placeholder="Start Time"
+                placeholder="Start Time (e.g., 10:00 AM)"
               />
               <input
                 id="endTime"
@@ -80,15 +90,16 @@ function AdminMeetings() {
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
                 type="text"
-                placeholder="End Time"
+                placeholder="End Time (e.g., 11:00 AM)"
               />
               <select
                 name="topicId"
                 id="topicId"
                 className="admin-meetings-select"
                 onChange={(e) => setTopicId(e.target.value)}
+                value={topicId}
               >
-                <option value=""> Topic </option>
+                <option value="">Topic</option>
               </select>
 
               <select
@@ -96,15 +107,16 @@ function AdminMeetings() {
                 id="dayOfWeek"
                 className="admin-meetings-select"
                 onChange={(e) => setDayOfWeek(e.target.value)}
+                value={dayOfWeek}
               >
-                <option value=""> Day </option>
-                <option value="1"> Monday</option>
-                <option value="2"> Tuesday</option>
-                <option value="3"> Wednesday</option>
-                <option value="4"> Thursday</option>
-                <option value="5"> Friday</option>
-                <option value="6"> Saturday</option>
-                <option value="0"> Sunday</option>
+                <option value="">Day</option>
+                <option value="1">Monday</option>
+                <option value="2">Tuesday</option>
+                <option value="3">Wednesday</option>
+                <option value="4">Thursday</option>
+                <option value="5">Friday</option>
+                <option value="6">Saturday</option>
+                <option value="0">Sunday</option>
               </select>
 
               <input
@@ -136,6 +148,7 @@ function AdminMeetings() {
             FLdate={date}
             FLdayOfWeek={dayOfWeek}
             debounce={debounce}
+            currentTime={currentTime}
           />
         </div>
       </div>
@@ -152,13 +165,26 @@ function ListFilteredMeetings({
   FLdate,
   FLdayOfWeek,
   debounce,
+  currentTime,
 }) {
   const {
     data: meetings,
     loading,
     error,
   } = useFetch(
-    `/api/meetings/filter?tutor=${FLtutor}&student=${FLstudent}&startTime=${FLstartTime}&endTime=${FLendTime}&topicId=${FLtopicId}&date=${FLdate}&dayOfWeek=${FLdayOfWeek}`,
+    `/api/meetings/filter?tutor=${encodeURIComponent(
+      FLtutor
+    )}&student=${encodeURIComponent(
+      FLstudent
+    )}&startTime=${encodeURIComponent(
+      FLstartTime
+    )}&endTime=${encodeURIComponent(
+      FLendTime
+    )}&topicId=${encodeURIComponent(
+      FLtopicId
+    )}&date=${encodeURIComponent(
+      FLdate
+    )}&dayOfWeek=${encodeURIComponent(FLdayOfWeek)}`,
     { method: "get" },
     [debounce]
   );
@@ -171,34 +197,41 @@ function ListFilteredMeetings({
     );
   }
 
+  if (error) {
+    return (
+      <div className="admin-meetings-error">
+        Error fetching meetings: {error.message}
+      </div>
+    );
+  }
+
   function parseDate(dateStr) {
     if (!dateStr) return null;
-  
-    if (typeof dateStr === 'number') {
+
+    if (typeof dateStr === "number") {
       const dateStrNum = dateStr.toString();
       if (dateStrNum.length === 8 && /^\d+$/.test(dateStrNum)) {
         const month = parseInt(dateStrNum.substring(0, 2), 10);
         const day = parseInt(dateStrNum.substring(2, 4), 10);
         const year = parseInt(dateStrNum.substring(4, 8), 10);
-        return new Date(year, month - 1, day); 
+        return new Date(year, month - 1, day);
       }
-      console.error('Invalid date number format:', dateStr);
+      console.error("Invalid date number format:", dateStr);
       return null;
     }
 
     if (dateStr instanceof Date) {
       return dateStr;
     }
-  
+
     return null;
   }
-  
 
   function formatDate(dateStr) {
     const date = parseDate(dateStr);
     if (!date) return dateStr;
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
   }
@@ -209,32 +242,46 @@ function ListFilteredMeetings({
     let hours = parseInt(timeParts[1], 10);
     const minutes = parseInt(timeParts[2], 10);
     const ampm = timeParts[3].toUpperCase();
-    if (ampm === 'PM' && hours !== 12) hours += 12;
-    if (ampm === 'AM' && hours === 12) hours = 0;
+    if (ampm === "PM" && hours !== 12) hours += 12;
+    if (ampm === "AM" && hours === 12) hours = 0;
     return hours * 60 + minutes;
   }
 
   function minutesToTimeString(totalMinutes) {
     let hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? "PM" : "AM";
     if (hours > 12) hours -= 12;
     if (hours === 0) hours = 12;
-    const displayMinutes = minutes.toString().padStart(2, '0');
+    const displayMinutes = minutes.toString().padStart(2, "0");
     return `${hours}:${displayMinutes} ${ampm}`;
   }
 
   function getStartTimeMinutes(meeting) {
-    if (!meeting.TutorHour || !meeting.TutorHour.Hour || !meeting.TutorHour.Hour.startTime) {
-      console.error('Error: meeting.TutorHour.Hour.startTime is undefined for meeting:', meeting);
+    if (
+      !meeting.TutorHour ||
+      !meeting.TutorHour.Hour ||
+      !meeting.TutorHour.Hour.startTime
+    ) {
+      console.error(
+        "Error: meeting.TutorHour.Hour.startTime is undefined for meeting:",
+        meeting
+      );
       return null;
     }
     return timeToMinutes(meeting.TutorHour.Hour.startTime);
   }
 
   function getEndTimeMinutes(meeting) {
-    if (!meeting.TutorHour || !meeting.TutorHour.Hour || !meeting.TutorHour.Hour.endTime) {
-      console.error('Error: meeting.TutorHour.Hour.endTime is undefined for meeting:', meeting);
+    if (
+      !meeting.TutorHour ||
+      !meeting.TutorHour.Hour ||
+      !meeting.TutorHour.Hour.endTime
+    ) {
+      console.error(
+        "Error: meeting.TutorHour.Hour.endTime is undefined for meeting:",
+        meeting
+      );
       return null;
     }
     return timeToMinutes(meeting.TutorHour.Hour.endTime);
@@ -271,7 +318,8 @@ function ListFilteredMeetings({
 
       if (
         currentMergedMeeting.date === currentMeeting.date &&
-        currentMergedMeeting.TutorHour.Tutor.id === currentMeeting.TutorHour.Tutor.id &&
+        currentMergedMeeting.TutorHour.Tutor.id ===
+          currentMeeting.TutorHour.Tutor.id &&
         currentMergedMeeting.Student.id === currentMeeting.Student.id &&
         currentMergedMeeting.Topic.id === currentMeeting.Topic.id &&
         currStartTime !== null &&
@@ -317,46 +365,70 @@ function ListFilteredMeetings({
 
   const mergedMeetings = mergeConsecutiveMeetings(meetingsArray);
 
+  function hasMeetingEnded(meeting) {
+    const meetingDate = parseDate(meeting.date);
+    const endTimeMinutes = getEndTimeMinutes(meeting);
+    if (!meetingDate || endTimeMinutes === null) return true;
+    const endDateTime = new Date(meetingDate);
+    endDateTime.setHours(
+      Math.floor(endTimeMinutes / 60),
+      endTimeMinutes % 60,
+      0,
+      0
+    );
+    return endDateTime <= currentTime;
+  }
+
+  const upcomingMeetings = mergedMeetings.filter(
+    (meeting) => !hasMeetingEnded(meeting)
+  );
+
   return (
     <>
-      <Background />
       <div className="admin-meetings-body">
         <div id="meetingsTable">
-          <table className="table-with-bordered">
-            <thead>
-              <tr>
-                <th>Meeting Id(s)</th>
-                <th>Topic</th>
-                <th>Student</th>
-                <th>Tutor</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mergedMeetings &&
-                mergedMeetings.map((meeting, i) => (
+          {upcomingMeetings.length === 0 ? (
+            <div className="admin-meetings-no-data">
+              No upcoming meetings found.
+            </div>
+          ) : (
+            <table className="table-with-bordered">
+              <thead>
+                <tr>
+                  <th>Meeting Id(s)</th>
+                  <th>Topic</th>
+                  <th>Student</th>
+                  <th>Tutor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcomingMeetings.map((meeting, i) => (
                   <tr key={i}>
-                    <td>{meeting.mergedIds.join(', ')}</td>
+                    <td>{meeting.mergedIds.join(", ")}</td>
                     <td>{meeting.Topic.description}</td>
                     <td>
                       {meeting.Student.firstName} {meeting.Student.lastName}
                     </td>
                     <td>
-                      {meeting.TutorHour.Tutor.firstName} {meeting.TutorHour.Tutor.lastName}
+                      {meeting.TutorHour.Tutor.firstName}{" "}
+                      {meeting.TutorHour.Tutor.lastName}
                     </td>
                     <td>{formatDate(meeting.date)}</td>
                     <td>
-                      {meeting.TutorHour.Hour.startTime} - {meeting.TutorHour.Hour.endTime}
+                      {meeting.TutorHour.Hour.startTime} -{" "}
+                      {meeting.TutorHour.Hour.endTime}
                     </td>
                     <td>
                       <MeetingDetailsButton meeting={meeting} />
                     </td>
                   </tr>
                 ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </>

@@ -9,6 +9,7 @@ function MyMeeting() {
   const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { get, response, error } = useFetch('/api/meetings');
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     async function fetchMeetings() {
@@ -22,7 +23,15 @@ function MyMeeting() {
       setLoading(false);
     }
     fetchMeetings();
-  }, []); 
+  }, [get, response]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   if (loading) {
     return (
@@ -66,7 +75,6 @@ function MyMeeting() {
   
     return null;
   }
-  
 
   function formatDate(dateStr) {
     const date = parseDate(dateStr);
@@ -114,7 +122,6 @@ function MyMeeting() {
     return timeToMinutes(meeting.Hour.endTime);
   }
 
-  // Sort meetings
   meetings.sort((a, b) => {
     const dateA = parseDate(a.date);
     const dateB = parseDate(b.date);
@@ -122,7 +129,6 @@ function MyMeeting() {
     return getStartTimeMinutes(a) - getStartTimeMinutes(b);
   });
 
-  // Merge consecutive meetings
   function mergeConsecutiveMeetings(meetingsArray) {
     const mergedMeetings = [];
     if (meetingsArray.length === 0) return mergedMeetings;
@@ -176,6 +182,17 @@ function MyMeeting() {
 
   console.log('Merged Meetings:', mergedMeetings);
 
+  function hasMeetingEnded(meeting) {
+    const meetingDate = parseDate(meeting.date);
+    const endTimeMinutes = getEndTimeMinutes(meeting);
+    if (!meetingDate || endTimeMinutes === null) return true;
+    const endDateTime = new Date(meetingDate);
+    endDateTime.setHours(Math.floor(endTimeMinutes / 60), endTimeMinutes % 60, 0, 0);
+    return endDateTime <= currentTime;
+  }
+
+  const upcomingMeetings = mergedMeetings.filter(meeting => !hasMeetingEnded(meeting));
+
   return (
     <>
       <Background />
@@ -183,40 +200,44 @@ function MyMeeting() {
         <div className="mymeetings-body">
           <div className="mymeetings-page">
             <h2 className="my-meetings-h2">My Meetings</h2>
-            <table className="mymeetings-table">
-              <thead>
-                <tr>
-                  <th>Meeting Id(s)</th>
-                  <th>Topic</th>
-                  <th>Student</th>
-                  <th>Tutor</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mergedMeetings.map((meeting, i) => (
-                  <tr key={i}>
-                    <td>{meeting.mergedIds.join(', ')}</td>
-                    <td>{meeting.Topic.description}</td>
-                    <td>
-                      {meeting.Student.firstName} {meeting.Student.lastName}
-                    </td>
-                    <td>
-                      {meeting.Tutor.firstName} {meeting.Tutor.lastName}
-                    </td>
-                    <td>{formatDate(meeting.date)}</td>
-                    <td>
-                      {meeting.Hour.startTime} - {meeting.Hour.endTime}
-                    </td>
-                    <td>
-                      <MeetingDetailsButton meeting={meeting} className="details-details-button" />
-                    </td>
+            {upcomingMeetings.length === 0 ? (
+              <div className="mymeetings-text-center">No upcoming meetings found.</div>
+            ) : (
+              <table className="mymeetings-table">
+                <thead>
+                  <tr>
+                    <th>Meeting Id(s)</th>
+                    <th>Topic</th>
+                    <th>Student</th>
+                    <th>Tutor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Details</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {upcomingMeetings.map((meeting, i) => (
+                    <tr key={i}>
+                      <td>{meeting.mergedIds.join(', ')}</td>
+                      <td>{meeting.Topic.description}</td>
+                      <td>
+                        {meeting.Student.firstName} {meeting.Student.lastName}
+                      </td>
+                      <td>
+                        {meeting.Tutor.firstName} {meeting.Tutor.lastName}
+                      </td>
+                      <td>{formatDate(meeting.date)}</td>
+                      <td>
+                        {meeting.Hour.startTime} - {meeting.Hour.endTime}
+                      </td>
+                      <td>
+                        <MeetingDetailsButton meeting={meeting} className="details-details-button" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
