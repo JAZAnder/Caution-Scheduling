@@ -1,25 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import "./labschedule.css";
 import EnvocLab from "../../assets/EnvocLab.png";
 import FayLab from "../../assets/Fay125Lab.png";
 import Background from "../../background";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 import useMediaQuery from "../../context/useMediaQuery.jsx";
 
 const LabSchedule = () => {
   const isMobile = useMediaQuery("(max-width: 900px)");
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedImage("");
+  };
+
   return (
     <div className="lab-schedule-page">
       <Background />
       {isMobile ? (
-        // React Bootstrap layout for mobile
         <Container className="mobile-lab-schedule">
           <div className="mobile-lab-content">
             <img
               src={EnvocLab}
               alt="Envoc Lab"
               className="img-fluid mobile-lab-image"
+              onClick={() => handleImageClick(EnvocLab)}
+              style={{ cursor: "pointer" }}
             />
             <a
               href="http://meet.google.com/cgc-diaj-gnx"
@@ -38,6 +52,8 @@ const LabSchedule = () => {
               src={FayLab}
               alt="Fay 125 Lab"
               className="img-fluid mobile-lab-image"
+              onClick={() => handleImageClick(FayLab)}
+              style={{ cursor: "pointer" }}
             />
             <a
               href="http://meet.google.com/fda-vanx-mnd"
@@ -61,6 +77,8 @@ const LabSchedule = () => {
                 src={EnvocLab}
                 alt="Envoc Lab"
                 className="lab-schedule-image"
+                onClick={() => handleImageClick(EnvocLab)}
+                style={{ cursor: "pointer" }}
               />
               <a
                 href="http://meet.google.com/cgc-diaj-gnx"
@@ -76,6 +94,8 @@ const LabSchedule = () => {
                 src={FayLab}
                 alt="Fay 125 Lab"
                 className="lab-schedule-image"
+                onClick={() => handleImageClick(FayLab)}
+                style={{ cursor: "pointer" }}
               />
               <a
                 href="http://meet.google.com/fda-vanx-mnd"
@@ -89,6 +109,22 @@ const LabSchedule = () => {
           </div>
         </>
       )}
+
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Body>
+          <img
+            src={selectedImage}
+            alt="Enlarged view"
+            className="img-fluid"
+            style={{ width: "100%" }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

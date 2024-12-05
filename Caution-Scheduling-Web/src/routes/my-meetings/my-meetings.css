@@ -1,10 +1,73 @@
-.mymeetings-body {
-    font-family: "Poppins", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-size: 14px;
-    color: white;
+.mymeetings-body .mymeetings-page {
+  padding: 20px;
+  background: #1a5632;
+  border: 2px solid gray;
+  max-width: 90%;
+  margin: auto;
+}
+
+.my-meetings-container {
+  margin: 10% 20px 10% 20px;
+}
+
+.my-meetings-h2 {
+  color: #ffffff;
+  margin-bottom: 2%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.mymeetings-body .mymeetings-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.mymeetings-body .mymeetings-table th,
+.mymeetings-body .mymeetings-table td {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  border: 1px solid gray;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.mymeetings-body .text-center {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.mymeetings-text-center{
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+}
+
+.mymeetings-body .details-details-button {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #ffc107;
+  color: #000000;
+  border-radius: 5px;
+  border: none;
+}
+
+.mymeetings-body .loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #1a5632;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
+  100% {
+    transform: rotate(360deg);
+  }
+}

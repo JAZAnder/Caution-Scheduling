@@ -12,6 +12,12 @@ type UserHour struct {
 	Available bool `json:"available"`
 }
 
+type UserHourSimple struct {
+	Id        int  `json:"id"`
+	HourId    int  `json:"hourId"`
+	TutorId   int  `json:"tutor"`
+}
+
 type UserHourExpanded struct {
 	Id        int       `json:"id"`
 	Hour    hour.Hour

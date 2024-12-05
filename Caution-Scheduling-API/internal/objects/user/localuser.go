@@ -9,7 +9,7 @@ import (
 )
 
 func (u *LocalUser) GetUserByEmail(db *sql.DB) error {
-	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role`, `googleId` FROM `localusers` WHERE `email` = ?;"
+	query := "SELECT `Id`, `UserName`, `firstName`, `lastName`, `email`, `role`, `googleId` FROM `localusers` WHERE `email` = ? and role > 0;"
 	result := db.QueryRow(query, u.Email)
 
 	err := result.Scan(&u.UserId, &u.UserName, &u.FirstName, &u.LastName, &u.Email, &u.Role, &u.GoogleId)
@@ -151,14 +151,14 @@ func (u *LocalUser) ToSelfViewInformation() (SelfViewInformation, error) {
 }
 
 func (u *LocalUser) checkValidUser() bool {
-	if u.UserId == 0 || u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
+	if u.UserId == 0 || u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role > 4 {
 		return false
 	}
 	return true
 }
 
 func (u *LocalUser) checkValidUserWithoutId() bool {
-	if u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
+	if u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role > 0 {
 		return false
 	}
 	return true
@@ -178,7 +178,7 @@ func (u *LocalUser) Login(db *sql.DB) error {
 		return err
 	}
 
-	query = "SELECT `Id`, `firstName`, `lastName`, `email`, `isAdmin`, `role`, `fullName`, `googleId` FROM `localusers` WHERE `userName` = '" + u.UserName + "';"
+	query = "SELECT `Id`, `firstName`, `lastName`, `email`, `isAdmin`, `role`, `fullName`, `googleId` FROM `localusers` WHERE `userName` = '" + u.UserName + "' and role > 0;"
 	result = db.QueryRow(query)
 
 	var isAdmin string
@@ -323,10 +323,20 @@ func (u *LocalUser) GetUser(db *sql.DB) error {
 	query := "SELECT `firstName`, `lastName` FROM `localusers` WHERE `userName` = '" + u.UserName + "'"
 	err := db.QueryRow(query).Scan(&u.FirstName, &u.LastName)
 	u.Email = "REDACTED"
-	u.UserName = "REDACTED"
 	u.Password = "REDACTED"
 	u.IsAdmin = false
 	return err
+}
+
+func (u *LocalUser) Update(db *sql.DB) error {
+	query := "UPDATE `localusers` SET `userName` = '"+u.UserName+"', `firstName` = '"+u.FirstName+"', `lastName` = '"+u.LastName+"', `email` = '"+u.Email+"', `role` = '"+strconv.Itoa(u.Role)+"' WHERE (`Id` = '"+ strconv.Itoa(u.UserId) +"');"
+	sqlerr := db.QueryRow(query)
+
+	if sqlerr != nil {
+		return sqlerr.Err()
+	}
+
+	return nil
 }
 
 func (u *LocalUser) HasStudentRights() (bool, error) {

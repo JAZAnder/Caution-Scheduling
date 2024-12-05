@@ -86,49 +86,4 @@ var (
 // 	responses.RespondWithJSON(w, http.StatusOK, meetings)
 // }
 
-// func deleteMeeting(w http.ResponseWriter, r *http.Request) {
-// 	var c user.SessionCookie
 
-// 	cookie, err := r.Cookie("key")
-// 	if err != nil {
-// 		if errors.Is(err, http.ErrNoCookie) {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Cookie not found")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 			return
-// 		}
-// 	}
-
-// 	c.Cookie = cookie.Value
-
-// 	currentUser, err := c.CheckSession(database)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			responses.RespondWithError(w, http.StatusUnauthorized, "Session expired")
-// 			return
-// 		} else {
-// 			responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 		}
-// 	}
-
-// 	if !currentUser.IsAdmin {
-// 		fmt.Println("	Fail : Meeting not deleted by " + currentUser.UserName + " : " + "Not an Admin")
-// 		responses.RespondWithError(w, http.StatusForbidden, "Not an Admin")
-// 		return
-// 	}
-
-// 	vars := mux.Vars(r)
-
-// 	id, err := strconv.Atoi(vars["id"])
-// 	if err != nil {
-// 		responses.RespondWithError(w, http.StatusBadRequest, "Invalid meeting ID")
-// 		return
-// 	}
-// 	m := meeting.Meeting{Id: id}
-// 	if err := m.DeleteMeeting(database); err != nil {
-// 		responses.RespondWithError(w, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-// 	responses.RespondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
-// }

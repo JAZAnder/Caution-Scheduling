@@ -63,7 +63,23 @@ func (uh *UserHour) DeleteUserHourById(db *sql.DB) error {
 }
 
 func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHours, error) {
-	rows, err := db.Query("SELECT uh.id, lu.Id As `userId`,lu.firstName, lu.lastName, h.Id As `hourId`, h.startTime, h.endTime, h.dayOfWeek  FROM userHours `uh` inner join localusers `lu` on uh.userId = lu.Id inner join hours `h` on uh.hourId = h.Id where lu.id = '" + filter.TutorId + "' AND h.timeCode = '" + filter.HourId + "' AND h.dayOfWeek = '" + filter.DayOfWeek + "';")
+	query := "SELECT uh.id, lu.Id As `userId`,lu.firstName, lu.lastName, h.Id As `hourId`, h.startTime, h.endTime, h.dayOfWeek  FROM userHours `uh` inner join localusers `lu` on uh.userId = lu.Id inner join hours `h` on uh.hourId = h.Id where uh.id > 0 "  
+	
+	if filter.TutorId != "null" {
+		query = query + " AND lu.id = '" + filter.TutorId + "'"
+	}
+
+	if filter.HourId != "null" {
+		query = query + " AND h.timeCode = '" + filter.HourId + "'"
+	}
+
+	if filter.DayOfWeek != "null" {
+		query = query + " AND h.dayOfWeek = '" + filter.DayOfWeek +"'"
+	}
+	
+	query = query + ";"
+
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -75,6 +91,21 @@ func GetUserTimeslotByFilter(db *sql.DB, filter TutorsAndHours) ([]TutorsAndHour
 		var result TutorsAndHours
 		if err := rows.Scan(&result.Id, &result.TutorId, &result.FirstName, &result.LastName, &result.HourId, &result.StartTime, &result.EndTime, &result.DayOfWeek); err != nil {
 			return nil, err
+		}
+		if(result.DayOfWeek == "1"){
+			result.DayOfWeek = "Monday"
+		}else if(result.DayOfWeek == "2"){
+			result.DayOfWeek = "Tuesday"
+		}else if(result.DayOfWeek == "3"){
+			result.DayOfWeek = "Wednesday"
+		}else if(result.DayOfWeek == "4"){
+			result.DayOfWeek = "Thursday"
+		}else if(result.DayOfWeek == "5"){
+			result.DayOfWeek = "Friday"
+		}else if(result.DayOfWeek == "6"){
+			result.DayOfWeek = "Saturday"
+		}else if(result.DayOfWeek == "0"){
+			result.DayOfWeek = "Sunday"
 		}
 
 		filteredResults = append(filteredResults, result)
@@ -139,26 +170,21 @@ func GetAvailableHoursByDay(db *sql.DB, date int) ([]TutorsAndHours, error) {
 	return filteredResults, nil
 }
 
-func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHour, error) {
-	rows, err := db.Query("SELECT `Id`, `hourId`, `userId`, `available` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
+func (uh *UserHour) GetHoursByUserId(db *sql.DB) ([]UserHourSimple, error) {
+	rows, err := db.Query("SELECT `Id`, `hourId`, `userId` FROM `userHours` WHERE `userId` = '" + strconv.Itoa(uh.TutorId) + "'")
 
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	userHours := []UserHour{}
-	var tempAva int
+	userHours := []UserHourSimple{}
 	for rows.Next() {
-		var uh UserHour
-		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId, &tempAva); err != nil {
+		var uh UserHourSimple
+		if err := rows.Scan(&uh.Id, &uh.HourId, &uh.TutorId); err != nil {
 			return nil, err
 		}
-		if tempAva == 1 {
-			uh.Available = true
-		} else {
-			uh.Available = false
-		}
+		
 		userHours = append(userHours, uh)
 	}
 	return userHours, nil

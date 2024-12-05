@@ -6,20 +6,14 @@ import (
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/logger"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/meeting"
 	"github.com/JAZAnder/Caution-Scheduling/internal/objects/user"
-
 )
 
 func NewMeeting(student user.LocalUser, tutor user.LocalUser, meeting meeting.Meeting) {
-	newMeetingStudentEmail(student, meeting)
-	newMeetingTutorEmail(tutor, meeting)
+	newMeetingStudentEmail(student, meeting, tutor)
+	newMeetingTutorEmail(tutor, meeting, student)
 }
 
-func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
-	// if !student.Settings.ReceiveMeetingEmails {
-	// 	logger.Log(2, "Email", "New Meeting Student", student.UserName, student.FirstName+" "+student.LastName+" has declined to receive emails.")
-	// 	return
-	// }
-
+func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting, tutor user.LocalUser) {
 	htmlContent := `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +38,7 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #4CAF50;
+            background-color: rgb(26, 86, 50);
             padding: 20px;
             text-align: center;
             color: #fff;
@@ -56,7 +50,7 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #4CAF50;
+            background-color: rgb(26, 86, 50);
             color: #fff;
             text-decoration: none;
             border-radius: 4px;
@@ -66,7 +60,7 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             text-align: center;
             font-size: 12px;
             color: #777;
-            background-color: #f4f4f4;
+            background-color: rgb(26, 86, 50);
         }
     </style>
 </head>
@@ -80,8 +74,9 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
             <p>Thank you for scheduling a meeting with Caution Scheduling!</p>
             <p><strong>Meeting Details:</strong></p>
             <ul>
-                <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
-                <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
+                <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date)[0:2]+`/` +strconv.Itoa(meeting.Date)[2:4] +`/`+ strconv.Itoa(meeting.Date)[4:]+ `</li>
+                <li><strong>Tutor:</strong> ` + tutor.FirstName +` `+tutor.LastName + `</li>
+                <li><strong>email:</strong> ` + tutor.Email +`</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>
@@ -93,6 +88,7 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
 </body>
 </html>
 `
+
 	plainTextContent := `Hi ` + student.FullName + `, Thank you for scheduling a meeting with Caution Scheduling! Meeting Details: ` + strconv.Itoa(meeting.Date) + ` -- ` + strconv.Itoa(meeting.UserHourId) + ``
 
 	logger.Log(1, "Email", "Meeting", "emailManager", "Email has been send to "+student.FullName+" at "+student.Email+" informing them about a meeting they scheduled")
@@ -100,7 +96,7 @@ func newMeetingStudentEmail(student user.LocalUser, meeting meeting.Meeting) {
 
 }
 
-func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
+func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting, student user.LocalUser) {
 	// if !tutor.Settings.ReceiveMeetingEmails {
 	// 	logger.Log(2, "Email", "New Meeting Student", tutor.UserName, tutor.FirstName+" "+tutor.LastName+" has declined to receive emails.")
 	// 	return
@@ -130,7 +126,7 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #4CAF50;
+            background-color: rgb(26, 86, 50);
             padding: 20px;
             text-align: center;
             color: #fff;
@@ -142,7 +138,7 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #4CAF50;
+            background-color: rgb(26, 86, 50);
             color: #fff;
             text-decoration: none;
             border-radius: 4px;
@@ -152,7 +148,7 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             text-align: center;
             font-size: 12px;
             color: #777;
-            background-color: #f4f4f4;
+            background-color: rgb(26, 86, 50);
         }
     </style>
 </head>
@@ -166,8 +162,9 @@ func newMeetingTutorEmail(tutor user.LocalUser, meeting meeting.Meeting) {
             <p>Thank you for scheduling a meeting with Caution Scheduling!</p>
             <p><strong>Meeting Details:</strong></p>
             <ul>
-                <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date) + `</li>
-                <li><strong>Time:</strong> ` + strconv.Itoa(meeting.UserHourId) + `</li>
+                <li><strong>Date:</strong> ` + strconv.Itoa(meeting.Date)[0:2]+`/` +strconv.Itoa(meeting.Date)[2:4] +`/`+ strconv.Itoa(meeting.Date)[4:]+ `</li>
+                <li><strong>Tutor:</strong> ` + student.FirstName +` `+student.LastName + `</li>
+                <li><strong>email:</strong> ` + student.Email +`</li>
             </ul>
             <p>If you need to reschedule or have any questions before the meeting, feel free to contact us.</p>
             <a href="[Insert Calendar Link]" class="button">Add to Calendar</a>

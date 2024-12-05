@@ -40,8 +40,53 @@
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  padding-left: 15%;
+  padding-left: 5%;
+  padding-right: 5%;
+  flex: 1;
+}
+
+.cs-center-text-default {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 5%;
   padding-right: 10%;
+  flex: 1;
+}
+
+.cs-center-text-admin {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 4.5%;
+  padding-right: 3%;
+  flex: 1;
+}
+
+.cs-center-text-supervisor {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 5%;
+  padding-right: 3%;
+  flex: 1;
+}
+
+.cs-center-text-tutor {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 5.5%;
+  padding-right: 4%;
+  flex: 1;
+}
+
+.cs-center-text-student {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 5%;
+  padding-right: 3%;
   flex: 1;
 }
 
