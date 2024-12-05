@@ -97,6 +97,7 @@ export default function Login() {
       const userData = await response.json();
       login(userData);
       navigate('/');
+      window.location.reload();
     } catch (err) {
       console.error("Error during Google login:", err);
       setError('Google login failed. Please try again.');

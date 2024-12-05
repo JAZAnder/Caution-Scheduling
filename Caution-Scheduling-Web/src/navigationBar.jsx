@@ -15,7 +15,7 @@ export default function NavigationBar() {
   const handleLogout = async (e) => {
     e.preventDefault();
     await logout(); 
-    navigate('/'); 
+    navigate('/login'); 
   };
 
   const getCenterTextClass = () => {
@@ -58,7 +58,7 @@ export default function NavigationBar() {
                       <Link to={'/MyProfile'}>My Profile</Link>
                     </li>
                     <li>
-                      <a href="#" onClick={handleLogout}>Log Out</a>
+                      <Link to={'/login'} href="#" onClick={handleLogout}>Log Out</Link>
                     </li>
                   </>
                 ) : (
@@ -157,9 +157,9 @@ export default function NavigationBar() {
                     <LinkContainer to="/MyProfile">
                       <Nav.Link className="cs-nav-link">My Profile</Nav.Link>
                     </LinkContainer>
-                    <Nav.Link className="cs-nav-link" onClick={handleLogout} href="#">
-                      Log Out
-                    </Nav.Link>
+                    <LinkContainer to="/login">
+                      <Nav.Link className="cs-nav-link" onClick={handleLogout} href="#"> Log Out </Nav.Link>
+                    </LinkContainer>
                   </>
                 ) : (
                   <LinkContainer to="/login">
