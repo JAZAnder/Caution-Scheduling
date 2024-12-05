@@ -158,7 +158,7 @@ func (u *LocalUser) checkValidUser() bool {
 }
 
 func (u *LocalUser) checkValidUserWithoutId() bool {
-	if u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role == 0 {
+	if u.UserName == "" || u.Email == "" || u.FirstName == "" || u.LastName == "" || u.Role > 0 {
 		return false
 	}
 	return true

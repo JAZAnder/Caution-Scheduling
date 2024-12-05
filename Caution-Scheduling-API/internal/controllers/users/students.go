@@ -85,7 +85,7 @@ func changePassword(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	authorization, err := u.HasStudentRights()
+	authorization, err := user.HasStudentRights()
 	if !authorization{
 		responses.RespondWithError(w, http.StatusUnauthorized, err.Error())
 			return
