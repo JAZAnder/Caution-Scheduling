@@ -23,7 +23,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
     const day = String(selectedDate.getDate()).padStart(2, "0");
     const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
     const year = selectedDate.getFullYear();
-    return `${month}${day}${year}`; // MMDDYYYY format
+    return `${month}${day}${year}`;
   };
 
   useEffect(() => {
@@ -151,9 +151,25 @@ const ScheduleMeeting = ({ isAdmin }) => {
       }
     });
 
-    const startTimesArray = Array.from(startTimes).sort(
+    let startTimesArray = Array.from(startTimes).sort(
       (a, b) => parseTime(a) - parseTime(b)
     );
+
+    if (selectedDate) {
+      const today = new Date();
+      const selected = new Date(selectedDate);
+      if (
+        selected.getFullYear() === today.getFullYear() &&
+        selected.getMonth() === today.getMonth() &&
+        selected.getDate() === today.getDate()
+      ) {
+        const currentMinutes =
+          today.getHours() * 60 + today.getMinutes() + 15;
+        startTimesArray = startTimesArray.filter(
+          (time) => parseTime(time) >= currentMinutes
+        );
+      }
+    }
 
     return startTimesArray;
   };
@@ -193,7 +209,26 @@ const ScheduleMeeting = ({ isAdmin }) => {
       return;
     }
 
-    const formattedDate = formatSelectedDate(); // MMDDYYYY format
+    const today = new Date();
+    const selected = new Date(selectedDate);
+    const isToday =
+      selected.getFullYear() === today.getFullYear() &&
+      selected.getMonth() === today.getMonth() &&
+      selected.getDate() === today.getDate();
+
+    if (isToday) {
+      const currentMinutes = today.getHours() * 60 + today.getMinutes();
+      const selectedStartMinutes = parseTime(startTime);
+      if (selectedStartMinutes < currentMinutes) {
+        toast.error("Cannot schedule a meeting in the past.", {
+          position: "top-right",
+          icon: "❌",
+        });
+        return;
+      }
+    }
+
+    const formattedDate = formatSelectedDate();
     const startMinutes = parseTime(startTime);
     const endMinutes = parseTime(endTime);
 
@@ -217,7 +252,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
         (slot) => slot.startTime === timeStr
       );
       if (slot) {
-        tutorHourIds.push(slot.id); // slot.id is the tutorHourId
+        tutorHourIds.push(slot.id);
       } else {
         setNotificationMessage(`No availability for time ${timeStr}`);
         return;
@@ -269,7 +304,6 @@ const ScheduleMeeting = ({ isAdmin }) => {
   
     saveMeeting();
   };
-  
 
   return (
     <>
@@ -292,6 +326,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
           }}
           placeholderText="Select a date"
           className="input-field"
+          minDate={new Date()}
         />
         <select
           value={selectedTutor}
@@ -347,7 +382,17 @@ const ScheduleMeeting = ({ isAdmin }) => {
           className="button schedule-button"
           onClick={handleScheduleMeeting}
           disabled={
-            !selectedTutor || !selectedDate || !startTime || !endTime
+            !selectedTutor ||
+            !selectedDate ||
+            !startTime ||
+            !endTime ||
+            (selectedDate && (() => {
+              const today = new Date();
+              const selected = new Date(selectedDate);
+              selected.setHours(0, 0, 0, 0);
+              today.setHours(0, 0, 0, 0);
+              return selected < today;
+            })())
           }
         >
           Schedule Meeting

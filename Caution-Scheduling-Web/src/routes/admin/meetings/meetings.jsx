@@ -173,31 +173,26 @@ function ListFilteredMeetings({
 
   function parseDate(dateStr) {
     if (!dateStr) return null;
-
-    if (typeof dateStr === 'string') {
-      if (dateStr.length === 8) {
-        const month = dateStr.substring(0, 2);
-        const day = dateStr.substring(2, 4);
-        const year = dateStr.substring(4, 8);
-        return new Date(`${year}-${month}-${day}`);
+  
+    if (typeof dateStr === 'number') {
+      const dateStrNum = dateStr.toString();
+      if (dateStrNum.length === 8 && /^\d+$/.test(dateStrNum)) {
+        const month = parseInt(dateStrNum.substring(0, 2), 10);
+        const day = parseInt(dateStrNum.substring(2, 4), 10);
+        const year = parseInt(dateStrNum.substring(4, 8), 10);
+        return new Date(year, month - 1, day); 
       }
-
-      const parsedDate = new Date(dateStr);
-      if (!isNaN(parsedDate)) {
-        return parsedDate;
-      }
+      console.error('Invalid date number format:', dateStr);
+      return null;
     }
 
     if (dateStr instanceof Date) {
       return dateStr;
     }
-
-    if (typeof dateStr === 'number') {
-      return new Date(dateStr);
-    }
-
+  
     return null;
   }
+  
 
   function formatDate(dateStr) {
     const date = parseDate(dateStr);
