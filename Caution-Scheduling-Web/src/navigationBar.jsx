@@ -85,10 +85,10 @@ export default function NavigationBar() {
                 {user && user.role === 'Administrator' && (
                   <>
                     <li>
-                      <Link to={'/meetings'}>Meetings</Link>
+                      <Link to={'/meetings'}>My Meetings</Link>
                     </li>
                     <li>
-                      <Link to={'/admin/adminmeetings'}>Admin Meetings</Link>
+                      <Link to={'/admin/adminmeetings'}>All Meetings</Link>
                     </li>
                     <li>
                       <Link to={'/users'}>Users</Link>
@@ -99,9 +99,17 @@ export default function NavigationBar() {
                   </>
                 )}
                 {user && user.role === 'Supervisor' && (
+                  <>
                   <li>
-                    <Link to={'/meetings'}>Meetings</Link>
+                    <Link to={'/meetings'}>My Meetings</Link>
                   </li>
+                  <li>
+                      <Link to={'/admin/adminmeetings'}>All Meetings</Link>
+                  </li>
+                  <li>
+                      <Link to={'/users'}>Users</Link>
+                  </li>
+                  </>
                 )}
                 {user && user.role === 'Tutor' && (
                   <>
@@ -173,7 +181,7 @@ export default function NavigationBar() {
                       <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/admin/adminmeetings">
-                      <Nav.Link className="cs-nav-link">Admin Meetings</Nav.Link>
+                      <Nav.Link className="cs-nav-link">All Meetings</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/users">
                       <Nav.Link className="cs-nav-link">Users</Nav.Link>
@@ -190,9 +198,17 @@ export default function NavigationBar() {
                   </>
                 )}
                 {user && user.role === 'Supervisor' && (
-                  <LinkContainer to="/meetings">
-                    <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
-                  </LinkContainer>
+                  <>
+                    <LinkContainer to="/meetings">
+                      <Nav.Link className="cs-nav-link">Meetings</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/adminmeetings">
+                      <Nav.Link className="cs-nav-link">All Meetings</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/users">
+                      <Nav.Link className="cs-nav-link">Users</Nav.Link>
+                    </LinkContainer>
+                  </>
                 )}
                 {user && user.role === 'Tutor' && (
                   <>
