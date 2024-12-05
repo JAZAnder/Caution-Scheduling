@@ -23,7 +23,7 @@ func AddUserRoutes(a *mux.Router) {
 
 	//Supervisor Routes
 	a.HandleFunc("/api/luser/resetpasswd", resetPassword).Methods("PUT") //Only Admins can reset another Admins password
-	
+	a.HandleFunc("/api/luser/update", updateUser).Methods("PUT")
 	a.HandleFunc("/api/lusers", getAllUsers).Methods("GET")
 
 

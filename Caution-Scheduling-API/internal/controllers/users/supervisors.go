@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers"
 
 	"github.com/JAZAnder/Caution-Scheduling/internal/helpers/responses"
@@ -71,6 +70,7 @@ func resetPassword(w http.ResponseWriter, r *http.Request) {
 	u.ChangePassword(database)
 	responses.RespondWithJSON(w, http.StatusCreated, "Password Changed")
 }
+
 
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var c user.SessionCookie

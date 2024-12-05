@@ -16,6 +16,40 @@ function UserDetailsButton(user) {
     const [email, setEmail] = useState(user.user.email)
     const [role, setRole] = useState(user.user.role)
 
+    const updateUser = async () => {
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+      
+        const urlencoded = new URLSearchParams();
+        urlencoded.append('userId', user.user.userId);
+        urlencoded.append('userName', userName);
+        urlencoded.append('firstName', firstName);
+        urlencoded.append('lastName', lastName);
+        urlencoded.append('email', email);
+        urlencoded.append('role', role);
+      
+        const requestOptions = {
+          method: 'PUT',
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow',
+        };
+      
+        try {
+          const response = await fetch('/api/luser/update', requestOptions);
+      
+          if (!response.ok) {
+            throw new Error('Something Went Wrong');
+          }
+      
+          const data = await response.json();
+
+        } catch (error) {
+            alert(error)
+          console.error('Error:', error);
+          throw new Error('Error');
+        }
+      };
 
 
     return (
@@ -86,6 +120,7 @@ function UserDetailsButton(user) {
                             <option value="2">Tutor</option>
                             <option value="3">Supervisor</option>
                             <option value="4">Administrator</option>
+                            <option value="0">Disabled</option>
                         </Form.Select>
                     </Form.Group>
                 </Modal.Body>
@@ -99,7 +134,7 @@ function UserDetailsButton(user) {
                     <Button variant="danger" onClick={handleClose} disabled={true}>
                         Delete User
                     </Button>
-                    <Button variant="success" className="background-1" onClick={function () { handleClose; toggle() }} disabled={true}>
+                    <Button variant="success" className="background-1" onClick={function () { handleClose(); updateUser(); }}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

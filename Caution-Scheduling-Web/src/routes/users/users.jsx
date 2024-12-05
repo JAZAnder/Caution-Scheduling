@@ -199,12 +199,12 @@ function ListFilteredUser({ FLuserName, FLfirstName, FLlastName, FLemail, FLrole
                   <UserDetailsButton user={usersInfo[user]} />
                 </td>
                 <td>
-                  <button
+                  <Button variant="secondary"
                     onClick={() => handleShow(usersInfo[user].userName)}
                     className="reset-password-button"
                   >
                     Reset Password
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

@@ -49,7 +49,7 @@ func googleLoginUser(w http.ResponseWriter, r *http.Request) {
 		u.FullName = u.FirstName + " " + u.LastName
 		u.GoogleId = googleUser.Sub
 		if err = u.SignUp(database); err != nil {
-			responses.RespondWithError(w, http.StatusInternalServerError, "Failed to create user")
+			responses.RespondWithError(w, http.StatusInternalServerError, "Failed to Sign In")
 			return
 		}
 	} else if err != nil {
