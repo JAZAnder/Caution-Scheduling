@@ -82,7 +82,7 @@ const ScheduleMeeting = ({ isAdmin }) => {
       try {
         const formattedDate = formatSelectedDate();
         const response = await axios.get(
-          `/api/scheduledMeetings/${selectedTutor}/${formattedDate}`
+          `/api/availability/${selectedTutor}/${formattedDate}`
         );
         const meetings = response.data;
         setScheduledMeetings(meetings);
